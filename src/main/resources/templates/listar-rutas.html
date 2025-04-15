@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Seleccionar Rutas</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    #map { height: 400px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+<h1>Selecciona una Ruta</h1>
+
+<select id="selector-rutas">
+  <option value="">-- Selecciona una ruta --</option>
+  <option th:each="ruta : ${rutas}"
+          th:value="${ruta.id}"
+          th:text="${ruta.nombre}">
+  </option>
+</select>
+
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<!-- Script para cargar rutas y actualizar el mapa -->
+<script th:inline="javascript">
+  // Todas las rutas (JSON embebido desde Thymeleaf)
+  let rutas = /*[[${rutas}]]*/ [];
+
+  let map = L.map('map').setView([10.41379, -75.52277], 16);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+  let markers = [];
+
+  function limpiarMapa() {
+      markers.forEach(m => map.removeLayer(m));
+      markers = [];
+  }
+
+  function mostrarParadas(paradas) {
+      if (paradas.length === 0) return;
+
+      let bounds = [];
+
+      paradas.forEach(parada => {
+          let marker = L.marker([parada.lat, parada.lng])
+                        .bindPopup(parada.nombre)
+                        .addTo(map);
+          markers.push(marker);
+          bounds.push([parada.lat, parada.lng]);
+      });
+
+      map.fitBounds(bounds);
+  }
+
+  document.getElementById('selector-rutas').addEventListener('change', function () {
+      let idSeleccionado = this.value;
+      limpiarMapa();
+
+      let rutaSeleccionada = rutas.find(r => r.id === idSeleccionado);
+      if (rutaSeleccionada) {
+          mostrarParadas(rutaSeleccionada.paradas);
+      }
+  });
+</script>
+</body>
+</html>

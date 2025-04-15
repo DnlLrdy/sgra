@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Nueva Ruta</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>#map { height: 400px; }</style>
+</head>
+<body>
+<h1>Agregar nueva ruta</h1>
+
+<form th:action="@{/admin/rutas/guardar}" th:object="${ruta}" method="post">
+    <input type="text" th:field="*{nombre}" placeholder="Nombre de la ruta" required />
+    <input type="hidden" id="paradasInput" name="paradasJson" />
+
+    <div id="map"></div>
+    <button type="submit">Guardar Ruta</button>
+</form>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+    const map = L.map('map').setView([10.41379, -75.52277], 16);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+    const paradas = [];
+
+    map.on('click', function (e) {
+        const nombre = prompt("Nombre de la parada:");
+        if (nombre) {
+            const parada = { nombre, lat: e.latlng.lat, lng: e.latlng.lng };
+            paradas.push(parada);
+            L.marker([parada.lat, parada.lng]).addTo(map).bindPopup(nombre);
+            document.getElementById('paradasInput').value = JSON.stringify(paradas);
+        }
+    });
+</script>
+</body>
+</html>
