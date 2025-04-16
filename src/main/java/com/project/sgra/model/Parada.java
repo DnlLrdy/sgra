@@ -6,7 +6,7 @@ import lombok.Data;
 public class Parada {
 
     private String nombre;
-    private double lat;
-    private double lng;
+    private double latitud;
+    private double longitud;
 
 }

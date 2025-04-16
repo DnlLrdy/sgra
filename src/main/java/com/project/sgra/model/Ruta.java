@@ -6,9 +6,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
-@Document(collection = "rutas")
 @Data
+@Document(collection = "rutas")
 public class Ruta {
+
     @Id
     private String id;
     private String nombre;

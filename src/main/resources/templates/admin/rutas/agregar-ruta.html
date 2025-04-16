@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>SGRA</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="../../../static/css/admin/rutas/agregar-ruta.css">
+    <link rel="stylesheet" th:href="@{/css/admin/rutas/agregar-ruta.css}">
+</head>
+
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">Agregar una ruta</h3>
+            </div>
+
+            <div class="card-body">
+                <form th:action="@{/sgra/admin/rutas/guardar}" th:object="${ruta}" method="post">
+                    <div class="mb-3">
+                        <label class="form-label">Nombre de la ruta</label>
+                        <input type="text" th:field="*{nombre}" class="form-control"
+                            placeholder="Ingrese el nombre de la ruta" required />
+                    </div>
+
+                    <input type="hidden" id="paradas-input" name="paradasJson" />
+
+                    <div id="map" class="mb-4"></div>
+
+                    <h5 class="mb-1">Lista de paradas</h5>
+                    <p class="text-muted mb-3" style="font-size: 0.9rem;">
+                        Puedes arrastrar las paradas para cambiar el orden. <i class="bi bi-arrows-move"></i>
+                    </p>
+
+                    <ul id="paradas-list" class="list-unstyled"></ul>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-save"></i> Guardar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <script src="../../../static/js/admin/rutas/agregar-ruta.js"></script>
+    <script th:src="@{/js/admin/rutas/agregar-ruta.js}"></script>
+</body>
+
+</html>

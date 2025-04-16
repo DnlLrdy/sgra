@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping("/admin/rutas")
+@RequestMapping("/sgra/admin/rutas")
 public class RutaController {
 
     @Autowired
@@ -22,28 +22,28 @@ public class RutaController {
 
     @GetMapping
     public String listarRutas(Model model) {
-        List<Ruta> rutas = rutaRepository.findAll();
-        model.addAttribute("rutas", rutas); // <-- esto debe existir
-        return "listar-rutas";
+        model.addAttribute("rutas", rutaRepository.findAll());
+        return "admin/rutas/listar-rutas";
     }
 
-    @GetMapping("/nueva")
-    public String nuevaRuta(Model model) {
+    @GetMapping("/agregar")
+    public String agregarRuta(Model model) {
         model.addAttribute("ruta", new Ruta());
-        return "nueva-ruta";
+        return "admin/rutas/agregar-ruta";
     }
 
     @PostMapping("/guardar")
     public String guardarRuta(@RequestParam String nombre, @RequestParam String paradasJson) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        List<Parada> paradas = mapper.readValue(paradasJson, new TypeReference<List<Parada>>(){});
+        List<Parada> paradas = mapper.readValue(paradasJson, new TypeReference<List<Parada>>() {
+        });
 
         Ruta ruta = new Ruta();
         ruta.setNombre(nombre);
         ruta.setParadas(paradas);
 
         rutaRepository.save(ruta);
-        return "redirect:/admin/rutas";
+        return "redirect:/sgra/admin/rutas";
     }
 
 }
