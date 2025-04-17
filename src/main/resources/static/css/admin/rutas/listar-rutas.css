@@ -1,22 +1,116 @@
+/* Paleta de color */
+:root {
+    --naranja-quemado: #d75836;
+    --azul-oscuro: #2d318d;
+    --celeste: #77d0e2;
+    --gris-claro: #d8d8d8;
+    --beige: #f3f1ed;
+}
+
+/* Estilos generales */
+body {
+    background-color: var(--beige) !important;
+}
+
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    background-color: var(--azul-oscuro) !important;
+}
+
+.btn-light.text-primary {
+    color: var(--azul-oscuro) !important;
+    border-color: white;
+}
+
+.btn-light.text-primary:hover {
+    background-color: white;
+    color: var(--azul-oscuro) !important;
+}
+
+/* Estilos del mapa */
 #map {
     height: 400px;
     border-radius: 8px;
     margin-bottom: 20px;
+    border: 2px solid var(--celeste);
+    background-color: white;
+}
+
+/* Selector de rutas */
+#selector-rutas {
+    border: 1px solid var(--gris-claro);
+}
+
+#selector-rutas:focus {
+    border-color: var(--celeste);
+    box-shadow: 0 0 0 0.25rem rgba(119, 208, 226, 0.25);
+}
+
+/* Botones de acción */
+.btn-outline-warning {
+    color: var(--naranja-quemado);
+    border-color: var(--naranja-quemado);
+}
+
+.btn-outline-warning:hover {
+    background-color: var(--naranja-quemado);
+    color: white;
+}
+
+.btn-outline-danger {
+    border-color: #dc3545;
+}
+
+/* Lista de paradas */
+#paradas-container {
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
 }
 
 #paradas-list {
     max-height: 300px;
     overflow-y: auto;
     padding-right: 10px;
+    border: 1px solid var(--gris-claro);
+    border-radius: 6px;
 }
 
 #paradas-list li {
     padding: 10px;
-    background-color: #f8f9fa;
-    border: 1px solid #dee2e6;
+    background-color: white;
+    border: 1px solid var(--gris-claro);
     border-radius: 5px;
     margin-bottom: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    transition: all 0.2s ease;
+}
+
+#paradas-list li:hover {
+    background-color: var(--gris-claro);
+    transform: translateX(2px);
+}
+
+/* Títulos */
+h3, h5 {
+    color: var(--azul-oscuro);
+}
+
+h5.text-secondary {
+    color: var(--azul-oscuro) !important;
+    border-bottom: 2px solid var(--celeste);
+    padding-bottom: 8px;
+    display: inline-block;
+}
+
+/* Iconos */
+.bi {
+    color: var(--azul-oscuro);
 }
