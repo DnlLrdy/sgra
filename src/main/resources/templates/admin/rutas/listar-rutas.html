@@ -21,7 +21,7 @@
                     <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
                         <h3 class="mb-0"><i class="bi bi-geo-alt"></i> Lista de rutas</h3>
                         <a th:href="@{/sgra/admin/rutas/agregar}" class="btn btn-light text-dark">
-                            <i class="bi bi-plus-lg"></i> Crear una ruta
+                            <i class="bi bi-plus-circle"></i> Crear una ruta
                         </a>
                     </div>
 
@@ -42,7 +42,8 @@
                                     <i class="bi bi-pencil-square"></i>
                                 </button>
                             </form>
-                            <form id="form-eliminar" th:action="@{/sgra/admin/rutas/eliminar}" method="post" style="display: none;">
+                            <form id="form-eliminar" th:action="@{/sgra/admin/rutas/eliminar}" method="post"
+                                style="display: none;">
                                 <input type="hidden" name="id" id="ruta-id-eliminar">
                                 <button type="button" class="btn btn-outline-danger" onclick="mostrarModalEliminar()">
                                     <i class="bi bi-trash"></i>
@@ -80,21 +81,19 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modalConfirmarEliminar" tabindex="-1" aria-labelledby="modalEliminarLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal fade" id="modalConfirmarEliminar" tabindex="-1" aria-labelledby="modalEliminarLabel"
+        aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content rounded-4 shadow-sm border-0">
                 <div class="modal-header bg-white border-bottom-0">
                     <h5 class="modal-title text-danger-emphasis fw-semibold" id="modalEliminarLabel">
                         <i class="bi bi-exclamation-triangle-fill me-2 text-danger"></i>
-                        Confirmar eliminación
+                        Eliminar ruta
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body text-muted fs-6">
-                    ¿Estás seguro de que deseas eliminar esta ruta?
-                    <div class="mt-2 text-danger-emphasis">
-                        También se eliminarán todas sus paradas asociadas.
-                    </div>
+                    ¿Estás seguro de que deseas eliminar esta ruta? También se eliminarán todas sus paradas asociadas.
                     <div class="mt-1 small text-secondary">
                         Esta acción no se puede deshacer.
                     </div>
@@ -110,9 +109,9 @@
             </div>
         </div>
     </div>
-    
-    
-    
+
+
+
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>

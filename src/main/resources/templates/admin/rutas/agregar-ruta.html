@@ -13,44 +13,180 @@
 </head>
 
 <body class="bg-light">
-    <div class="container mt-5">
-        <div class="card shadow">
-            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                <h3 class="mb-0">Agregar una ruta</h3>
-                <a th:href="@{/sgra/admin/rutas}" class="btn btn-light text-primary">
-                    <i class="bi bi-arrow-left"></i> Regresar
-                </a>
+    <div class="container-fluid mt-5">
+        <div class="row">
+            <!-- Contenedor izquierdo: Formulario y mapa -->
+            <div class="col-md-8">
+                <div class="card shadow">
+                    <div
+                        class="card-header bg-primary text-white d-flex justify-content-between align-items-center flex-wrap">
+                        <h3 class="mb-0"><i class="bi bi-geo-alt"></i> Crear una ruta</h3>
+                        <div class="d-flex gap-2 mt-2 mt-md-0">
+                            <a th:href="@{/sgra/admin/rutas}" class="btn btn-light text-primary">
+                                <i class="bi bi-arrow-left"></i> Regresar
+                            </a>
+                            <button type="submit" class="btn btn-light text-primary" form="form-ruta">
+                                <i class="bi bi-plus-circle"></i> Crear ruta
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form id="form-ruta" th:action="@{/sgra/admin/rutas/guardar}" th:object="${ruta}" method="post">
+                            <div class="mb-3">
+                                <label class="form-label">Nombre de la ruta</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-map"></i></span>
+                                    <input type="text" minlength="1" maxlength="100" pattern="^(?!\s)(.*\S.*)$" th:field="*{nombre}" class="form-control"
+                                        placeholder="Ingrese el nombre de la ruta" required />
+                                </div>
+                            </div>
+
+                            <input type="hidden" id="paradas-input" name="paradasJson" />
+
+                            <div id="map" class="mb-4"></div>
+                        </form>
+                    </div>
+                </div>
             </div>
 
-            <div class="card-body">
-                <form th:action="@{/sgra/admin/rutas/guardar}" th:object="${ruta}" method="post">
-                    <div class="mb-3">
-                        <label class="form-label">Nombre de la ruta</label>
-                        <input type="text" th:field="*{nombre}" class="form-control"
-                            placeholder="Ingrese el nombre de la ruta" required />
+            <!-- Contenedor derecho: Lista de paradas -->
+            <div class="col-md-4">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="mb-0"><i class="bi bi-list-ul"></i> Lista de paradas</h3>
                     </div>
 
-                    <input type="hidden" id="paradas-input" name="paradasJson" />
+                    <div class="card-body p-2">
+                        <div id="paradas-container" class="mt-2">
+                            <!-- Mensaje de arrastrar paradas, oculto si no hay -->
+                            <p id="texto-arrastrar" class="text-muted mb-2" style="font-size: 0.9rem; display: none;">
+                                Puedes arrastrar las paradas para cambiar el orden. <i class="bi bi-arrows-move"></i>
+                            </p>
 
-                    <div id="map" class="mb-4"></div>
-
-                    <h5 class="mb-1">Lista de paradas</h5>
-                    <p class="text-muted mb-3" style="font-size: 0.9rem;">
-                        Puedes arrastrar las paradas para cambiar el orden. <i class="bi bi-arrows-move"></i>
-                    </p>
-
-                    <ul id="paradas-list" class="list-unstyled"></ul>
-
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-success">
-                            <i class="bi bi-save"></i> Guardar
-                        </button>
+                            <ul id="paradas-list" class="list-group">
+                                <!-- Mensaje de "no hay paradas" -->
+                                <div id="sin-paradas-alerta" class="alert alert-primary text-center" role="alert">
+                                    <strong>¡No hay paradas creadas!</strong><br>
+                                    Haz clic derecho en el mapa para crear una.
+                                </div>
+                            </ul>
+                        </div>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- Modal para Crear Parada -->
+    <div class="modal fade" id="modalCrearParada" tabindex="-1" aria-labelledby="modalCrearParadaLabel"
+        aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 shadow-sm border-0">
+                <div class="modal-header bg-white border-bottom-0">
+                    <h5 class="modal-title text-info-emphasis fw-semibold" id="modalCrearParadaLabel">
+                        <i class="bi bi-plus-circle me-2"></i>
+                        Crear parada
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body text-muted fs-6">
+                    <label for="nombre-parada" class="form-label">Nombre de la parada</label>
+                    <input type="text" minlength="1" maxlength="100" pattern="^(?!\s)(.*\S.*)$" id="nombre-parada" class="form-control"
+                        placeholder="Ingrese el nombre de la parada" required>
+                </div>
+                <div class="modal-footer border-top-0 d-flex justify-content-between">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+                    <button type="button" class="btn btn-success rounded-pill px-4" id="guardar-parada">
+                        Crear
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Modal para editar nombre de parada -->
+    <div class="modal fade" id="modalEditarParada" tabindex="-1" aria-labelledby="modalEditarParadaLabel"
+        aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 shadow-sm border-0">
+                <div class="modal-header bg-white border-bottom-0">
+                    <h5 class="modal-title text-warning-emphasis fw-semibold" id="modalEditarParadaLabel">
+                        <i class="bi bi-pencil-square me-2"></i>
+                        Modificar parada
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body text-muted fs-6">
+                    <label for="nombre-parada-edit" class="form-label">Nuevo nombre de la parada</label>
+                    <input type="text" minlength="1" maxlength="100" pattern="^(?!\s)(.*\S.*)$" id="nombre-parada-edit" class="form-control"
+                        placeholder="Ingrese el nuevo nombre de la parada" required>
+                </div>
+                <div class="modal-footer border-top-0 d-flex justify-content-between">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+                    <button type="button" class="btn btn-warning rounded-pill px-4" id="guardar-edicion">
+                        Modificar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalConfirmarEliminar" tabindex="-1" aria-labelledby="modalEliminarLabel"
+        aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 shadow-sm border-0">
+                <div class="modal-header bg-white border-bottom-0">
+                    <h5 class="modal-title text-danger-emphasis fw-semibold" id="modalEliminarLabel">
+                        <i class="bi bi-exclamation-triangle-fill me-2 text-danger"></i>
+                        Eliminar parada
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body text-muted fs-6">
+                    ¿Estás seguro de que deseas eliminar esta parada?
+                    <div class="mt-1 small text-secondary">
+                        Esta acción no se puede deshacer.
+                    </div>
+                </div>
+                <div class="modal-footer border-top-0 d-flex justify-content-between">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+                    <button type="button" class="btn btn-danger rounded-pill px-4" onclick="confirmarEliminacion()">
+                        Eliminar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para confirmar que se debe agregar al menos una parada -->
+    <div class="modal fade" id="modalConfirmarParadas" tabindex="-1" aria-labelledby="modalConfirmarParadasLabel"
+        aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 shadow-sm border-0">
+                <div class="modal-header bg-white border-bottom-0">
+                    <h5 class="modal-title text-primary fw-semibold" id="modalConfirmarParadasLabel">
+                        <i class="bi bi-exclamation-circle-fill me-2 text-primary"></i>
+                        <!-- Cambié el color del ícono a azul -->
+                        ¡Atención!
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body text-muted fs-6">
+                    Debes agregar al menos una parada antes de crear la ruta.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
