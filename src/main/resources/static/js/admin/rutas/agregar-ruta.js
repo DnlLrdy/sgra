@@ -29,14 +29,25 @@ map.on('contextmenu', e => {
     // Agregar la parada al hacer clic en el botón de "Crear Parada"
     document.getElementById('guardar-parada').onclick = function () {
         const nombre = document.getElementById('nombre-parada').value.trim();
+        const color = document.getElementById('color-parada').value;
 
         if (nombre) {
-            // Crear la parada con la información de nombre y ubicación
-            const parada = { nombre, latitud: ubicacion.lat, longitud: ubicacion.lng };
+            const parada = { nombre, latitud: ubicacion.lat, longitud: ubicacion.lng, color };
             paradas.push(parada);
 
-            // Crear el marcador en el mapa
-            const marcador = L.marker([parada.latitud, parada.longitud], { draggable: true })
+            const iconoPersonalizado = L.icon({
+                iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-${color}.png`,
+                shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                shadowSize: [41, 41]
+            });
+
+            const marcador = L.marker([parada.latitud, parada.longitud], {
+                draggable: true,
+                icon: iconoPersonalizado
+            })
                 .addTo(map)
                 .bindPopup(nombre)
                 .on('dragend', event => {
@@ -49,11 +60,8 @@ map.on('contextmenu', e => {
 
             marcadores.push(marcador);
             actualizarListaParadas();
-
-            // Cerrar el modal después de agregar la parada
             modal.hide();
         } else {
-            // Si no se ingresa un nombre, simplemente cerrar el modal sin alerta
             modal.hide();
         }
     };
@@ -131,6 +139,7 @@ function editarParada(index) {
 
     // Rellenar el campo de texto del modal con el nombre actual
     document.getElementById('nombre-parada-edit').value = nombreParada;
+    document.getElementById('color-parada-edit').value = paradas[paradaIndex].color; 
 
     // Mostrar el modal de edición
     const modal = new bootstrap.Modal(document.getElementById('modalEditarParada'));
@@ -142,22 +151,38 @@ function editarParada(index) {
 }
 
 function guardarEdicion(paradaIndex) {
-    // Obtener el nuevo nombre desde el campo de texto
     const nuevoNombre = document.getElementById('nombre-parada-edit').value.trim();
+    const nuevoColor = document.getElementById('color-parada-edit').value;
 
-    // Si el nuevo nombre no está vacío y es diferente al anterior, actualizar
-    if (nuevoNombre && nuevoNombre !== paradas[paradaIndex].nombre) {
-        // Actualizar el nombre de la parada
-        paradas[paradaIndex].nombre = nuevoNombre;
+    const parada = paradas[paradaIndex];
+    let hayCambios = false;
 
-        // Actualizar el marcador en el mapa
+    if (nuevoNombre && nuevoNombre !== parada.nombre) {
+        parada.nombre = nuevoNombre;
         marcadores[paradaIndex].setPopupContent(nuevoNombre);
+        hayCambios = true;
+    }
 
-        // Actualizar la lista de paradas
+    if (nuevoColor && nuevoColor !== parada.color) {
+        parada.color = nuevoColor;
+
+        const nuevoIcono = L.icon({
+            iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-${nuevoColor}.png`,
+            shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+        });
+
+        marcadores[paradaIndex].setIcon(nuevoIcono);
+        hayCambios = true;
+    }
+
+    if (hayCambios) {
         actualizarListaParadas();
     }
 
-    // Cerrar el modal
     const modal = bootstrap.Modal.getInstance(document.getElementById('modalEditarParada'));
     modal.hide();
 }

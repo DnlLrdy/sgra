@@ -31,12 +31,14 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <form id="form-ruta" th:action="@{/sgra/admin/rutas/actualizar}" th:object="${ruta}" method="post">
+                        <form id="form-ruta" th:action="@{/sgra/admin/rutas/actualizar}" th:object="${ruta}"
+                            method="post">
                             <div class="mb-3">
                                 <label class="form-label">Nombre de la ruta</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="bi bi-map"></i></span>
-                                    <input type="text" minlength="1" maxlength="100" pattern="^(?!\s)(.*\S.*)$" th:field="*{nombre}" class="form-control"
+                                    <input type="text" minlength="1" maxlength="100" pattern="^(?!\s)(.*\S.*)$"
+                                        th:field="*{nombre}" class="form-control"
                                         placeholder="Ingrese el nuevo nombre de la ruta" required />
                                 </div>
                             </div>
@@ -92,8 +94,20 @@
                 </div>
                 <div class="modal-body text-muted fs-6">
                     <label for="nombre-parada" class="form-label">Nombre de la parada</label>
-                    <input type="text" minlength="1" maxlength="100" pattern="^(?!\s)(.*\S.*)$" id="nombre-parada" class="form-control"
-                        placeholder="Ingrese el nombre de la parada" required>
+                    <input type="text" minlength="1" maxlength="100" pattern="^(?!\s)(.*\S.*)$" id="nombre-parada"
+                        class="form-control" placeholder="Ingrese el nombre de la parada" required>
+                    <label for="color-parada" class="form-label mt-3">Color del marcador</label>
+                    <select class="form-select" id="color-parada">
+                        <option value="blue" selected>Azul</option>
+                        <option value="gold">Dorado</option>
+                        <option value="red">Rojo</option>
+                        <option value="green">Verde</option>
+                        <option value="orange">Naranja</option>
+                        <option value="yellow">Amarillo</option>
+                        <option value="violet">Violeta</option>
+                        <option value="grey">Gris</option>
+                        <option value="black">Negro</option>
+                    </select>
                 </div>
                 <div class="modal-footer border-top-0 d-flex justify-content-between">
                     <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">
@@ -123,8 +137,20 @@
                 </div>
                 <div class="modal-body text-muted fs-6">
                     <label for="nombre-parada-edit" class="form-label">Nuevo nombre de la parada</label>
-                    <input type="text" minlength="1" maxlength="100" pattern="^(?!\s)(.*\S.*)$" id="nombre-parada-edit" class="form-control"
-                        placeholder="Ingrese el nuevo nombre de la parada" required>
+                    <input type="text" minlength="1" maxlength="100" pattern="^(?!\s)(.*\S.*)$" id="nombre-parada-edit"
+                        class="form-control" placeholder="Ingrese el nuevo nombre de la parada" required>
+                    <label for="color-parada" class="form-label mt-3">Color del marcador</label>
+                    <select class="form-select" id="color-parada-edit">
+                        <option value="blue" selected>Azul</option>
+                        <option value="gold">Dorado</option>
+                        <option value="red">Rojo</option>
+                        <option value="green">Verde</option>
+                        <option value="orange">Naranja</option>
+                        <option value="yellow">Amarillo</option>
+                        <option value="violet">Violeta</option>
+                        <option value="grey">Gris</option>
+                        <option value="black">Negro</option>
+                    </select>
                 </div>
                 <div class="modal-footer border-top-0 d-flex justify-content-between">
                     <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">
