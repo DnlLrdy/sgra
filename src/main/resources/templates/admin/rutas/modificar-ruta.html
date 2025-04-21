@@ -8,65 +8,63 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="../../../static/css/admin/rutas/agregar-ruta.css">
-    <link rel="stylesheet" th:href="@{/css/admin/rutas/agregar-ruta.css}">
+    <link rel="stylesheet" href="../../../static/css/admin/rutas/modificar-ruta.css">
+    <link rel="stylesheet" th:href="@{/css/admin/rutas/modificar-ruta.css}">
 </head>
 
 <body class="bg-light">
     <div class="container-fluid mt-5">
         <div class="row">
-            <!-- Contenedor izquierdo: Formulario y mapa -->
+
             <div class="col-md-8">
+
                 <div class="card shadow">
                     <div
-                        class="card-header bg-primary text-white d-flex justify-content-between align-items-center flex-wrap">
-                        <h3 class="mb-0"><i class="bi bi-geo-alt"></i> Crear una ruta</h3>
+                        class="card-header bg-warning text-white d-flex justify-content-between align-items-center flex-wrap">
+                        <h3 class="mb-0"><i class="bi bi-geo-alt"></i> Modificar una ruta</h3>
                         <div class="d-flex gap-2 mt-2 mt-md-0">
-                            <a th:href="@{/sgra/admin/rutas}" class="btn btn-light text-primary">
+                            <a th:href="@{/sgra/admin/rutas}" class="btn btn-light text-warning">
                                 <i class="bi bi-arrow-left"></i> Regresar
                             </a>
-                            <button type="submit" class="btn btn-light text-primary" form="form-ruta">
-                                <i class="bi bi-plus-circle"></i> Crear ruta
+                            <button type="submit" class="btn btn-light text-warning" form="form-ruta">
+                                <i class="bi bi-pencil-square"></i> Modificar ruta
                             </button>
                         </div>
                     </div>
                     <div class="card-body">
-                        <form id="form-ruta" th:action="@{/sgra/admin/rutas/guardar}" th:object="${ruta}" method="post">
+                        <form id="form-ruta" th:action="@{/sgra/admin/rutas/actualizar}" th:object="${ruta}"
+                            method="post">
                             <div class="mb-3">
                                 <label class="form-label">Nombre de la ruta</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="bi bi-map"></i></span>
                                     <input type="text" minlength="1" maxlength="100" pattern="^(?!\s)(.*\S.*)$"
                                         th:field="*{nombre}" class="form-control"
-                                        placeholder="Ingrese el nombre de la ruta" required />
+                                        placeholder="Ingrese el nuevo nombre de la ruta" required />
                                 </div>
                             </div>
-
+                            <input type="hidden" th:field="*{id}" />
                             <input type="hidden" id="paradas-input" name="paradasJson" />
-
                             <div id="map" class="mb-4"></div>
                         </form>
                     </div>
                 </div>
+
             </div>
 
-            <!-- Contenedor derecho: Lista de paradas -->
             <div class="col-md-4">
+
                 <div class="card shadow">
-                    <div class="card-header bg-primary text-white">
+                    <div class="card-header bg-warning text-white">
                         <h3 class="mb-0"><i class="bi bi-list-ul"></i> Lista de paradas</h3>
                     </div>
-
                     <div class="card-body p-2">
                         <div id="paradas-container" class="mt-2">
-                            <!-- Mensaje de arrastrar paradas, oculto si no hay -->
                             <p id="texto-arrastrar" class="text-muted mb-2" style="font-size: 0.9rem; display: none;">
                                 Puedes arrastrar las paradas para cambiar el orden. <i class="bi bi-arrows-move"></i>
                             </p>
-
                             <ul id="paradas-list" class="list-group">
-                                <!-- Mensaje de "no hay paradas" -->
-                                <div id="sin-paradas-alerta" class="alert alert-primary text-center" role="alert">
+                                <div id="sin-paradas-alerta" class="alert alert-warning text-center" role="alert">
                                     <strong>¡No hay paradas creadas!</strong><br>
                                     Haz clic derecho en el mapa para crear una.
                                 </div>
@@ -74,11 +72,11 @@
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
 
-    <!-- Modal para Crear Parada -->
     <div class="modal fade" id="modalCrearParada" tabindex="-1" aria-labelledby="modalCrearParadaLabel"
         aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered">
@@ -119,9 +117,6 @@
         </div>
     </div>
 
-
-
-    <!-- Modal para editar nombre de parada -->
     <div class="modal fade" id="modalEditarParada" tabindex="-1" aria-labelledby="modalEditarParadaLabel"
         aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered">
@@ -191,15 +186,13 @@
         </div>
     </div>
 
-    <!-- Modal para confirmar que se debe agregar al menos una parada -->
     <div class="modal fade" id="modalConfirmarParadas" tabindex="-1" aria-labelledby="modalConfirmarParadasLabel"
         aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content rounded-4 shadow-sm border-0">
                 <div class="modal-header bg-white border-bottom-0">
-                    <h5 class="modal-title text-primary fw-semibold" id="modalConfirmarParadasLabel">
-                        <i class="bi bi-exclamation-circle-fill me-2 text-primary"></i>
-                        <!-- Cambié el color del ícono a azul -->
+                    <h5 class="modal-title text-warning fw-semibold" id="modalConfirmarParadasLabel">
+                        <i class="bi bi-exclamation-circle-fill me-2 text-warning"></i>
                         ¡Atención!
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
@@ -211,15 +204,19 @@
         </div>
     </div>
 
-    <!-- Scripts -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
         crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
-    <script src="../../../static/js/admin/rutas/agregar-ruta.js"></script>
-    <script th:src="@{/js/admin/rutas/agregar-ruta.js}"></script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var paradasJson = /*[[${paradasJson}]]*/[];
+        /*]]>*/
+    </script>
+    <script src="../../../static/js/admin/rutas/modificar-ruta.js"></script>
+    <script th:src="@{/js/admin/rutas/modificar-ruta.js}"></script>
 </body>
 
 </html>

@@ -12,7 +12,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/sgra/admin/rutas")
@@ -27,10 +26,10 @@ public class RutaController {
         return "admin/rutas/listar-rutas";
     }
 
-    @GetMapping("/agregar")
-    public String agregarRuta(Model model) {
+    @GetMapping("/crear")
+    public String crearRuta(Model model) {
         model.addAttribute("ruta", new Ruta());
-        return "admin/rutas/agregar-ruta";
+        return "admin/rutas/crear-ruta";
     }
 
     @PostMapping("/guardar")
@@ -47,8 +46,8 @@ public class RutaController {
         return "redirect:/sgra/admin/rutas";
     }
 
-    @PostMapping("/editar")
-    public String editarRuta(@RequestParam String id, Model model) throws JsonProcessingException {
+    @PostMapping("/modificar")
+    public String modificarRuta(@RequestParam String id, Model model) throws JsonProcessingException {
         Ruta ruta = rutaRepository.findById(id).orElse(null);
 
         ObjectMapper mapper = new ObjectMapper();
@@ -56,13 +55,14 @@ public class RutaController {
 
         model.addAttribute("ruta", ruta);
         model.addAttribute("paradasJson", paradasJson);
-        return "admin/rutas/editar-ruta";
+        return "admin/rutas/modificar-ruta";
     }
 
     @PostMapping("/actualizar")
     public String actualizarRuta(@RequestParam String id, @RequestParam String nombre, @RequestParam String paradasJson) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        List<Parada> paradas = mapper.readValue(paradasJson, new TypeReference<List<Parada>>() {});
+        List<Parada> paradas = mapper.readValue(paradasJson, new TypeReference<List<Parada>>() {
+        });
 
         Ruta rutaExistente = rutaRepository.findById(id).orElse(null);
 
@@ -70,14 +70,13 @@ public class RutaController {
         rutaExistente.setParadas(paradas);
 
         rutaRepository.save(rutaExistente);
-
         return "redirect:/sgra/admin/rutas";
     }
 
     @PostMapping("/eliminar")
     public String eliminarRuta(@RequestParam String id) {
         rutaRepository.deleteById(id);
-        return "redirect:/sgra/admin/rutas";  // Redirige a la lista de rutas después de la eliminación
+        return "redirect:/sgra/admin/rutas";
     }
 
 }

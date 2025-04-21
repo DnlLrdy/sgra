@@ -15,12 +15,12 @@
 <body class="bg-light">
     <div class="container-fluid mt-5">
         <div class="row">
-            <!-- Contenedor izquierdo: Selector y mapa (muy ancho) -->
+
             <div class="col-md-8">
                 <div class="card shadow">
                     <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
                         <h3 class="mb-0"><i class="bi bi-geo-alt"></i> Lista de rutas</h3>
-                        <a th:href="@{/sgra/admin/rutas/agregar}" class="btn btn-light text-dark">
+                        <a th:href="@{/sgra/admin/rutas/crear}" class="btn btn-light text-dark">
                             <i class="bi bi-plus-circle"></i> Crear una ruta
                         </a>
                     </div>
@@ -28,14 +28,12 @@
                     <div class="card-body">
                         <div class="mb-3 d-flex gap-2">
                             <select id="selector-rutas" class="form-select" th:disabled="${#lists.isEmpty(rutas)}">
-                                <!-- Si no hay rutas, mostrar solo el mensaje de no paradas -->
                                 <option th:if="${#lists.isEmpty(rutas)}" value="" disabled selected>¡No hay rutas
                                     creadas!</option>
                                 <option th:each="ruta : ${rutas}" th:value="${ruta.id}" th:text="${ruta.nombre}">
                                 </option>
                             </select>
-                            <!-- Formularios para editar y eliminar ruta (ocultos por defecto) -->
-                            <form id="form-editar" th:action="@{/sgra/admin/rutas/editar}" method="post"
+                            <form id="form-editar" th:action="@{/sgra/admin/rutas/modificar}" method="post"
                                 style="display: none;">
                                 <input type="hidden" name="id" id="ruta-id-editar">
                                 <button type="submit" class="btn btn-outline-warning">
@@ -50,13 +48,11 @@
                                 </button>
                             </form>
                         </div>
-
                         <div id="map" class="mb-4"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Contenedor derecho: Lista de paradas (más estrecho) -->
             <div class="col-md-4">
                 <div class="card shadow">
                     <div class="card-header bg-dark text-white">
@@ -66,12 +62,10 @@
                     <div class="card-body p-2">
                         <div id="paradas-container" class="mt-2">
                             <ul id="paradas-list" class="list-group">
-                                <!-- Mostrar mensaje cuando no haya rutas -->
                                 <div th:if="${#lists.isEmpty(rutas)}" class="alert alert-dark text-center" role="alert">
                                     <strong>¡No hay paradas creadas!</strong><br>
                                     Crea una ruta para crear paradas.
                                 </div>
-                                <!-- Aquí se llenan las paradas dinámicamente -->
                             </ul>
                         </div>
                     </div>
@@ -109,9 +103,6 @@
             </div>
         </div>
     </div>
-
-
-
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>

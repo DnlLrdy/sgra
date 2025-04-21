@@ -1,19 +1,19 @@
 #map {
-    height: 600px; /* reducido de 600px */
+    height: 600px;
     border-radius: 10px;
     margin-bottom: 15px;
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
 }
 
 #paradas-list {
-    max-height: 200px; /* reducido de 300px */
+    max-height: 200px;
     overflow-y: auto;
     padding-right: 8px;
 }
 
 #paradas-list li {
-    padding: 8px 12px; /* reducido de 12px 15px */
-    margin-bottom: 8px; /* reducido de 12px */
+    padding: 8px 12px;
+    margin-bottom: 8px;
     background: #f8f9fa;
     border: 1px solid #dee2e6;
     border-radius: 10px;
@@ -22,7 +22,7 @@
     align-items: center;
     cursor: pointer;
     transition: background-color 0.2s, transform 0.2s;
-    font-size: 0.9rem; /* ligeramente más pequeño */
+    font-size: 0.9rem;
 }
 
 #paradas-list li:hover {
@@ -30,7 +30,8 @@
     transform: translateY(-1px);
 }
 
-#paradas-list li strong, .nombre-parada {
+#paradas-list li strong,
+.nombre-parada {
     display: inline-block;
     width: 100%;
     white-space: nowrap;
@@ -47,7 +48,7 @@
 
 .btn {
     border-radius: 40px;
-    padding: 6px 12px; /* reducido de 8px 16px */
+    padding: 6px 12px;
     font-size: 0.9rem;
     transition: all 0.3s;
 }
@@ -63,7 +64,6 @@
 
 .card-header {
     border-radius: 10px 10px 0 0;
-    padding: 12px 16px; /* reducido de 16px 20px */
+    padding: 12px 16px;
     font-size: 0.95rem;
 }
-

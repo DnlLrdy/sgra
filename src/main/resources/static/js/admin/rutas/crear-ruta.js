@@ -12,51 +12,16 @@ const map = L.map('map', {
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-
-const paradas = JSON.parse(paradasJson);
-const marcadores = [];
-
-paradas.forEach(parada => {
-    const iconoPersonalizado = L.icon({
-        iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-${parada.color}.png`,
-        shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-        shadowSize: [41, 41]
-    });
-
-    const marcador = L.marker([parada.latitud, parada.longitud], { 
-        draggable: true, 
-        icon: iconoPersonalizado // Aquí aplicamos el icono personalizado con el color
-    })
-        .addTo(map)
-        .bindPopup(parada.nombre)
-        .on('dragend', event => {
-            const { lat, lng } = event.target.getLatLng();
-            parada.latitud = lat;
-            parada.longitud = lng;
-            marcador.setPopupContent(parada.nombre);
-            actualizarListaParadas();
-        });
-
-    marcadores.push(marcador);
-});
-
-actualizarListaParadas();
+const paradas = [], marcadores = [];
 
 map.on('contextmenu', e => {
-    // Limpiar el campo de texto del modal cada vez que se abra
     document.getElementById('nombre-parada').value = '';
 
-    // Mostrar el modal para crear la parada
     const modal = new bootstrap.Modal(document.getElementById('modalCrearParada'));
     modal.show();
 
-    // Guardar la ubicación de la parada al abrir el modal
     const ubicacion = { lat: e.latlng.lat, lng: e.latlng.lng };
 
-    // Agregar la parada al hacer clic en el botón de "Crear Parada"
     document.getElementById('guardar-parada').onclick = function () {
         const nombre = document.getElementById('nombre-parada').value.trim();
         const color = document.getElementById('color-parada').value;
@@ -97,7 +62,6 @@ map.on('contextmenu', e => {
     };
 });
 
-
 function actualizarListaParadas() {
     const lista = document.getElementById('paradas-list');
     lista.innerHTML = '';
@@ -106,11 +70,10 @@ function actualizarListaParadas() {
     const alerta = document.getElementById('sin-paradas-alerta');
 
     if (paradas.length === 0) {
-        // Mostrar mensaje de alerta si no hay paradas
         if (!alerta) {
             const div = document.createElement("div");
             div.id = "sin-paradas-alerta";
-            div.className = "alert alert-warning text-center";
+            div.className = "alert alert-primary text-center";
             div.innerHTML = `<strong>¡No hay paradas creadas!</strong><br>Haz clic derecho en el mapa para crear una.`;
             lista.appendChild(div);
         }
@@ -153,7 +116,6 @@ function actualizarListaParadas() {
         lista.appendChild(li);
     });
 
-    // Inicializar tooltips para nombres largos
     document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => new bootstrap.Tooltip(el));
 
     document.getElementById('paradas-input').value = JSON.stringify(paradas);
@@ -161,21 +123,16 @@ function actualizarListaParadas() {
 
 
 function editarParada(index) {
-    // Guardar el índice de la parada seleccionada para usarlo después
     const paradaIndex = index;
 
-    // Obtener el nombre de la parada a editar
     const nombreParada = paradas[paradaIndex].nombre;
 
-    // Rellenar el campo de texto del modal con el nombre actual
     document.getElementById('nombre-parada-edit').value = nombreParada;
     document.getElementById('color-parada-edit').value = paradas[paradaIndex].color;
 
-    // Mostrar el modal de edición
     const modal = new bootstrap.Modal(document.getElementById('modalEditarParada'));
     modal.show();
 
-    // Añadir un listener para el botón "Guardar" del modal
     const guardarBtn = document.getElementById('guardar-edicion');
     guardarBtn.onclick = () => guardarEdicion(paradaIndex);
 }
@@ -218,28 +175,22 @@ function guardarEdicion(paradaIndex) {
 }
 
 function eliminarParada(index) {
-    // Guardar el índice de la parada seleccionada para usarlo después
     const paradaIndex = index;
 
-    // Mostrar el modal de confirmación
     const modal = new bootstrap.Modal(document.getElementById('modalConfirmarEliminar'));
     modal.show();
 
-    // Añadir un listener para el botón "Eliminar" del modal
     const eliminarBtn = document.querySelector('#modalConfirmarEliminar .btn-danger');
     eliminarBtn.onclick = () => confirmarEliminacion(paradaIndex);
 }
 
 function confirmarEliminacion(paradaIndex) {
-    // Eliminar el marcador y la parada de las listas
     marcadores[paradaIndex].remove();
     paradas.splice(paradaIndex, 1);
     marcadores.splice(paradaIndex, 1);
 
-    // Actualizar la lista de paradas en la interfaz
     actualizarListaParadas();
 
-    // Cerrar el modal después de la eliminación
     const modal = bootstrap.Modal.getInstance(document.getElementById('modalConfirmarEliminar'));
     modal.hide();
 }
@@ -255,12 +206,10 @@ new Sortable(document.getElementById('paradas-list'), {
     }
 });
 
-
 document.querySelector("form").addEventListener("submit", e => {
     if (paradas.length === 0) {
-        e.preventDefault(); // Prevenir el envío del formulario
+        e.preventDefault();
         const modal = new bootstrap.Modal(document.getElementById('modalConfirmarParadas'));
-        modal.show(); // Mostrar el modal personalizado
+        modal.show();
     }
 });
-

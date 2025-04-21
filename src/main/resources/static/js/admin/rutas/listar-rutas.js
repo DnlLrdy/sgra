@@ -28,7 +28,7 @@ function mostrarParadas(paradas) {
 
     paradas.forEach((parada, index) => {
         const latLng = [parada.latitud, parada.longitud];
-    
+
         const iconoPersonalizado = L.icon({
             iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-${parada.color}.png`,
             shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
@@ -37,14 +37,14 @@ function mostrarParadas(paradas) {
             popupAnchor: [1, -34],
             shadowSize: [41, 41]
         });
-    
+
         const marker = L.marker(latLng, { icon: iconoPersonalizado })
             .bindPopup(`<strong>${parada.nombre}</strong>`)
             .addTo(map);
-    
+
         marcadores.push(marker);
         bounds.push(latLng);
-    
+
         const isLongName = parada.nombre.length > 30;
         const item = document.createElement('li');
         item.className = 'list-group-item';
@@ -60,14 +60,13 @@ function mostrarParadas(paradas) {
             map.setView(latLng, 18);
             marker.openPopup();
         });
-    
+
         lista.appendChild(item);
     });
 
     document.getElementById('paradas-container').classList.remove('d-none');
     map.fitBounds(bounds);
 
-    // Inicializar tooltips para nombres largos
     document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => new bootstrap.Tooltip(el));
 }
 
@@ -90,7 +89,6 @@ document.getElementById('selector-rutas').addEventListener('change', function ()
     }
 });
 
-// Inicializar paradas al cargar la página
 document.addEventListener("DOMContentLoaded", function () {
     if (rutas.length > 0) {
         const selector = document.getElementById("selector-rutas");
