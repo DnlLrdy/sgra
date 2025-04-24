@@ -12,7 +12,41 @@ const map = L.map('map', {
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-const paradas = [], marcadores = [];
+let paradas = [];
+let marcadores = [];
+
+if (paradasJson && paradasJson.trim()) {
+    paradas = JSON.parse(paradasJson);
+
+    paradas.forEach(parada => {
+        const iconoPersonalizado = L.icon({
+            iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-${parada.color}.png`,
+            shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+        });
+
+        const marcador = L.marker([parada.latitud, parada.longitud], {
+            draggable: true,
+            icon: iconoPersonalizado
+        })
+            .addTo(map)
+            .bindPopup(parada.nombre)
+            .on('dragend', event => {
+                const { lat, lng } = event.target.getLatLng();
+                parada.latitud = lat;
+                parada.longitud = lng;
+                marcador.setPopupContent(parada.nombre);
+                actualizarListaParadas();
+            });
+
+        marcadores.push(marcador);
+    });
+
+    actualizarListaParadas();
+}
 
 map.on('contextmenu', e => {
     document.getElementById('nombre-parada').value = '';
@@ -23,7 +57,7 @@ map.on('contextmenu', e => {
     const ubicacion = { lat: e.latlng.lat, lng: e.latlng.lng };
 
     document.getElementById('guardar-parada').onclick = function () {
-        const nombre = document.getElementById('nombre-parada').value.trim();
+        const nombre = document.getElementById('nombre-parada').value;
         const color = document.getElementById('color-parada').value;
 
         if (nombre) {
@@ -206,10 +240,4 @@ new Sortable(document.getElementById('paradas-list'), {
     }
 });
 
-document.querySelector("form").addEventListener("submit", e => {
-    if (paradas.length === 0) {
-        e.preventDefault();
-        const modal = new bootstrap.Modal(document.getElementById('modalConfirmarParadas'));
-        modal.show();
-    }
-});
+

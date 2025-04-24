@@ -12,8 +12,8 @@ const map = L.map('map', {
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-const paradas = JSON.parse(paradasJson);
-const marcadores = [];
+let paradas = JSON.parse(paradasJson);
+let marcadores = [];
 
 paradas.forEach(parada => {
     const iconoPersonalizado = L.icon({

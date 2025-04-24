@@ -74,3 +74,11 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+.swal-popup {
+    border-radius: 15px;
+    padding: 12px 20px;
+    font-size: 1rem;
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
