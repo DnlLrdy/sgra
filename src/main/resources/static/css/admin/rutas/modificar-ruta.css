@@ -6,7 +6,7 @@
 }
 
 #paradas-list {
-    max-height: 200px;
+    max-height: 600px;
     overflow-y: auto;
     padding-right: 8px;
 }
@@ -37,7 +37,6 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    cursor: move;
 }
 
 .text-truncate-container {
@@ -50,7 +49,7 @@
     border-radius: 40px;
     padding: 6px 12px;
     font-size: 0.9rem;
-    transition: all 0.3s;
+    transition: transform 0.3s;
 }
 
 .btn:hover {
@@ -73,4 +72,12 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.swal-popup {
+    border-radius: 15px;
+    padding: 12px 20px;
+    font-size: 1rem;
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }

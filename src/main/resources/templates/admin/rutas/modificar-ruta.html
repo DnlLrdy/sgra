@@ -3,11 +3,15 @@
 
 <head>
     <title>SGRA</title>
+
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.19.1/dist/sweetalert2.all.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.19.1/dist/sweetalert2.min.css" rel="stylesheet">
+
     <link rel="stylesheet" href="../../../static/css/admin/rutas/modificar-ruta.css">
     <link rel="stylesheet" th:href="@{/css/admin/rutas/modificar-ruta.css}">
 </head>
@@ -15,9 +19,7 @@
 <body class="bg-light">
     <div class="container-fluid mt-5">
         <div class="row">
-
             <div class="col-md-8">
-
                 <div class="card shadow">
                     <div
                         class="card-header bg-warning text-white d-flex justify-content-between align-items-center flex-wrap">
@@ -31,16 +33,16 @@
                             </button>
                         </div>
                     </div>
+
                     <div class="card-body">
-                        <form id="form-ruta" th:action="@{/sgra/admin/rutas/actualizar}" th:object="${ruta}"
+                        <form id="form-ruta" th:action="@{/sgra/admin/rutas/actualizar}" th:object="${rutaDTO}"
                             method="post">
                             <div class="mb-3">
                                 <label class="form-label">Nombre de la ruta</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="bi bi-map"></i></span>
-                                    <input type="text" minlength="1" maxlength="100" pattern="^(?!\s)(.*\S.*)$"
-                                        th:field="*{nombre}" class="form-control"
-                                        placeholder="Ingrese el nuevo nombre de la ruta" required />
+                                    <input type="text" th:field="*{nombre}" class="form-control"
+                                        placeholder="Ingrese el nuevo nombre de la ruta" maxlength="100" required />
                                 </div>
                             </div>
                             <input type="hidden" th:field="*{id}" />
@@ -49,15 +51,14 @@
                         </form>
                     </div>
                 </div>
-
             </div>
 
             <div class="col-md-4">
-
                 <div class="card shadow">
                     <div class="card-header bg-warning text-white">
                         <h3 class="mb-0"><i class="bi bi-list-ul"></i> Lista de paradas</h3>
                     </div>
+
                     <div class="card-body p-2">
                         <div id="paradas-container" class="mt-2">
                             <p id="texto-arrastrar" class="text-muted mb-2" style="font-size: 0.9rem; display: none;">
@@ -72,136 +73,51 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
 
-    <div class="modal fade" id="modalCrearParada" tabindex="-1" aria-labelledby="modalCrearParadaLabel"
-        aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content rounded-4 shadow-sm border-0">
-                <div class="modal-header bg-white border-bottom-0">
-                    <h5 class="modal-title text-info-emphasis fw-semibold" id="modalCrearParadaLabel">
-                        <i class="bi bi-plus-circle me-2"></i>
-                        Crear parada
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                </div>
-                <div class="modal-body text-muted fs-6">
-                    <label for="nombre-parada" class="form-label">Nombre de la parada</label>
-                    <input type="text" minlength="1" maxlength="100" pattern="^(?!\s)(.*\S.*)$" id="nombre-parada"
-                        class="form-control" placeholder="Ingrese el nombre de la parada" required>
-                    <label for="color-parada" class="form-label mt-3">Color del marcador</label>
-                    <select class="form-select" id="color-parada">
-                        <option value="blue" selected>Azul</option>
-                        <option value="gold">Dorado</option>
-                        <option value="red">Rojo</option>
-                        <option value="green">Verde</option>
-                        <option value="orange">Naranja</option>
-                        <option value="yellow">Amarillo</option>
-                        <option value="violet">Violeta</option>
-                        <option value="grey">Gris</option>
-                        <option value="black">Negro</option>
-                    </select>
-                </div>
-                <div class="modal-footer border-top-0 d-flex justify-content-between">
-                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">
-                        Cancelar
-                    </button>
-                    <button type="button" class="btn btn-success rounded-pill px-4" id="guardar-parada">
-                        Crear
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <div th:replace="admin/rutas/modales :: modalCrearParada"></div>
+    <div th:replace="admin/rutas/modales :: modalModificarParada"></div>
+    <div th:replace="admin/rutas/modales :: modalEliminarParada"></div>
 
-    <div class="modal fade" id="modalEditarParada" tabindex="-1" aria-labelledby="modalEditarParadaLabel"
-        aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content rounded-4 shadow-sm border-0">
-                <div class="modal-header bg-white border-bottom-0">
-                    <h5 class="modal-title text-warning-emphasis fw-semibold" id="modalEditarParadaLabel">
-                        <i class="bi bi-pencil-square me-2"></i>
-                        Modificar parada
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                </div>
-                <div class="modal-body text-muted fs-6">
-                    <label for="nombre-parada-edit" class="form-label">Nuevo nombre de la parada</label>
-                    <input type="text" minlength="1" maxlength="100" pattern="^(?!\s)(.*\S.*)$" id="nombre-parada-edit"
-                        class="form-control" placeholder="Ingrese el nuevo nombre de la parada" required>
-                    <label for="color-parada" class="form-label mt-3">Color del marcador</label>
-                    <select class="form-select" id="color-parada-edit">
-                        <option value="blue" selected>Azul</option>
-                        <option value="gold">Dorado</option>
-                        <option value="red">Rojo</option>
-                        <option value="green">Verde</option>
-                        <option value="orange">Naranja</option>
-                        <option value="yellow">Amarillo</option>
-                        <option value="violet">Violeta</option>
-                        <option value="grey">Gris</option>
-                        <option value="black">Negro</option>
-                    </select>
-                </div>
-                <div class="modal-footer border-top-0 d-flex justify-content-between">
-                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">
-                        Cancelar
-                    </button>
-                    <button type="button" class="btn btn-warning rounded-pill px-4" id="guardar-edicion">
-                        Modificar
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <div th:if="${mensajesError != null}" th:inline="javascript">
+        <script>
+            const errors = /*[[${mensajesError}]]*/[];
 
-    <div class="modal fade" id="modalConfirmarEliminar" tabindex="-1" aria-labelledby="modalEliminarLabel"
-        aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content rounded-4 shadow-sm border-0">
-                <div class="modal-header bg-white border-bottom-0">
-                    <h5 class="modal-title text-danger-emphasis fw-semibold" id="modalEliminarLabel">
-                        <i class="bi bi-exclamation-triangle-fill me-2 text-danger"></i>
-                        Eliminar parada
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                </div>
-                <div class="modal-body text-muted fs-6">
-                    ¿Estás seguro de que deseas eliminar esta parada?
-                    <div class="mt-1 small text-secondary">
-                        Esta acción no se puede deshacer.
-                    </div>
-                </div>
-                <div class="modal-footer border-top-0 d-flex justify-content-between">
-                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">
-                        Cancelar
-                    </button>
-                    <button type="button" class="btn btn-danger rounded-pill px-4" onclick="confirmarEliminacion()">
-                        Eliminar
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+            if (errors.length > 0) {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top',
+                    showConfirmButton: false,
+                    timer: 2500,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
+                    },
+                    customClass: { popup: 'swal-popup' },
+                });
 
-    <div class="modal fade" id="modalConfirmarParadas" tabindex="-1" aria-labelledby="modalConfirmarParadasLabel"
-        aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content rounded-4 shadow-sm border-0">
-                <div class="modal-header bg-white border-bottom-0">
-                    <h5 class="modal-title text-warning fw-semibold" id="modalConfirmarParadasLabel">
-                        <i class="bi bi-exclamation-circle-fill me-2 text-warning"></i>
-                        ¡Atención!
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                </div>
-                <div class="modal-body text-muted fs-6">
-                    Debes agregar al menos una parada antes de crear la ruta.
-                </div>
-            </div>
-        </div>
+                document.addEventListener('click', (e) => {
+                    if (!document.querySelector('.swal-popup').contains(e.target)) {
+                        Swal.close();
+                    }
+                });
+
+                let showAlert = (index) => {
+                    if (index < errors.length) {
+                        Toast.fire({
+                            icon: 'error',
+                            title: errors[index],
+                            iconColor: '#e74c3c',
+                        }).then(() => showAlert(index + 1));
+                    }
+                };
+
+                showAlert(0);
+            }
+        </script>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
@@ -211,10 +127,9 @@
         crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <script th:inline="javascript">
-        /*<![CDATA[*/
         var paradasJson = /*[[${paradasJson}]]*/[];
-        /*]]>*/
     </script>
+
     <script src="../../../static/js/admin/rutas/modificar-ruta.js"></script>
     <script th:src="@{/js/admin/rutas/modificar-ruta.js}"></script>
 </body>

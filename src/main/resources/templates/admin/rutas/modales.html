@@ -1,0 +1,124 @@
+<!-- Modal para crear parada -->
+<div th:fragment="modalCrearParada">
+    <div class="modal fade" id="modalCrearParada" tabindex="-1" aria-labelledby="modalCrearParadaLabel"
+        aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 shadow-sm border-0">
+                <!-- Header -->
+                <div class="modal-header bg-white border-bottom-0">
+                    <h5 class="modal-title text-info-emphasis fw-semibold" id="modalCrearParadaLabel">
+                        <i class="bi bi-plus-circle me-2"></i>Crear parada
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+
+                <!-- Body -->
+                <div class="modal-body text-muted fs-6">
+                    <label for="nombre-parada" class="form-label">Nombre de la parada</label>
+                    <input type="text" id="nombre-parada" class="form-control"
+                        placeholder="Ingrese el nombre de la parada" maxlength="255" required>
+
+                    <label for="color-parada" class="form-label mt-3">Color del marcador</label>
+                    <select class="form-select" id="color-parada">
+                        <option value="blue" selected>Azul</option>
+                        <option value="gold">Dorado</option>
+                        <option value="red">Rojo</option>
+                        <option value="green">Verde</option>
+                        <option value="orange">Naranja</option>
+                        <option value="yellow">Amarillo</option>
+                        <option value="violet">Violeta</option>
+                        <option value="grey">Gris</option>
+                        <option value="black">Negro</option>
+                    </select>
+                </div>
+
+                <!-- Footer -->
+                <div class="modal-footer border-top-0 d-flex justify-content-between">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4"
+                        data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success rounded-pill px-4" id="guardar-parada">Crear</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para modificar parada -->
+<div th:fragment="modalModificarParada">
+    <div class="modal fade" id="modalEditarParada" tabindex="-1" aria-labelledby="modalEditarParadaLabel"
+        aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 shadow-sm border-0">
+                <!-- Header -->
+                <div class="modal-header bg-white border-bottom-0">
+                    <h5 class="modal-title text-warning-emphasis fw-semibold" id="modalEditarParadaLabel">
+                        <i class="bi bi-pencil-square me-2"></i>Modificar parada
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+
+                <!-- Body -->
+                <div class="modal-body text-muted fs-6">
+                    <label for="nombre-parada-edit" class="form-label">Nuevo nombre de la parada</label>
+                    <input type="text" id="nombre-parada-edit" class="form-control"
+                        placeholder="Ingrese el nuevo nombre de la parada" maxlength="255" required>
+
+                    <label for="color-parada-edit" class="form-label mt-3">Color del marcador</label>
+                    <select class="form-select" id="color-parada-edit">
+                        <option value="blue" selected>Azul</option>
+                        <option value="gold">Dorado</option>
+                        <option value="red">Rojo</option>
+                        <option value="green">Verde</option>
+                        <option value="orange">Naranja</option>
+                        <option value="yellow">Amarillo</option>
+                        <option value="violet">Violeta</option>
+                        <option value="grey">Gris</option>
+                        <option value="black">Negro</option>
+                    </select>
+                </div>
+
+                <!-- Footer -->
+                <div class="modal-footer border-top-0 d-flex justify-content-between">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4"
+                        data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-warning rounded-pill px-4"
+                        id="guardar-edicion">Modificar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para eliminar parada -->
+<div th:fragment="modalEliminarParada">
+    <div class="modal fade" id="modalConfirmarEliminar" tabindex="-1" aria-labelledby="modalEliminarLabel"
+        aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 shadow-sm border-0">
+                <!-- Header -->
+                <div class="modal-header bg-white border-bottom-0">
+                    <h5 class="modal-title text-danger-emphasis fw-semibold" id="modalEliminarLabel">
+                        <i class="bi bi-trash me-2 text-danger"></i>Eliminar parada
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+
+                <!-- Body -->
+                <div class="modal-body text-muted fs-6">
+                    ¿Estás seguro de que deseas eliminar esta parada?
+                    <div class="mt-1 small text-secondary">
+                        Esta acción no se puede deshacer.
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="modal-footer border-top-0 d-flex justify-content-between">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4"
+                        data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger rounded-pill px-4"
+                        onclick="confirmarEliminacion()">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

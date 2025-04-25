@@ -1,22 +1,22 @@
 package com.project.sgra.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 
 @Data
 public class ParadaDTO {
 
-    @NotBlank(message = "El nombre de la parada es requerido")
+    @NotBlank(message = "El nombre no puede estar vacío")
+    @Size(max = 255, message = "El nombre no puede tener más de 255 caracteres")
     private String nombre;
 
-    @NotNull(message = "Latitud requerida")
+    @NotNull(message = "La latitud es obligatoria.")
     private Double latitud;
 
-    @NotNull(message = "Longitud requerida")
+    @NotNull(message = "La longitud es obligatoria.")
     private Double longitud;
 
-    @NotBlank(message = "Color requerido")
+    @NotBlank(message = "El color es obligatorio.")
     private String color;
 
 }
