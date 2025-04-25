@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>SGRA</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet" href="../../../static/css/admin/rutas/listar-rutas.css">
+    <link rel="stylesheet" th:href="@{/css/admin/rutas/listar-rutas.css}">
+</head>
+
+<body class="bg-light">
+    <div class="container-fluid mt-5">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card shadow">
+                    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                        <h3 class="mb-0"><i class="bi bi-geo-alt"></i> Lista de rutas</h3>
+                        <a th:href="@{/sgra/admin/rutas/crear}" class="btn btn-light text-dark">
+                            <i class="bi bi-plus-circle"></i> Crear una ruta
+                        </a>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="mb-3 d-flex gap-2">
+                            <select id="selector-rutas" class="form-select" th:disabled="${#lists.isEmpty(rutas)}">
+                                <option th:if="${#lists.isEmpty(rutas)}" value="" disabled selected>¡No hay rutas
+                                    creadas!</option>
+                                <option th:each="ruta : ${rutas}" th:value="${ruta.id}" th:text="${ruta.nombre}">
+                                </option>
+                            </select>
+                            <form id="form-editar" th:action="@{/sgra/admin/rutas/modificar}" method="post"
+                                style="display: none;">
+                                <input type="hidden" name="id" id="ruta-id-editar">
+                                <button type="submit" class="btn btn-outline-warning">
+                                    <i class="bi bi-pencil-square"></i>
+                                </button>
+                            </form>
+                            <form id="form-eliminar" th:action="@{/sgra/admin/rutas/eliminar}" method="post"
+                                style="display: none;">
+                                <input type="hidden" name="id" id="ruta-id-eliminar">
+                                <button type="button" class="btn btn-outline-danger" onclick="mostrarModalEliminar()">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                        <div id="map" class="mb-4"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow">
+                    <div class="card-header bg-dark text-white">
+                        <h3 class="mb-0"><i class="bi bi-list-ul"></i> Lista de paradas</h3>
+                    </div>
+
+                    <div class="card-body p-2">
+                        <div id="paradas-container" class="mt-2">
+                            <ul id="paradas-list" class="list-group">
+                                <div th:if="${#lists.isEmpty(rutas)}" class="alert alert-dark text-center" role="alert">
+                                    <strong>¡No hay paradas creadas!</strong><br>
+                                    Crea una ruta para crear paradas.
+                                </div>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalConfirmarEliminar" tabindex="-1" aria-labelledby="modalEliminarLabel"
+        aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 shadow-sm border-0">
+                <div class="modal-header bg-white border-bottom-0">
+                    <h5 class="modal-title text-danger-emphasis fw-semibold" id="modalEliminarLabel">
+                        <i class="bi bi-exclamation-triangle-fill me-2 text-danger"></i>
+                        Eliminar ruta
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body text-muted fs-6">
+                    ¿Estás seguro de que deseas eliminar esta ruta? También se eliminarán todas sus paradas asociadas.
+                    <div class="mt-1 small text-secondary">
+                        Esta acción no se puede deshacer.
+                    </div>
+                </div>
+                <div class="modal-footer border-top-0 d-flex justify-content-between">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+                    <button type="button" class="btn btn-danger rounded-pill px-4" onclick="confirmarEliminacion()">
+                        Eliminar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var rutas = /*[[${rutas}]]*/[];
+        /*]]>*/
+    </script>
+
+    <script src="../../../static/js/admin/rutas/listar-rutas.js"></script>
+    <script th:src="@{/js/admin/rutas/listar-rutas.js}"></script>
+</body>
+
+</html>
