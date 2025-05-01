@@ -40,10 +40,10 @@ public class RutaService {
             rutaDTO.setParadas(paradas);
 
             if (paradas.isEmpty()) {
-                bindingResult.rejectValue("paradas", null, "Debes crear al menos una parada a la ruta.");
+                bindingResult.rejectValue("paradas", null, "Debes crear al menos una parada en la ruta.");
             }
         } catch (Exception e) {
-            bindingResult.rejectValue("paradas", null, "Debes crear al menos una parada a la ruta.");
+            bindingResult.rejectValue("paradas", null, "Debes crear al menos una parada en la ruta.");
         }
 
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();

@@ -5,16 +5,20 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@Document(collection = "rutas")
-public class Ruta {
+@Document(collection = "token_restablecer_contraseña")
+public class TokenRestablecerContraseña {
 
     @Id
     private String id;
-    private String nombre;
-    private List<Parada> paradas;
+
+    private String token;
+
+    private String emailUsuario;
+
+    private LocalDateTime fechaExpiracion;
 
 }

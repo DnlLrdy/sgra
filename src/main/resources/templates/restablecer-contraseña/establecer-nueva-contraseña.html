@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Establecer Nueva Contraseña</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.19.1/dist/sweetalert2.all.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.19.1/dist/sweetalert2.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Nunito Sans', sans-serif;
+            background-color: #e9ecef;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: #fff;
+            padding: 3rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            max-width: 400px;
+        }
+
+        .form-label,
+        .text-title,
+        .text-muted-small {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .text-title {
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .form-control {
+            border-radius: 10px;
+            padding: 12px 16px;
+        }
+
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            padding: 12px 20px;
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .mt-4,
+        .mt-3 {
+            margin-top: 2rem;
+        }
+
+        .swal-popup {
+            border-radius: 15px;
+            padding: 12px 20px;
+            font-size: 1rem;
+            background-color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-card">
+        <h2 class="text-title">Establecer Nueva Contraseña</h2>
+        <p class="text-muted-small mb-4">Ingresa tu nueva contraseña</p>
+        <form th:action="@{/sgra/establecer-nueva-contraseña/estableciendo-nueva-contraseña}" method="post" th:object="${establecerNuevaContraseñaDTO}">
+            <div class="mb-3">
+                <label for="nuevaContrasena" class="form-label">Nueva Contraseña</label>
+                <input type="password" class="form-control" id="nuevaContrasena" name="nuevaContraseña" placeholder="Nueva contraseña" th:field="*{nuevaContraseña}">
+            </div>
+        
+            <div class="mb-3">
+                <label for="confirmarNuevaContrasena" class="form-label">Confirmar nueva Contraseña</label>
+                <input type="password" class="form-control" id="confirmarContrasena" name="confirmarNuevaContraseña" placeholder="Confirmar contraseña" th:field="*{confirmarNuevaContraseña}">
+            </div>
+
+            <input type="hidden" id="token" name="token" th:field="*{token}" />
+        
+            <div class="d-grid mt-4">
+                <button type="submit" class="btn btn-primary">Establecer Contraseña</button>
+            </div>
+        
+            <div class="mt-3 text-center">
+                <span class="text-muted-small"><a th:href="@{/sgra/login}">Volver al inicio de sesión</a></span>
+            </div>
+        </form>        
+    </div>
+
+    <div class="modal fade" id="modalErrores" tabindex="-1" aria-labelledby="modalErroresLabel" aria-hidden="true"
+    data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 shadow-sm border-0">
+            <div class="modal-header bg-white border-bottom-0">
+                <h5 class="modal-title text-danger-emphasis fw-semibold" id="modalErroresLabel">
+                    <i class="bi bi-x-circle me-2 text-danger"></i>Errores
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+
+            <div class="modal-body fs-6">
+                <ul class="list-unstyled">
+                    <li th:each="error, stat : ${mensajesError}" th:text="'#' + ${stat.index + 1} + ': ' + ${error}"
+                        class="border-bottom py-3">
+                        <strong class="text-danger"><span th:text="'Error #' + ${stat.index + 1}"></span>:</strong>
+                        <span th:text="${error}"></span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="modal-footer border-top-0 d-flex justify-content-end">
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script th:inline="javascript">
+        $(document).ready(function () {
+            const errors = /*[[${mensajesError}]]*/ null;
+            if (errors && errors.length > 0) {
+                const modalErrores = new bootstrap.Modal(document.getElementById('modalErroresRegistro'));
+                modalErrores.show();
+            }
+        });
+    </script>
+
+<div th:if="${mensajesError != null && !mensajesError.isEmpty()}" th:inline="javascript">
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            new bootstrap.Modal(document.getElementById('modalErrores')).show();
+        });
+    </script>
+</div>
+</body>
+
+</html>
