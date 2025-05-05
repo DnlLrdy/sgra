@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Establecer Nueva Contraseña - [Nombre de tu Aplicación/Sitio]</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.19.1/dist/sweetalert2.all.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.19.1/dist/sweetalert2.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #e0f7fa 0%, #c5cae9 100%);
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .reset-container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            transform: translateY(-20px);
+            animation: fadeInSlideDown 0.5s ease-out forwards 0.2s;
+        }
+
+        @keyframes fadeInSlideDown {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .reset-title {
+            font-size: 2.2rem;
+            font-weight: 300;
+            color: #37474f;
+            text-align: center;
+            margin-bottom: 35px;
+            opacity: 0;
+            transform: translateY(-10px);
+            animation: fadeInSlideDown 0.4s ease-out forwards 0.4s;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-label {
+            font-weight: 400;
+            color: #546e7a;
+            margin-bottom: 6px;
+            display: block;
+            font-size: 0.95rem;
+            opacity: 0;
+            transform: translateY(-5px);
+            animation: fadeInSlideDown 0.3s ease-out forwards 0.6s;
+        }
+
+        .input-wrapper {
+            position: relative;
+            opacity: 0;
+            transform: translateY(-5px);
+            animation: fadeInSlideDown 0.3s ease-out forwards 0.7s;
+        }
+
+        .form-control {
+            border: 1px solid #cfd8dc;
+            border-radius: 8px;
+            padding: 10px 14px;
+            padding-left: 35px;
+            font-size: 1rem;
+            width: 100%;
+            box-sizing: border-box;
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+
+        .form-control:focus {
+            border-color: #64b5f6;
+            box-shadow: 0 0 0 0.2rem rgba(100, 181, 246, 0.25);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #78909c;
+            font-size: 1rem;
+        }
+
+        .password-wrapper .form-control {
+            padding-right: 35px;
+        }
+
+        .password-toggle-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #78909c;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: #4caf50;
+            /* Verde para "Guardar" o "Restablecer" */
+            border-color: #4caf50;
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 400;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, transform 0.1s ease-in-out;
+            width: 100%;
+            margin-top: 30px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transform: scale(0.95);
+            animation: fadeInScaleUp 0.3s ease-out forwards 0.8s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        @keyframes fadeInScaleUp {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .btn-primary:hover {
+            background-color: #388e3c;
+            border-color: #388e3c;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            transform: scale(1.02);
+        }
+
+        .swal-popup {
+            border-radius: 16px;
+            /* Igual que los bordes de las cards */
+            padding: 20px;
+            /* Un poco más de espacio interior */
+            font-size: 1rem;
+            background-color: #fff;
+            /* Fondo blanco, igual que las cards */
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            /* Misma sombra que las cards */
+            border: 1px solid #cfd8dc;
+            /* Un borde sutil, similar a los inputs */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="reset-container">
+        <h2 class="reset-title">Establecer Nueva Contraseña</h2>
+        <form th:action="@{/sgra/establecer-nueva-contraseña/estableciendo-nueva-contraseña}" th:method="post"
+            th:object="${establecerNuevaContraseñaDTO}">
+            <div class="form-group">
+                <label for="newPassword" class="form-label">Nueva Contraseña</label>
+                <div class="input-wrapper password-wrapper">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="password" class="form-control" id="newPassword" th:field="*{nuevaContraseña}"
+                        placeholder="Ingresa tu nueva contraseña">
+                    <i class="fas fa-eye password-toggle-icon" id="toggleNewPassword"></i>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="confirmNewPassword" class="form-label">Confirmar Nueva Contraseña</label>
+                <div class="input-wrapper password-wrapper">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="password" class="form-control" id="confirmNewPassword"
+                        th:field="*{confirmarNuevaContraseña}" placeholder="Confirma tu nueva contraseña">
+                    <i class="fas fa-eye password-toggle-icon" id="toggleConfirmNewPassword"></i>
+                </div>
+            </div>
+
+            <div>
+                <input type="hidden" th:field="*{token}" />
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-sync-alt"></i> Restablecer Contraseña
+            </button>
+        </form>
+    </div>
+
+    <script>
+        const newPasswordInput = document.getElementById('newPassword');
+        const toggleNewPasswordIcon = document.getElementById('toggleNewPassword');
+        const confirmNewPasswordInput = document.getElementById('confirmNewPassword');
+        const toggleConfirmNewPasswordIcon = document.getElementById('toggleConfirmNewPassword');
+
+        function togglePasswordVisibility(inputElement, iconElement) {
+            const type = inputElement.getAttribute('type') === 'password' ? 'text' : 'password';
+            inputElement.setAttribute('type', type);
+            iconElement.classList.toggle
+            iconElement.classList.toggle('fa-eye');
+            iconElement.classList.toggle('fa-eye-slash');
+        }
+
+        toggleNewPasswordIcon.addEventListener('click', function () {
+            togglePasswordVisibility(newPasswordInput, this);
+        });
+
+        toggleConfirmNewPasswordIcon.addEventListener('click', function () {
+            togglePasswordVisibility(confirmNewPasswordInput, this);
+        });
+    </script>
+
+<div th:if="${mensajesError != null}" th:inline="javascript">
+    <script>
+        const errors = /*[[${mensajesError}]]*/[];
+        if (errors.length > 0) {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top',
+                showConfirmButton: false,
+                timer: 3500,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer);
+                    toast.addEventListener('mouseleave', Swal.resumeTimer);
+                },
+                customClass: { popup: 'swal-popup' },
+            });
+            document.addEventListener('click', (e) => {
+                if (!document.querySelector('.swal-popup').contains(e.target)) {
+                    Swal.close();
+                }
+            });
+            let showAlert = (index) => {
+                if (index < errors.length) {
+                    Toast.fire({
+                        icon: 'error',
+                        title: errors[index],
+                        iconColor: '#e74c3c',
+                    }).then(() => showAlert(index + 1));
+                }
+            };
+            showAlert(0);
+        }
+    </script>
+</div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

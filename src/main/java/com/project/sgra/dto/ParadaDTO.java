@@ -1,13 +1,15 @@
 package com.project.sgra.dto;
 
 import jakarta.validation.constraints.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class ParadaDTO {
 
-    @NotBlank(message = "El nombre no puede estar vacío")
-    @Size(max = 255, message = "El nombre no puede tener más de 255 caracteres")
+    @NotBlank(message = "El nombre de la parada no puede estar vacío.")
+    @Size(max = 255, message = "El nombre de la parada no puede tener más de 255 caracteres.")
     private String nombre;
 
     @NotNull(message = "La latitud es obligatoria.")

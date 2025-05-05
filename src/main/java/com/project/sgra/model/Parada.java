@@ -1,8 +1,10 @@
 package com.project.sgra.model;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class Parada {
 
     private String nombre;
