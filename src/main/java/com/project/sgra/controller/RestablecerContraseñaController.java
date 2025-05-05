@@ -43,16 +43,14 @@ public class RestablecerContraseñaController {
     }
 
     @PostMapping("/restableciendo-contraseña")
-    public String restableciendoContraseña(@RequestParam String email, Model model, RedirectAttributes redirectAttributes) {
+    public String restableciendoContraseña(@RequestParam("email") String email, Model model, RedirectAttributes redirectAttributes) {
         if (email == null || email.trim().isEmpty()) {
             model.addAttribute("mensajeError", "El email no puede estar vacío.");
             return "restablecer-contraseña/restablecer-contraseña";
         }
 
-        // Verificar si el correo está en Usuario
         Optional<Usuario> usuario = usuarioRepository.findByEmail(email);
 
-        // Verificar si el correo está en Conductor
         Optional<Conductor> conductor = conductorRepository.findByEmail(email);
 
         if (usuario.isEmpty() && conductor.isEmpty()) {
