@@ -73,3 +73,82 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+#autobuses-list {
+    max-height: 600px;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+#autobuses-list li {
+    padding: 8px 12px;
+    margin-bottom: 8px;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+    font-size: 0.9rem;
+}
+
+#autobuses-list li:hover {
+    background-color: #e2e6ea;
+    transform: translateY(-1px);
+}
+
+/* Estilo para el contenedor con scroll */
+#modal-autobuses-container {
+    max-height: 300px; /* Ajusta según lo que necesites */
+    overflow-y: auto;
+    padding-right: 30px; /* Para asegurar que la barra de desplazamiento no se sobreponga */
+}
+
+body {
+    font-family: 'Noto Sans JP', sans-serif;
+}
+
+/* Estilo para el checkbox personalizado */
+.custom-checkbox {
+    -webkit-appearance: none; /* Quita el estilo predeterminado */
+    -moz-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #333; /* Borde gris oscuro */
+    border-radius: 5px;
+    background-color: white;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* Cuando está seleccionado */
+.custom-checkbox:checked {
+    background-color: #333; /* Fondo negro */
+    border-color: #333; /* Borde negro */
+}
+
+.custom-checkbox:checked::before {
+    content: "";
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 8px;
+    height: 8px;
+    background-color: white; /* Círculo blanco */
+    border-radius: 50%;
+}
+
+/* Efecto hover */
+.custom-checkbox:hover {
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* Sombra oscura */
+}
+
+/* Estilo cuando el checkbox no está seleccionado */
+.custom-checkbox:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.5); /* Borde de enfoque oscuro */
+}

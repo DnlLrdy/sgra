@@ -1,0 +1,142 @@
+<!-- Modal para crear autobús -->
+<div th:fragment="modalCrearAutobus">
+    <div class="modal fade" id="modalCrearAutobus" tabindex="-1" aria-labelledby="modalCrearAutobusLabel"
+        aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 shadow-sm border-0">
+                <!-- Header -->
+                <div class="modal-header bg-white border-bottom-0">
+                    <h5 class="modal-title text-info-emphasis fw-semibold" id="modalCrearAutobusLabel">
+                        <i class="bi bi-plus-circle me-2"></i>Crear autobús
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+
+                <!-- Form -->
+                <form th:action="@{/sgra/admin/autobuses/guardar}" method="post" th:object="${autobus}">
+                    <!-- Body -->
+                    <div class="modal-body text-muted fs-6">
+                        <label for="matricula-autobus" class="form-label">Matrícula</label>
+                        <input type="text" id="matricula-autobus" name="matricula" class="form-control"
+                            th:field="*{matricula}" placeholder="Ingrese la matrícula del autobús" maxlength="20"
+                            required>
+
+                        <label for="modelo-autobus" class="form-label mt-3">Modelo</label>
+                        <input type="text" id="modelo-autobus" name="modelo" class="form-control" th:field="*{modelo}"
+                            placeholder="Ingrese el modelo del autobús" maxlength="100" required>
+
+                        <label for="capacidad-autobus" class="form-label mt-3">Capacidad</label>
+                        <input type="number" id="capacidad-autobus" name="capacidad" class="form-control"
+                            th:field="*{capacidad}" placeholder="Ingrese la capacidad del autobús" min="1" required>
+
+                        <label for="estado-autobus" class="form-label mt-3">Estado</label>
+                        <select id="estado-autobus" name="estado" class="form-select" th:field="*{estado}" required>
+                            <option value="Activo">Activo</option>
+                            <option value="En mantenimiento">En mantenimiento</option>
+                            <option value="Fuera de servicio">Fuera de servicio</option>
+                        </select>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="modal-footer border-top-0 d-flex justify-content-between">
+                        <button type="button" class="btn btn-outline-secondary rounded-pill px-4"
+                            data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-success rounded-pill px-4">Crear</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para modificar autobús -->
+<div th:fragment="modalModificarAutobus">
+    <div class="modal fade" id="modalEditarAutobus" tabindex="-1" aria-labelledby="modalEditarAutobusLabel"
+        aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 shadow-sm border-0">
+                <!-- Header -->
+                <div class="modal-header bg-white border-bottom-0">
+                    <h5 class="modal-title text-warning-emphasis fw-semibold" id="modalEditarAutobusLabel">
+                        <i class="bi bi-pencil-square me-2"></i>Modificar autobús
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+
+                <!-- Form -->
+                <form th:action="@{/sgra/admin/autobuses/actualizar}" method="post">
+                    <input type="hidden" id="autobus-id-edit" name="id" />
+
+                    <!-- Body -->
+                    <div class="modal-body text-muted fs-6">
+                        <label for="matricula-autobus-edit" class="form-label">Nueva matrícula</label>
+                        <input type="text" id="matricula-autobus-edit" name="matricula" class="form-control"
+                            placeholder="Ingrese la nueva matrícula del autobús" maxlength="20" required>
+
+                        <label for="modelo-autobus-edit" class="form-label mt-3">Nuevo modelo</label>
+                        <input type="text" id="modelo-autobus-edit" name="modelo" class="form-control"
+                            placeholder="Ingrese el nuevo modelo del autobús" maxlength="100" required>
+
+                        <label for="capacidad-autobus-edit" class="form-label mt-3">Nueva capacidad</label>
+                        <input type="number" id="capacidad-autobus-edit" name="capacidad" class="form-control"
+                            placeholder="Ingrese la nueva capacidad del autobús" min="1" required>
+
+                            <label for="estado-autobus" class="form-label mt-3">Estado</label>
+                            <select id="estado-autobus-edit" name="estado" class="form-select" required>
+                                <option value="Activo">Activo</option>
+                                <option value="En mantenimiento">En mantenimiento</option>
+                                <option value="Fuera de servicio">Fuera de servicio</option>
+                            </select>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="modal-footer border-top-0 d-flex justify-content-between">
+                        <button type="button" class="btn btn-outline-secondary rounded-pill px-4"
+                            data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-warning rounded-pill px-4">Modificar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal para eliminar autobús -->
+<div th:fragment="modalEliminarAutobus">
+    <div class="modal fade" id="modalConfirmarEliminarAutobus" tabindex="-1" aria-labelledby="modalEliminarAutobusLabel"
+        aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 shadow-sm border-0">
+                <!-- Header -->
+                <div class="modal-header bg-white border-bottom-0">
+                    <h5 class="modal-title text-danger-emphasis fw-semibold" id="modalEliminarAutobusLabel">
+                        <i class="bi bi-trash me-2 text-danger"></i>Eliminar autobús
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+
+                <!-- Form -->
+                <form th:action="@{/sgra/admin/autobuses/eliminar}" method="post">
+
+                    <input type="hidden" name="id" id="autobusIdEliminar">
+
+                    <!-- Body -->
+                    <div class="modal-body text-muted fs-6">
+                        ¿Estás seguro de que deseas eliminar este autobús?
+                        <div class="mt-1 small text-secondary">
+                            Esta acción no se puede deshacer.
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="modal-footer border-top-0 d-flex justify-content-between">
+                        <button type="button" class="btn btn-outline-secondary rounded-pill px-4"
+                            data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-danger rounded-pill px-4">Eliminar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

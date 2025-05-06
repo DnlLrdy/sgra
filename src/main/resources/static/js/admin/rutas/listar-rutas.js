@@ -89,9 +89,17 @@ document.getElementById('selector-rutas').addEventListener('change', function ()
     document.getElementById('paradas-list').innerHTML = ''; // Limpiar la lista de paradas
     document.getElementById('paradas-container').classList.add('d-none'); // Ocultar el contenedor de paradas
 
+    document.getElementById('autobuses-list').innerHTML = ''; // limpiar lista de autobuses
+    document.getElementById('autobuses-container').classList.add('d-none'); // ocultar contenedor
+
     const rutaSeleccionada = rutas.find(r => r.id === idSeleccionado); // Buscar la ruta seleccionada
+
     if (rutaSeleccionada) {
         mostrarParadas(rutaSeleccionada.paradas); // Mostrar las paradas de la ruta seleccionada
+
+        const autobusesConRutaSeleccionada = autobuses.filter(bus => bus.rutaId === rutaSeleccionada.id);
+        mostrarAutobuses(autobusesConRutaSeleccionada);
+
         // Mostrar los formularios de edición y eliminación para la ruta seleccionada
         document.getElementById("ruta-id-editar").value = idSeleccionado;
         document.getElementById("ruta-id-eliminar").value = idSeleccionado;
@@ -122,3 +130,111 @@ function mostrarModalEliminar() {
 function confirmarEliminacion() {
     document.getElementById('form-eliminar').submit(); // Enviar el formulario de eliminación
 }
+
+function mostrarAutobuses(autobuses) {
+    const lista = document.getElementById("autobuses-list");
+    const alerta = document.getElementById("alerta-sin-autobuses");
+    const contenedor = document.getElementById("autobuses-container");
+
+    lista.innerHTML = ''; // Limpiar la lista previa
+
+    if (!autobuses || autobuses.length === 0) {
+        alerta.classList.remove('d-none');
+        contenedor.classList.remove('d-none');
+        return;
+    }
+
+    alerta.classList.add('d-none'); // Ocultar la alerta si hay autobuses
+
+    autobuses.forEach((autobus, index) => {
+        const item = document.createElement('li');
+        item.className = 'list-group-item';
+        item.innerHTML = `
+        <div class="text-truncate-container">
+            <strong class="nombre-parada">${index + 1}. Matricula: ${autobus.matricula}</strong>
+            <small class="text-muted">Estado: ${autobus.estado}</small>
+        </div>
+        <button type="button" class="btn btn-outline-danger btn-sm ms-2" onclick="mostrarModalDesvincular('${autobus.id}')">
+            <i class="bi-arrow-left-right"></i>
+        </button>
+        `;
+        lista.appendChild(item);
+    });
+
+
+    contenedor.classList.remove('d-none'); // Mostrar el contenedor
+}
+
+
+function mostrarModalAutobuses() {
+    cargarAutobusesEnModal(); // Cargar autobuses antes de mostrar el modal
+    const modal = new bootstrap.Modal(document.getElementById('modalSeleccionarAutobuses'));
+    modal.show();
+}
+
+
+function cargarAutobusesEnModal() {
+    const contenedor = document.getElementById("modal-autobuses-container");
+    contenedor.innerHTML = ''; // Limpiar el contenedor
+
+    if (!autobuses || autobuses.length === 0) {
+        contenedor.innerHTML = '<div class="alert alert-dark text-center">No hay autobuses disponibles.</div>';
+        return;
+    }
+
+    // Filtrar autobuses sin ruta asignada
+    const autobusesDisponibles = autobuses.filter(autobus => !autobus.rutaId);
+
+    if (autobusesDisponibles.length === 0) {
+        contenedor.innerHTML = '<div class="alert alert-dark text-center">Todos los autobuses están asignados a una ruta.</div>';
+        return;
+    }
+
+    const selector = document.getElementById("selector-rutas");
+    const rutaId = selector.value;
+
+    const selectedOption = Array.from(selector.options).find(option => option.value === rutaId);
+    const rutaNombre = selectedOption ? selectedOption.text : null;
+
+    const inputId = document.getElementById("rutaId");
+    inputId.value = rutaId;
+
+    const inputNombre = document.getElementById("rutaNombre");
+    inputNombre.value = rutaNombre;
+
+    autobusesDisponibles.forEach((autobus) => {
+        const div = document.createElement('div');
+        div.className = 'form-check';
+        div.innerHTML = `
+<div class="d-flex align-items-center justify-content-between mb-2 p-2 border rounded-3 shadow-sm bg-light">
+  <div class="d-flex align-items-center">
+    <input class="form-check-input custom-checkbox me-2" type="checkbox" name="autobusesId" value="${autobus.id}" id="autobus-${autobus.id}">
+    <div class="text-truncate-container">
+      <strong class="nombre-parada">
+        Matrícula: ${autobus.matricula} - Modelo: ${autobus.modelo} - Capacidad: ${autobus.capacidad}
+      </strong>
+      <div>
+        <small class="text-muted">Estado: ${autobus.estado}</small>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+        const container = document.getElementById('modal-autobuses-container');
+        container.style.maxHeight = '500px'; // Limitar altura
+        container.style.overflowY = 'auto';  // Habilitar desplazamiento vertical
+
+
+        contenedor.appendChild(div);
+    });
+}
+
+function mostrarModalDesvincular(autobusId) {
+    const inputId = document.getElementById("autobusIdDesvincular");
+    inputId.value = autobusId;
+
+    const modal = new bootstrap.Modal(document.getElementById('modalConfirmarDesvinculacion'));
+    modal.show();
+}
+

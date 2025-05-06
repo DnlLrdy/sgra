@@ -1,0 +1,75 @@
+.card {
+    border-radius: 10px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    border-radius: 10px 10px 0 0;
+    padding: 12px 16px;
+    font-size: 0.95rem;
+}
+
+.btn {
+    border-radius: 40px;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    transition: transform 0.3s;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+}
+
+.bus-item {
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.bus-item:hover {
+    background-color: #e2e6ea;
+    transform: translateY(-2px);
+}
+
+.bus-info {
+    flex-grow: 1;
+    margin-right: 10px;
+    overflow: hidden;
+}
+
+.bus-info strong {
+    display: block;
+    font-size: 0.95rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.bus-actions button {
+    margin-left: 5px;
+}
+
+.bus-list {
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+
+.form-control[readonly],
+.form-control.bg-light {
+    border: 1px solid #dee2e6;
+    pointer-events: none;
+    background-color: #f8f9fa;
+    box-shadow: none;
+}
+
+body {
+    font-family: 'Noto Sans JP', sans-serif;
+}
