@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SGRA</title>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -44,9 +46,9 @@
     <div class="container-fluid mt-5">
         <div class="row">
             <div class="col-md-8">
-                <div class="card shadow">
-                    <div
-                        class="card-header bg-dark text-white d-flex justify-content-between align-items-center flex-wrap">
+                <!-- Tarjeta del formulario para crear una ruta -->
+                <div class="card shadow mb-3">
+                    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center flex-wrap">
                         <h3 class="mb-0"><i class="bi bi-geo-alt"></i> Crear una ruta</h3>
                         <div class="d-flex gap-2 mt-2 mt-md-0">
                             <a th:href="@{/sgra/admin/rutas}" class="btn btn-light text-dark">
@@ -57,10 +59,9 @@
                             </button>
                         </div>
                     </div>
-
+            
                     <div class="card-body">
-                        <form id="form-ruta" th:action="@{/sgra/admin/rutas/guardar}" th:object="${rutaDTO}"
-                            method="post">
+                        <form id="form-ruta" th:action="@{/sgra/admin/rutas/guardar}" th:object="${rutaDTO}" method="post">
                             <div class="mb-3">
                                 <label class="form-label">Nombre de la ruta</label>
                                 <div class="input-group">
@@ -70,11 +71,18 @@
                                 </div>
                             </div>
                             <input type="hidden" id="paradas-input" name="paradasJson" />
-                            <div id="map" class="mb-4"></div>
                         </form>
                     </div>
                 </div>
+            
+                <!-- Tarjeta del mapa -->
+                <div class="card shadow">
+                    <div class="card-body">
+                        <div id="map" class="mb-4"></div>
+                    </div>
+                </div>
             </div>
+            
 
             <div class="col-md-4">
                 <div class="card shadow">

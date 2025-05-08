@@ -95,20 +95,24 @@ document.getElementById('selector-rutas').addEventListener('change', function ()
     const rutaSeleccionada = rutas.find(r => r.id === idSeleccionado); // Buscar la ruta seleccionada
 
     if (rutaSeleccionada) {
-        mostrarParadas(rutaSeleccionada.paradas); // Mostrar las paradas de la ruta seleccionada
-
+        mostrarParadas(rutaSeleccionada.paradas);
         const autobusesConRutaSeleccionada = autobuses.filter(bus => bus.rutaId === rutaSeleccionada.id);
         mostrarAutobuses(autobusesConRutaSeleccionada);
-
-        // Mostrar los formularios de edición y eliminación para la ruta seleccionada
+    
         document.getElementById("ruta-id-editar").value = idSeleccionado;
         document.getElementById("ruta-id-eliminar").value = idSeleccionado;
         document.getElementById("form-editar").style.display = "inline-block";
         document.getElementById("form-eliminar").style.display = "inline-block";
+    
+        // Mostrar botón de vincular autobús
+        document.getElementById("btn-vincular-autobus").classList.remove("d-none");
     } else {
-        document.getElementById("form-editar").style.display = "none"; // Ocultar formulario de edición si no hay ruta
-        document.getElementById("form-eliminar").style.display = "none"; // Ocultar formulario de eliminación si no hay ruta
-    }
+        document.getElementById("form-editar").style.display = "none";
+        document.getElementById("form-eliminar").style.display = "none";
+    
+        // Ocultar botón de vincular autobús
+        document.getElementById("btn-vincular-autobus").classList.add("d-none");
+    }    
 });
 
 // Ejecutar al cargar la página
@@ -154,10 +158,12 @@ function mostrarAutobuses(autobuses) {
             <strong class="nombre-parada">${index + 1}. Matricula: ${autobus.matricula}</strong>
             <small class="text-muted">Estado: ${autobus.estado}</small>
         </div>
-        <button type="button" class="btn btn-outline-danger btn-sm ms-2" onclick="mostrarModalDesvincular('${autobus.id}')">
-            <i class="bi-arrow-left-right"></i>
-        </button>
+<button type="button" class="btn btn-outline-danger btn-sm ms-2" onclick="event.stopPropagation(); mostrarModalDesvincular('${autobus.id}')">
+    <i class="bi-arrow-left-right"></i>
+</button>
+
         `;
+        item.addEventListener("click", () => mostrarDetallesAutobus(autobus));
         lista.appendChild(item);
     });
 
@@ -179,6 +185,7 @@ function cargarAutobusesEnModal() {
 
     if (!autobuses || autobuses.length === 0) {
         contenedor.innerHTML = '<div class="alert alert-dark text-center">No hay autobuses disponibles.</div>';
+        document.getElementById("btn-seleccionar-autobuses").classList.add("d-none");
         return;
     }
 
@@ -187,6 +194,7 @@ function cargarAutobusesEnModal() {
 
     if (autobusesDisponibles.length === 0) {
         contenedor.innerHTML = '<div class="alert alert-dark text-center">Todos los autobuses están asignados a una ruta.</div>';
+        document.getElementById("btn-seleccionar-autobuses").classList.add("d-none");
         return;
     }
 
@@ -238,3 +246,11 @@ function mostrarModalDesvincular(autobusId) {
     modal.show();
 }
 
+
+function mostrarDetallesAutobus(autobus) {
+    document.getElementById("detalle-autobus-modelo").textContent = autobus.modelo
+    document.getElementById("detalle-autobus-capacidad").textContent = autobus.capacidad
+
+    const modal = new bootstrap.Modal(document.getElementById("modalDetallesAutobus"));
+    modal.show();
+}

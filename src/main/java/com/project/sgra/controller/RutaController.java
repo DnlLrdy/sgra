@@ -106,9 +106,18 @@ public class RutaController {
 
     @PostMapping("/eliminar")
     public String eliminarRuta(@RequestParam("id") String id) {
+        List<Autobus> autobuses = autobusRepository.findByRutaId(id);
+
+        for (Autobus autobus : autobuses) {
+            autobus.setRutaId("");
+            autobus.setRutaNombre("");
+        }
+
+        autobusRepository.saveAll(autobuses);
         rutaRepository.deleteById(id);
         return "redirect:/sgra/admin/rutas";
     }
+
 
     @PostMapping("/vincular")
     public String vincularAutobusRuta(@RequestParam("autobusesId") List<String> autobusesId,

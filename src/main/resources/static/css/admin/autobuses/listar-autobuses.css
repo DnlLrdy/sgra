@@ -73,3 +73,24 @@
 body {
     font-family: 'Noto Sans JP', sans-serif;
 }
+
+.bus-item.selected {
+    background-color: #e2e6ea; /* mismo color que el hover */
+    border: 2px solid #adb5bd; /* opcional: tono gris más suave */
+    transform: none; /* mantiene la posición */
+}
+
+
+
+.bus-item.selected:hover {
+    transform: none;
+}
+
+
+
+
+
+
+
+
+

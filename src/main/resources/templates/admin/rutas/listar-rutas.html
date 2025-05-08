@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SGRA</title>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -44,37 +46,41 @@
     <div class="container-fluid mt-5">
         <div class="row">
             <div class="col-md-8">
-                <div class="card shadow">
+                <!-- Tarjeta del selector de rutas -->
+                <div class="card shadow mb-3">
                     <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
-                        <h3 class="mb-0"><i class="bi bi-geo-alt"></i> Lista de rutas</h3>
+                        <h3 class="mb-0"><i class="bi bi-signpost-split"></i> Seleccionar ruta</h3>
                         <a th:href="@{/sgra/admin/rutas/crear}" class="btn btn-light text-dark">
                             <i class="bi bi-plus-circle"></i> Crear una ruta
                         </a>
                     </div>
+                    <div class="card-body d-flex gap-2">
+                        <select id="selector-rutas" class="form-select" th:disabled="${#lists.isEmpty(rutas)}">
+                            <option th:if="${#lists.isEmpty(rutas)}" value="" disabled selected>¡No hay rutas creadas!
+                            </option>
+                            <option th:each="ruta : ${rutas}" th:value="${ruta.id}" th:text="${ruta.nombre}"></option>
+                        </select>
+                        <form id="form-editar" th:action="@{/sgra/admin/rutas/modificar}" method="post"
+                            style="display: none;">
+                            <input type="hidden" name="id" id="ruta-id-editar">
+                            <button type="submit" class="btn btn-outline-warning">
+                                <i class="bi bi-pencil-square"></i>
+                            </button>
+                        </form>
+                        <form id="form-eliminar" th:action="@{/sgra/admin/rutas/eliminar}" method="post"
+                            style="display: none;">
+                            <input type="hidden" name="id" id="ruta-id-eliminar">
+                            <button type="button" class="btn btn-outline-danger" onclick="mostrarModalEliminar()">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
 
+
+                <!-- Tarjeta del mapa -->
+                <div class="card shadow">
                     <div class="card-body">
-                        <div class="mb-3 d-flex gap-2">
-                            <select id="selector-rutas" class="form-select" th:disabled="${#lists.isEmpty(rutas)}">
-                                <option th:if="${#lists.isEmpty(rutas)}" value="" disabled selected>¡No hay rutas
-                                    creadas!</option>
-                                <option th:each="ruta : ${rutas}" th:value="${ruta.id}" th:text="${ruta.nombre}">
-                                </option>
-                            </select>
-                            <form id="form-editar" th:action="@{/sgra/admin/rutas/modificar}" method="post"
-                                style="display: none;">
-                                <input type="hidden" name="id" id="ruta-id-editar">
-                                <button type="submit" class="btn btn-outline-warning">
-                                    <i class="bi bi-pencil-square"></i>
-                                </button>
-                            </form>
-                            <form id="form-eliminar" th:action="@{/sgra/admin/rutas/eliminar}" method="post"
-                                style="display: none;">
-                                <input type="hidden" name="id" id="ruta-id-eliminar">
-                                <button type="button" class="btn btn-outline-danger" onclick="mostrarModalEliminar()">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </form>
-                        </div>
                         <div id="map" class="mb-4"></div>
                     </div>
                 </div>
@@ -103,7 +109,8 @@
                 <div class="card shadow mt-4">
                     <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
                         <h3 class="mb-0"><i class="bi bi-bus-front"></i> Lista de autobuses</h3>
-                        <a class="btn btn-light text-dark" onclick="mostrarModalAutobuses()">
+                        <a id="btn-vincular-autobus" class="btn btn-light text-dark d-none"
+                            onclick="mostrarModalAutobuses()">
                             <i class="bi bi-plus-circle"></i> Vincular un autobus
                         </a>
                     </div>
@@ -153,42 +160,43 @@
         </div>
     </div>
 
-<!-- Modal para seleccionar autobuses -->
-<div th:fragment="modalSeleccionarAutobuses">
-    <div class="modal fade" id="modalSeleccionarAutobuses" tabindex="-1"
-        aria-labelledby="modalSeleccionarAutobusesLabel" aria-hidden="true" data-bs-backdrop="static"
-        data-bs-keyboard="false">
-        <div class="modal-dialog modal-lg modal-dialog-centered"> <!-- Modal más grande -->
-            <div class="modal-content rounded-4 shadow-sm border-0">
-                <!-- Header -->
-                <div class="modal-header bg-white border-bottom-0">
-                    <h5 class="modal-title text-black-emphasis fw-semibold" id="modalSeleccionarAutobusesLabel">
-                        <i class="bi bi-bus-front me-2"></i>Seleccionar Autobuses
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                </div>
+    <!-- Modal para seleccionar autobuses -->
+    <div th:fragment="modalSeleccionarAutobuses">
+        <div class="modal fade" id="modalSeleccionarAutobuses" tabindex="-1"
+            aria-labelledby="modalSeleccionarAutobusesLabel" aria-hidden="true" data-bs-backdrop="static"
+            data-bs-keyboard="false">
+            <div class="modal-dialog modal-lg modal-dialog-centered"> <!-- Modal más grande -->
+                <div class="modal-content rounded-4 shadow-sm border-0">
+                    <!-- Header -->
+                    <div class="modal-header bg-white border-bottom-0">
+                        <h5 class="modal-title text-black-emphasis fw-semibold" id="modalSeleccionarAutobusesLabel">
+                            <i class="bi bi-bus-front me-2"></i>Seleccionar Autobuses
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
 
-                <form th:action="@{/sgra/admin/rutas/vincular}" method="post">
-                    <input type="hidden" id="rutaId" name="rutaId" />
-                    <input type="hidden" id="rutaNombre" name="rutaNombre" />
+                    <form th:action="@{/sgra/admin/rutas/vincular}" method="post">
+                        <input type="hidden" id="rutaId" name="rutaId" />
+                        <input type="hidden" id="rutaNombre" name="rutaNombre" />
 
-                    <!-- Body -->
-                    <div class="modal-body text-muted fs-6">
-                        <div id="modal-autobuses-container">
+                        <!-- Body -->
+                        <div class="modal-body text-muted fs-6">
+                            <div id="modal-autobuses-container">
+                            </div>
                         </div>
-                    </div>
 
-                    <!-- Footer -->
-                    <div class="modal-footer border-top-0 d-flex justify-content-between">
-                        <button type="button" class="btn btn-outline-secondary rounded-pill px-4"
-                            data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-dark rounded-pill px-4">Agregar</button>
-                    </div>
-                </form>
+                        <!-- Footer -->
+                        <div class="modal-footer border-top-0 d-flex justify-content-between">
+                            <button type="button" class="btn btn-outline-secondary rounded-pill px-4"
+                                data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" id="btn-seleccionar-autobuses"
+                                class="btn btn-dark rounded-pill px-4">Agregar</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 
     <!-- Modal para desvincular autobús de la ruta -->
@@ -228,6 +236,30 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal Detalles Autobús -->
+    <div class="modal fade" id="modalDetallesAutobus" tabindex="-1" aria-labelledby="modalDetallesAutobusLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 shadow-sm border-0">
+                <div class="modal-header bg-white border-bottom-0">
+                    <h5 class="modal-title text-dark fw-semibold" id="modalDetallesAutobusLabel">
+                        <i class="bi bi-bus-front me-2"></i>Detalles del Autobús
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body text-muted fs-6">
+                    <p><strong>Modelo:</strong> <span id="detalle-autobus-modelo"></span></p>
+                    <p><strong>Capacidad:</strong> <span id="detalle-autobus-capacidad"></span></p>
+                </div>
+                <div class="modal-footer border-top-0">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4"
+                        data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"

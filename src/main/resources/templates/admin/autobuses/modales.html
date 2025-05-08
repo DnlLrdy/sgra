@@ -13,24 +13,23 @@
                 </div>
 
                 <!-- Form -->
-                <form th:action="@{/sgra/admin/autobuses/guardar}" method="post" th:object="${autobus}">
+                <form th:action="@{/sgra/admin/autobuses/guardar}" method="post" th:object="${autobusDTO}">
                     <!-- Body -->
                     <div class="modal-body text-muted fs-6">
                         <label for="matricula-autobus" class="form-label">Matrícula</label>
                         <input type="text" id="matricula-autobus" name="matricula" class="form-control"
-                            th:field="*{matricula}" placeholder="Ingrese la matrícula del autobús" maxlength="20"
-                            required>
+                            th:field="*{matricula}" placeholder="Ingrese la matrícula del autobús" oninput="this.value = this.value.toUpperCase();">
 
                         <label for="modelo-autobus" class="form-label mt-3">Modelo</label>
                         <input type="text" id="modelo-autobus" name="modelo" class="form-control" th:field="*{modelo}"
-                            placeholder="Ingrese el modelo del autobús" maxlength="100" required>
+                            placeholder="Ingrese el modelo del autobús">
 
                         <label for="capacidad-autobus" class="form-label mt-3">Capacidad</label>
                         <input type="number" id="capacidad-autobus" name="capacidad" class="form-control"
-                            th:field="*{capacidad}" placeholder="Ingrese la capacidad del autobús" min="1" required>
+                            th:field="*{capacidad}" placeholder="Ingrese la capacidad del autobús">
 
                         <label for="estado-autobus" class="form-label mt-3">Estado</label>
-                        <select id="estado-autobus" name="estado" class="form-select" th:field="*{estado}" required>
+                        <select id="estado-autobus" name="estado" class="form-select" th:field="*{estado}">
                             <option value="Activo">Activo</option>
                             <option value="En mantenimiento">En mantenimiento</option>
                             <option value="Fuera de servicio">Fuera de servicio</option>
@@ -64,25 +63,25 @@
                 </div>
 
                 <!-- Form -->
-                <form th:action="@{/sgra/admin/autobuses/actualizar}" method="post">
-                    <input type="hidden" id="autobus-id-edit" name="id" />
+                <form th:action="@{/sgra/admin/autobuses/actualizar}" method="post" th:object="${autobusDTO}">
+                    <input type="hidden" id="autobus-id-edit" name="id" th:field="*{id}"/>
 
                     <!-- Body -->
                     <div class="modal-body text-muted fs-6">
                         <label for="matricula-autobus-edit" class="form-label">Nueva matrícula</label>
-                        <input type="text" id="matricula-autobus-edit" name="matricula" class="form-control"
-                            placeholder="Ingrese la nueva matrícula del autobús" maxlength="20" required>
+                        <input type="text" id="matricula-autobus-edit" name="matricula" class="form-control" th:field="*{matricula}"
+                            placeholder="Ingrese la nueva matrícula del autobús" >
 
                         <label for="modelo-autobus-edit" class="form-label mt-3">Nuevo modelo</label>
-                        <input type="text" id="modelo-autobus-edit" name="modelo" class="form-control"
+                        <input type="text" id="modelo-autobus-edit" name="modelo" class="form-control" th:field="*{modelo}"
                             placeholder="Ingrese el nuevo modelo del autobús" maxlength="100" required>
 
-                        <label for="capacidad-autobus-edit" class="form-label mt-3">Nueva capacidad</label>
-                        <input type="number" id="capacidad-autobus-edit" name="capacidad" class="form-control"
-                            placeholder="Ingrese la nueva capacidad del autobús" min="1" required>
+                        <label for="capacidad-autobus-edit" class="form-label mt-3">Nueva capacidad</label> 
+                        <input type="number" id="capacidad-autobus-edit" name="capacidad" class="form-control" th:field="*{capacidad}"
+                            placeholder="Ingrese la nueva capacidad del autobús">
 
                             <label for="estado-autobus" class="form-label mt-3">Estado</label>
-                            <select id="estado-autobus-edit" name="estado" class="form-select" required>
+                            <select id="estado-autobus-edit" name="estado" class="form-select" th:field="*{estado}" >
                                 <option value="Activo">Activo</option>
                                 <option value="En mantenimiento">En mantenimiento</option>
                                 <option value="Fuera de servicio">Fuera de servicio</option>

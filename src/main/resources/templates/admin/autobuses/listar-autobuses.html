@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SGRA - Gestión de Autobuses</title>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -42,26 +44,9 @@
     </nav>
 
     <div class="container-fluid mt-5">
-        <div class="row">
-            <!-- Bus Detail Card -->
-            <div class="col-md-6">
-                <div class="card shadow">
-                    <div class="card-header bg-dark text-white">
-                        <h3 class="mb-0"><i class="bi bi-info-circle"></i> Detalles del autobús</h3>
-                    </div>
-                    <div class="card-body">
-                        <!-- Aquí se cargan dinámicamente los datos del autobús seleccionado -->
-                        <p><strong>Placa:</strong> <span id="detalle-placa">---</span></p>
-                        <p><strong>Modelo:</strong> <span id="detalle-modelo">---</span></p>
-                        <p><strong>Capacidad:</strong> <span id="detalle-capacidad">---</span></p>
-                        <p><strong>Estado:</strong> <span id="detalle-estado">---</span></p>
-                        <p><strong>Ruta:</strong> <span id="detalle-ruta">---</span></p>
-                    </div>
-                </div>
-            </div>
-
+        <div class="row justify-content-center"> <!-- Añadí la clase justify-content-center para centrar las cards -->
             <!-- Bus List Card -->
-            <div class="col-md-6">
+            <div class="col-md-5"> <!-- Puedes ajustar el tamaño de la columna aquí si lo deseas -->
                 <div class="card shadow">
                     <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
                         <h3 class="mb-0"><i class="bi bi-bus-front"></i> Lista de autobuses</h3>
@@ -70,7 +55,13 @@
                         </button>
                     </div>
                     <div class="card-body bus-list p-3">
-                        <!-- Lista de autobuses generada con Thymeleaf -->
+                        <!-- Mensaje cuando no hay rutas -->
+                        <div th:if="${#lists.isEmpty(autobuses)}" class="alert alert-dark text-center" role="alert">
+                            <strong>¡No hay autobuses agregados!</strong><br>
+                            Agreguelos.
+                        </div>
+                    
+                        <!-- Lista de autobuses -->
                         <div th:each="autobus : ${autobuses}" class="bus-item">
                             <div class="bus-info" th:data-matricula="${autobus.matricula}"
                                 th:data-modelo="${autobus.modelo}" th:data-capacidad="${autobus.capacidad}"
@@ -93,14 +84,109 @@
                             </div>
                         </div>
                     </div>
+                    
                 </div>
             </div>
+
+            <!-- Bus Detail Card -->
+            <div class="col-md-5"> <!-- Modifiqué el tamaño de la columna aquí también -->
+                <div class="card shadow">
+                    <div
+                        class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                        <h3 class="mb-0"><i class="bi bi-info-circle-fill me-2"></i>Detalles del autobús</h3>
+                    </div>
+                    <div class="card-body p-4">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex align-items-center">
+                                <i class="bi bi-upc-scan me-2 text-primary"></i>
+                                <strong class="me-2">Placa:</strong>
+                                <span id="detalle-placa">---</span>
+                            </li>
+                            <li class="list-group-item d-flex align-items-center">
+                                <i class="bi bi-truck-front me-2 text-success"></i>
+                                <strong class="me-2">Modelo:</strong>
+                                <span id="detalle-modelo">---</span>
+                            </li>
+                            <li class="list-group-item d-flex align-items-center">
+                                <i class="bi bi-people-fill me-2 text-warning"></i>
+                                <strong class="me-2">Capacidad:</strong>
+                                <span id="detalle-capacidad">---</span>
+                            </li>
+                            <li class="list-group-item d-flex align-items-center">
+                                <i class="bi bi-check-circle-fill me-2 text-info"></i>
+                                <strong class="me-2">Estado:</strong>
+                                <span id="detalle-estado">---</span>
+                            </li>
+                            <li class="list-group-item d-flex align-items-center">
+                                <i class="bi bi-map me-2 text-danger"></i>
+                                <strong class="me-2">Ruta:</strong>
+                                <span id="detalle-ruta">---</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
+
 
     <div th:replace="admin/autobuses/modales :: modalCrearAutobus"></div>
     <div th:replace="admin/autobuses/modales :: modalModificarAutobus"></div>
     <div th:replace="admin/autobuses/modales :: modalEliminarAutobus"></div>
+
+    <div th:if="${mensajesError != null}" th:inline="javascript">
+        <script>
+            const errors = /*[[${mensajesError}]]*/[];
+            if (errors.length > 0) {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top',
+                    showConfirmButton: false,
+                    timer: 3500,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
+                    },
+                    customClass: { popup: 'swal-popup' },
+                });
+                document.addEventListener('click', (e) => {
+                    if (!document.querySelector('.swal-popup').contains(e.target)) {
+                        Swal.close();
+                    }
+                });
+                let showAlert = (index) => {
+                    if (index < errors.length) {
+                        Toast.fire({
+                            icon: 'error',
+                            title: errors[index],
+                            iconColor: '#e74c3c',
+                        }).then(() => showAlert(index + 1));
+                    }
+                };
+                showAlert(0);
+            }
+        </script>
+    </div>
+
+    <div th:if="${abrirModalCrear != null}" th:inline="javascript">
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const modal = new bootstrap.Modal(document.getElementById('modalCrearAutobus'));
+                modal.show();
+            });
+        </script>
+    </div>
+
+    <div th:if="${abrirModalEditar != null}" th:inline="javascript">
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const modal = new bootstrap.Modal(document.getElementById('modalEditarAutobus'));
+                modal.show();
+            });
+        </script>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
