@@ -108,7 +108,7 @@ function actualizarListaParadas() {
         if (!alerta) {
             const div = document.createElement("div");
             div.id = "sin-paradas-alerta";
-            div.className = "alert alert-primary text-center";
+            div.className = "alert alert-dark text-center";
             div.innerHTML = `<strong>¡No hay paradas creadas!</strong><br>Haz clic derecho en el mapa para crear una.`;
             lista.appendChild(div);
         }
@@ -139,7 +139,7 @@ function actualizarListaParadas() {
                     <i class="bi bi-pencil-square"></i>
                 </button>
                 <button type="button" class="btn btn-sm btn-outline-danger" onclick="eliminarParada(${i})">
-                    <i class="bi bi-trash"></i>
+                    <i class="bi bi-trash"></i> 
                 </button>
             </div>
         `;

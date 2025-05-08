@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SGRA</title>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -11,32 +13,55 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.19.1/dist/sweetalert2.all.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.19.1/dist/sweetalert2.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="../../../static/css/admin/rutas/crear-ruta.css">
     <link rel="stylesheet" th:href="@{/css/admin/rutas/crear-ruta.css}">
 </head>
 
 <body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand">SGRA</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/sgra/admin/autobuses}">Autobuses</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link">Conductores</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-danger" th:href="@{/sgra/logout}">Cerrar sesión</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
     <div class="container-fluid mt-5">
         <div class="row">
             <div class="col-md-8">
-                <div class="card shadow">
-                    <div
-                        class="card-header bg-primary text-white d-flex justify-content-between align-items-center flex-wrap">
+                <!-- Tarjeta del formulario para crear una ruta -->
+                <div class="card shadow mb-3">
+                    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center flex-wrap">
                         <h3 class="mb-0"><i class="bi bi-geo-alt"></i> Crear una ruta</h3>
                         <div class="d-flex gap-2 mt-2 mt-md-0">
-                            <a th:href="@{/sgra/admin/rutas}" class="btn btn-light text-primary">
+                            <a th:href="@{/sgra/admin/rutas}" class="btn btn-light text-dark">
                                 <i class="bi bi-arrow-left"></i> Regresar
                             </a>
-                            <button type="submit" class="btn btn-light text-primary" form="form-ruta">
+                            <button type="submit" class="btn btn-light text-dark" form="form-ruta">
                                 <i class="bi bi-plus-circle"></i> Crear ruta
                             </button>
                         </div>
                     </div>
-
+            
                     <div class="card-body">
-                        <form id="form-ruta" th:action="@{/sgra/admin/rutas/guardar}" th:object="${rutaDTO}"
-                            method="post">
+                        <form id="form-ruta" th:action="@{/sgra/admin/rutas/guardar}" th:object="${rutaDTO}" method="post">
                             <div class="mb-3">
                                 <label class="form-label">Nombre de la ruta</label>
                                 <div class="input-group">
@@ -46,15 +71,22 @@
                                 </div>
                             </div>
                             <input type="hidden" id="paradas-input" name="paradasJson" />
-                            <div id="map" class="mb-4"></div>
                         </form>
                     </div>
                 </div>
+            
+                <!-- Tarjeta del mapa -->
+                <div class="card shadow">
+                    <div class="card-body">
+                        <div id="map" class="mb-4"></div>
+                    </div>
+                </div>
             </div>
+            
 
             <div class="col-md-4">
                 <div class="card shadow">
-                    <div class="card-header bg-primary text-white">
+                    <div class="card-header bg-dark text-white">
                         <h3 class="mb-0"><i class="bi bi-list-ul"></i> Lista de paradas</h3>
                     </div>
 
@@ -64,7 +96,7 @@
                                 Puedes arrastrar las paradas para cambiar el orden. <i class="bi bi-arrows-move"></i>
                             </p>
                             <ul id="paradas-list" class="list-group">
-                                <div id="sin-paradas-alerta" class="alert alert-primary text-center" role="alert">
+                                <div id="sin-paradas-alerta" class="alert alert-dark text-center" role="alert">
                                     <strong>¡No hay paradas creadas!</strong><br>Haz clic derecho en el mapa para crear
                                     una.
                                 </div>

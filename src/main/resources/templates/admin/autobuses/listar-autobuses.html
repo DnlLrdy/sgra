@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SGRA - Gestión de Autobuses</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.19.1/dist/sweetalert2.all.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.19.1/dist/sweetalert2.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="../../../static/css/admin/autobuses/listar-autobuses.css">
+    <link rel="stylesheet" th:href="@{/css/admin/autobuses/listar-autobuses.css}">
+</head>
+
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand">SGRA</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/sgra/admin/rutas}">Rutas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link">Conductores</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-danger" th:href="@{/sgra/logout}">Cerrar sesión</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-5">
+        <div class="row justify-content-center"> <!-- Añadí la clase justify-content-center para centrar las cards -->
+            <!-- Bus List Card -->
+            <div class="col-md-5"> <!-- Puedes ajustar el tamaño de la columna aquí si lo deseas -->
+                <div class="card shadow">
+                    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                        <h3 class="mb-0"><i class="bi bi-bus-front"></i> Lista de autobuses</h3>
+                        <button class="btn btn-light text-dark" onclick="agregarAutobus()">
+                            <i class="bi bi-plus-circle"></i> Agregar un autobús
+                        </button>
+                    </div>
+                    <div class="card-body bus-list p-3">
+                        <!-- Mensaje cuando no hay rutas -->
+                        <div th:if="${#lists.isEmpty(autobuses)}" class="alert alert-dark text-center" role="alert">
+                            <strong>¡No hay autobuses agregados!</strong><br>
+                            Agreguelos.
+                        </div>
+                    
+                        <!-- Lista de autobuses -->
+                        <div th:each="autobus : ${autobuses}" class="bus-item">
+                            <div class="bus-info" th:data-matricula="${autobus.matricula}"
+                                th:data-modelo="${autobus.modelo}" th:data-capacidad="${autobus.capacidad}"
+                                th:data-estado="${autobus.estado}" th:data-ruta="${autobus.rutaNombre}"
+                                onclick="mostrarDetalleDesdeData(this)">
+                                <strong th:text="'Matricula: ' + ${autobus.matricula}"></strong>
+                                <small th:text="'Modelo: ' + ${autobus.modelo}"></small>
+                            </div>
+                            <div class="bus-actions">
+                                <button class="btn btn-sm btn-outline-warning" th:data-id="${autobus.id}"
+                                    th:data-matricula="${autobus.matricula}" th:data-modelo="${autobus.modelo}"
+                                    th:data-capacidad="${autobus.capacidad}" th:data-estado="${autobus.estado}"
+                                    onclick="modificarAutobus(this)">
+                                    <i class="bi bi-pencil-square"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" th:data-id="${autobus.id}"
+                                    onclick="eliminarAutobus(this)">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+
+            <!-- Bus Detail Card -->
+            <div class="col-md-5"> <!-- Modifiqué el tamaño de la columna aquí también -->
+                <div class="card shadow">
+                    <div
+                        class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                        <h3 class="mb-0"><i class="bi bi-info-circle-fill me-2"></i>Detalles del autobús</h3>
+                    </div>
+                    <div class="card-body p-4">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex align-items-center">
+                                <i class="bi bi-upc-scan me-2 text-primary"></i>
+                                <strong class="me-2">Placa:</strong>
+                                <span id="detalle-placa">---</span>
+                            </li>
+                            <li class="list-group-item d-flex align-items-center">
+                                <i class="bi bi-truck-front me-2 text-success"></i>
+                                <strong class="me-2">Modelo:</strong>
+                                <span id="detalle-modelo">---</span>
+                            </li>
+                            <li class="list-group-item d-flex align-items-center">
+                                <i class="bi bi-people-fill me-2 text-warning"></i>
+                                <strong class="me-2">Capacidad:</strong>
+                                <span id="detalle-capacidad">---</span>
+                            </li>
+                            <li class="list-group-item d-flex align-items-center">
+                                <i class="bi bi-check-circle-fill me-2 text-info"></i>
+                                <strong class="me-2">Estado:</strong>
+                                <span id="detalle-estado">---</span>
+                            </li>
+                            <li class="list-group-item d-flex align-items-center">
+                                <i class="bi bi-map me-2 text-danger"></i>
+                                <strong class="me-2">Ruta:</strong>
+                                <span id="detalle-ruta">---</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div th:replace="admin/autobuses/modales :: modalCrearAutobus"></div>
+    <div th:replace="admin/autobuses/modales :: modalModificarAutobus"></div>
+    <div th:replace="admin/autobuses/modales :: modalEliminarAutobus"></div>
+
+    <div th:if="${mensajesError != null}" th:inline="javascript">
+        <script>
+            const errors = /*[[${mensajesError}]]*/[];
+            if (errors.length > 0) {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top',
+                    showConfirmButton: false,
+                    timer: 3500,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
+                    },
+                    customClass: { popup: 'swal-popup' },
+                });
+                document.addEventListener('click', (e) => {
+                    if (!document.querySelector('.swal-popup').contains(e.target)) {
+                        Swal.close();
+                    }
+                });
+                let showAlert = (index) => {
+                    if (index < errors.length) {
+                        Toast.fire({
+                            icon: 'error',
+                            title: errors[index],
+                            iconColor: '#e74c3c',
+                        }).then(() => showAlert(index + 1));
+                    }
+                };
+                showAlert(0);
+            }
+        </script>
+    </div>
+
+    <div th:if="${abrirModalCrear != null}" th:inline="javascript">
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const modal = new bootstrap.Modal(document.getElementById('modalCrearAutobus'));
+                modal.show();
+            });
+        </script>
+    </div>
+
+    <div th:if="${abrirModalEditar != null}" th:inline="javascript">
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const modal = new bootstrap.Modal(document.getElementById('modalEditarAutobus'));
+                modal.show();
+            });
+        </script>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+        crossorigin="anonymous"></script>
+
+    <script src="../../../static/js/admin/autobuses/listar-autobuses.js"></script>
+    <script th:src="@{/js/admin/autobuses/listar-autobuses.js}"></script>
+</body>
+
+</html>

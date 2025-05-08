@@ -3,7 +3,9 @@ package com.project.sgra.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.sgra.dto.RutaDTO;
+import com.project.sgra.model.Autobus;
 import com.project.sgra.model.Ruta;
+import com.project.sgra.repository.AutobusRepository;
 import com.project.sgra.repository.RutaRepository;
 import com.project.sgra.service.RutaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +26,13 @@ public class RutaController {
     @Autowired
     private RutaService rutaService;
 
+    @Autowired
+    private AutobusRepository autobusRepository;
+
     @GetMapping
     public String listarRutas(Model model) {
         model.addAttribute("rutas", rutaRepository.findAll());
+        model.addAttribute("autobuses", autobusRepository.findAll());
         return "admin/rutas/listar-rutas";
     }
 
@@ -100,8 +106,44 @@ public class RutaController {
 
     @PostMapping("/eliminar")
     public String eliminarRuta(@RequestParam("id") String id) {
+        List<Autobus> autobuses = autobusRepository.findByRutaId(id);
+
+        for (Autobus autobus : autobuses) {
+            autobus.setRutaId("");
+            autobus.setRutaNombre("");
+        }
+
+        autobusRepository.saveAll(autobuses);
         rutaRepository.deleteById(id);
         return "redirect:/sgra/admin/rutas";
     }
+
+
+    @PostMapping("/vincular")
+    public String vincularAutobusRuta(@RequestParam("autobusesId") List<String> autobusesId,
+                                     @RequestParam("rutaId") String rutaId,
+                                     @RequestParam("rutaNombre") String rutaNombre) {
+
+        List<Autobus> autobuses = autobusRepository.findAllById(autobusesId);
+
+        for (Autobus autobus : autobuses) {
+            autobus.setRutaId(rutaId);
+            autobus.setRutaNombre(rutaNombre);
+        }
+
+        autobusRepository.saveAll(autobuses);
+
+        return "redirect:/sgra/admin/rutas";
+    }
+
+    @PostMapping("/desvincular")
+    public String desvincularAutobusRuta(@RequestParam("autobusId") String autobusId) {
+        Autobus autobusExistente = autobusRepository.findById(autobusId).orElse(null);
+        autobusExistente.setRutaId("");
+        autobusExistente.setRutaNombre("");
+        autobusRepository.save(autobusExistente);
+        return "redirect:/sgra/admin/rutas";
+    }
+
 
 }

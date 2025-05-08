@@ -108,7 +108,7 @@ function actualizarListaParadas() {
         if (!alerta) {
             const div = document.createElement("div");
             div.id = "sin-paradas-alerta";
-            div.className = "alert alert-warning text-center";
+            div.className = "alert alert-dark text-center";
             div.innerHTML = `<strong>¡No hay paradas creadas!</strong><br>Haz clic derecho en el mapa para crear una.`;
             lista.appendChild(div);
         }
