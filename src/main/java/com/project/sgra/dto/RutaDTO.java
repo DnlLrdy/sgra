@@ -1,8 +1,7 @@
 package com.project.sgra.dto;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import com.project.sgra.validator.NombreRutaUnico;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,15 +9,20 @@ import java.util.List;
 
 @Getter
 @Setter
+@NombreRutaUnico(message = "{rutaDTO.nombreRutaUnico}")
 public class RutaDTO {
 
-    private String id;
+    public interface NotBlankValidator {
+    }
 
-    @NotBlank(message = "El nombre de la ruta no puede estar vacío.")
-    @Size(max = 100, message = "El nombre de la ruta no puede tener más de 100 caracteres.")
-    private String nombre;
+    @Pattern(regexp = "^[0-9a-fA-F]{24}$", message = "{rutaDTO.idDTO.pattern}")
+    private String idDTO;
 
-    @Valid
-    private List<ParadaDTO> paradas;
+    @NotBlank(message = "{rutaDTO.nombreDTO.notBlank}", groups = NotBlankValidator.class)
+    @Size(min = 3, max = 50, message = "{rutaDTO.nombreDTO.size}")
+    private String nombreDTO;
+
+    @NotEmpty(message = "{rutaDTO.paradasDTO.notEmpty}")
+    private List<ParadaDTO> paradasDTO;
 
 }

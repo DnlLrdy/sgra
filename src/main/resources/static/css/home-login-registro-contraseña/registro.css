@@ -1,0 +1,253 @@
+body {
+    background: linear-gradient(135deg, #e0f7fa 0%, #c5cae9 100%);
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.signup-container {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+    /* Aumentando aún más el ancho máximo */
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: fadeInSlideDown 0.5s ease-out forwards 0.2s;
+}
+
+@keyframes fadeInSlideDown {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.signup-title {
+    font-size: 2.2rem;
+    font-weight: 300;
+    color: #37474f;
+    text-align: center;
+    margin-bottom: 35px;
+    opacity: 0;
+    transform: translateY(-10px);
+    animation: fadeInSlideDown 0.4s ease-out forwards 0.4s;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.form-label {
+    font-weight: 400;
+    color: #546e7a;
+    margin-bottom: 6px;
+    display: block;
+    font-size: 0.95rem;
+    opacity: 0;
+    transform: translateY(-5px);
+    animation: fadeInSlideDown 0.3s ease-out forwards 0.6s;
+}
+
+.input-wrapper {
+    position: relative;
+    opacity: 0;
+    transform: translateY(-5px);
+    animation: fadeInSlideDown 0.3s ease-out forwards 0.7s;
+}
+
+.form-control {
+    border: 1px solid #cfd8dc;
+    border-radius: 8px;
+    padding: 10px 14px;
+    padding-left: 35px;
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.form-control:focus {
+    border-color: #64b5f6;
+    box-shadow: 0 0 0 0.2rem rgba(100, 181, 246, 0.25);
+}
+
+.input-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #78909c;
+    font-size: 1rem;
+}
+
+.password-wrapper .form-control {
+    padding-right: 35px;
+}
+
+.password-toggle-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #78909c;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background-color: #2e7d32;
+    /* Verde para "Crear cuenta" */
+    border-color: #2e7d32;
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 400;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, transform 0.1s ease-in-out;
+    width: 100%;
+    margin-top: 30px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transform: scale(0.95);
+    animation: fadeInScaleUp 0.3s ease-out forwards 0.9s;
+}
+
+@keyframes fadeInScaleUp {
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.btn-primary:hover {
+    background-color: #1b5e20;
+    border-color: #1b5e20;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    transform: scale(1.02);
+}
+
+.login-link {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.9rem;
+    color: #78909c;
+    opacity: 0;
+    animation: fadeIn 0.3s ease-out forwards 1s;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+.login-link a {
+    color: #1e88e5;
+    text-decoration: none;
+    transition: color 0.2s ease-in-out;
+}
+
+.login-link a:hover {
+    text-decoration: underline;
+    color: #1565c0;
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+    /* Espacio entre los campos en la misma fila */
+}
+
+.form-row .form-group {
+    flex: 1;
+    /* Los campos ocupan el mismo espacio */
+    margin-bottom: 15px;
+    /* Reduciendo el margen inferior para filas */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* Estilos adicionales para mantener la coherencia con el diseño del modal de error */
+.modal-content {
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.modal-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    display: flex;
+    justify-content: space-between;
+    /* Para alinear el título a la izquierda y el botón de cerrar a la derecha */
+    align-items: center;
+    /* Para centrar verticalmente el título y el botón */
+    padding: 1rem 1.5rem;
+    /* Añadiendo un poco de padding estándar */
+    background-color: #dc3545;
+    /* Rojo de Bootstrap para errores */
+    color: white;
+}
+
+.modal-title {
+    font-weight: 500;
+    color: white;
+    /* Asegurándonos de que el texto sea blanco */
+    margin-bottom: 0;
+    /* Resetting margin that might interfere with flex alignment */
+}
+
+.modal-body {
+    padding: 20px;
+    color: #37474f;
+}
+
+/* El modal-footer y su estilo han sido eliminados */
+
+/* Estilos para el botón de cerrar (la "X") - Intento con filtro */
+.btn-close {
+    box-sizing: content-box;
+    width: 1em;
+    height: 1em;
+    padding: 0.25em 0.25em;
+    background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e") center/1em auto no-repeat;
+    border: 0;
+    border-radius: 0.375rem;
+    opacity: 0.5;
+    filter: invert(100%) hue-rotate(180deg);
+    /* Invertir colores para hacerlo blanco */
+}
+
+.btn-close:hover {
+    opacity: 0.75;
+}
+
+.btn-close:focus {
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.25);
+    /* Sombra blanca al enfocar */
+}
+
+.me-2 {
+    /* Margen a la derecha para el icono en el título */
+    margin-right: 0.5rem;
+}

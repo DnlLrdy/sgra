@@ -7,122 +7,136 @@ import com.project.sgra.model.Usuario;
 import com.project.sgra.repository.ConductorRepository;
 import com.project.sgra.repository.TokenRestablecerContraseñaRepository;
 import com.project.sgra.repository.UsuarioRepository;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
-import jakarta.validation.ValidatorFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.project.sgra.service.EstablecerNuevaContraseñaService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Controller
-@RequestMapping("/sgra/establecer-nueva-contraseña")
+@RequestMapping("/sgra/establecer-nueva-contrasena")
 public class EstablecerNuevaContraseñaController {
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
+    private static final String ESTABLECER_NUEVA_CONTRASEÑA_VISTA = "home-login-registro-contraseña/establecer-nueva-contraseña";
 
-    @Autowired
-    private ConductorRepository conductorRepository;
+    private static final String REDIRECT_ESTABLECER_NUEVA_CONTRASEÑA_VISTA = "redirect:/sgra/establecer-nueva-contrasena?token=";
+    private static final String REDIRECT_LOGIN_VISTA = "redirect:/sgra/login";
 
-    @Autowired
-    private TokenRestablecerContraseñaRepository tokenRestablecerContraseñaRepository;
+    private static final String MENSAJE_TOKEN_INVALIDO = "El enlace para restablecer la contraseña no es válido o ha expirado. Por favor, solicita uno nuevo.";
+    private static final String MENSAJE_EXITO = "Tu nueva contraseña se estableció correctamente.";
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final TokenRestablecerContraseñaRepository tokenRestablecerContraseñaRepository;
+    private final UsuarioRepository usuarioRepository;
+    private final ConductorRepository conductorRepository;
+    private final EstablecerNuevaContraseñaService establecerNuevaContraseñaService;
+    private final PasswordEncoder passwordEncoder;
+
+    public EstablecerNuevaContraseñaController(TokenRestablecerContraseñaRepository tokenRestablecerContraseñaRepository,
+                                               UsuarioRepository usuarioRepository,
+                                               ConductorRepository conductorRepository,
+                                               EstablecerNuevaContraseñaService establecerNuevaContraseñaService,
+                                               PasswordEncoder passwordEncoder) {
+
+        this.tokenRestablecerContraseñaRepository = tokenRestablecerContraseñaRepository;
+        this.usuarioRepository = usuarioRepository;
+        this.conductorRepository = conductorRepository;
+        this.establecerNuevaContraseñaService = establecerNuevaContraseñaService;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @GetMapping
-    public String establecerNuevaContraseña(@RequestParam("token") String token, RedirectAttributes redirectAttributes, Model model) {
-        Optional<TokenRestablecerContraseña> tokenRestablecerContraseña = tokenRestablecerContraseñaRepository.findByToken(token);
-
-        if (tokenRestablecerContraseña.isEmpty() || tokenRestablecerContraseña.get().getFechaExpiracion().isBefore(LocalDateTime.now())) {
-            tokenRestablecerContraseñaRepository.deleteByToken(token);
-            redirectAttributes.addFlashAttribute("mensajeError", "El enlace para restablecer la contraseña no es válido o ha expirado. Por favor, solicita uno nuevo.");
-            return "redirect:/sgra/login";
+    public String mostrarFormularioEstablecerContraseña(@RequestParam("token") String token,
+                                                        RedirectAttributes redirectAttributes,
+                                                        Model model) {
+        if (esTokenValido(token)) {
+            redirectAttributes.addFlashAttribute("mensajeError", MENSAJE_TOKEN_INVALIDO);
+            return REDIRECT_LOGIN_VISTA;
         }
 
-        EstablecerNuevaContraseñaDTO establecerNuevaContraseñaDTO = new EstablecerNuevaContraseñaDTO();
-        establecerNuevaContraseñaDTO.setToken(token);
+        model.addAttribute("establecerNuevaContraseñaDTO",
+                model.containsAttribute("establecerNuevaContraseñaDTO")
+                        ? model.getAttribute("establecerNuevaContraseñaDTO")
+                        : crearDTOConToken(token));
 
-        model.addAttribute("establecerNuevaContraseñaDTO", establecerNuevaContraseñaDTO);
-        return "restablecer-contraseña/establecer-nueva-contraseña";
+        return ESTABLECER_NUEVA_CONTRASEÑA_VISTA;
     }
 
-    @PostMapping("/estableciendo-nueva-contraseña")
-    public String estableciendoNuevaContraseña(@RequestParam("token") String token,
-                                               @ModelAttribute("establecerNuevaContraseñaDTO") EstablecerNuevaContraseñaDTO establecerNuevaContraseñaDTO,
-                                               Model model,
-                                               RedirectAttributes redirectAttributes,
-                                               BindingResult bindingResult) {
-        Optional<TokenRestablecerContraseña> tokenRestablecerContraseña = tokenRestablecerContraseñaRepository.findByToken(token);
 
-        if (tokenRestablecerContraseña.isEmpty() || tokenRestablecerContraseña.get().getFechaExpiracion().isBefore(LocalDateTime.now())) {
-            tokenRestablecerContraseñaRepository.deleteByToken(token);
-            redirectAttributes.addFlashAttribute("mensajeError", "El enlace para restablecer la contraseña no es válido o ha expirado. Por favor, solicita uno nuevo.");
-            return "redirect:/sgra/login";
+    @PostMapping("/estableciendo-nueva-contrasena")
+    public String establecerNuevaContraseña(@ModelAttribute("establecerNuevaContraseñaDTO") EstablecerNuevaContraseñaDTO dto,
+                                            RedirectAttributes redirectAttributes) {
+
+        if (esTokenValido(dto.getTokenDTO())) {
+            redirectAttributes.addFlashAttribute("mensajeError", MENSAJE_TOKEN_INVALIDO);
+            return REDIRECT_LOGIN_VISTA;
         }
 
-        Optional<Usuario> usuario = usuarioRepository.findByEmail(tokenRestablecerContraseña.get().getEmailUsuario());
-        Optional<Conductor> conductor = conductorRepository.findByEmail(tokenRestablecerContraseña.get().getEmailUsuario());
+        List<String> mensajesError = establecerNuevaContraseñaService.validarEstablecerNuevaContraseñaDTO(dto);
+        Optional<TokenRestablecerContraseña> tokenOpt = tokenRestablecerContraseñaRepository.findByToken(dto.getTokenDTO());
 
-        if (usuario.isEmpty() && conductor.isEmpty()) {
-            redirectAttributes.addFlashAttribute("mensajeError", "No encontramos una cuenta asociada a ese email.");
-            return "redirect:/sgra/login";
+        if (tokenOpt.isEmpty()) {
+            redirectAttributes.addFlashAttribute("mensajeError", MENSAJE_TOKEN_INVALIDO);
+            return REDIRECT_LOGIN_VISTA;
         }
 
-        if (usuario.isPresent() && passwordEncoder.matches(establecerNuevaContraseñaDTO.getNuevaContraseña(), usuario.get().getContraseña())) {
-            bindingResult.rejectValue("nuevaContraseña", null, "La nueva contraseña no puede ser la misma que la anterior.");
+        String correo = tokenOpt.get().getCorreoElectronico();
+        String nuevaContraseñaEnTextoPlano = dto.getNuevaContraseñaDTO();
+
+        if (!mensajesError.isEmpty()) {
+            redirectAttributes.addFlashAttribute("mensajesError", mensajesError);
+            redirectAttributes.addFlashAttribute("establecerNuevaContraseñaDTO", dto);
+            return REDIRECT_ESTABLECER_NUEVA_CONTRASEÑA_VISTA + dto.getTokenDTO();
         }
 
-        if (conductor.isPresent() && passwordEncoder.matches(establecerNuevaContraseñaDTO.getNuevaContraseña(), conductor.get().getContraseña())) {
-            bindingResult.rejectValue("nuevaContraseña", null, "La nueva contraseña no puede ser la misma que la anterior.");
+        if (esMismaContraseñaRegistrada(correo, nuevaContraseñaEnTextoPlano)) {
+            redirectAttributes.addFlashAttribute("mensajesError", List.of("La nueva contraseña no puede ser igual a la anterior."));
+            redirectAttributes.addFlashAttribute("establecerNuevaContraseñaDTO", dto);
+            return REDIRECT_ESTABLECER_NUEVA_CONTRASEÑA_VISTA + dto.getTokenDTO();
         }
 
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
-        Set<ConstraintViolation<EstablecerNuevaContraseñaDTO>> violations = validator.validate(establecerNuevaContraseñaDTO);
+        actualizarContraseñaSiExiste(correo, nuevaContraseñaEnTextoPlano);
+        tokenRestablecerContraseñaRepository.deleteByToken(dto.getTokenDTO());
 
-        for (ConstraintViolation<EstablecerNuevaContraseñaDTO> violation : violations) {
-            bindingResult.rejectValue(violation.getPropertyPath().toString(), null, violation.getMessage());
-        }
-
-        if (!bindingResult.hasFieldErrors("nuevaContraseña") &&
-                !bindingResult.hasFieldErrors("confirmarNuevaContraseña") &&
-                !establecerNuevaContraseñaDTO.getNuevaContraseña().equals(establecerNuevaContraseñaDTO.getConfirmarNuevaContraseña())) {
-            bindingResult.rejectValue("confirmarContraseña", null, "Las nuevas contraseñas no coinciden.");
-        }
-
-        if (bindingResult.hasErrors()) {
-            List<String> mensajesError = new ArrayList<>();
-            bindingResult.getAllErrors().forEach(error -> mensajesError.add(error.getDefaultMessage()));
-            model.addAttribute("mensajesError", mensajesError);
-            return "restablecer-contraseña/establecer-nueva-contraseña";
-        }
-
-        if (usuario.isPresent()) {
-            usuario.get().setContraseña(passwordEncoder.encode(establecerNuevaContraseñaDTO.getNuevaContraseña()));
-            usuarioRepository.save(usuario.get());
-        }
-
-        if (conductor.isPresent()) {
-            conductor.get().setContraseña(passwordEncoder.encode(establecerNuevaContraseñaDTO.getNuevaContraseña()));
-            conductorRepository.save(conductor.get());
-        }
-
-        tokenRestablecerContraseñaRepository.deleteByToken(token);
-
-        redirectAttributes.addFlashAttribute("mensajeExito", "Tu nueva contraseña se estableció correctamente.");
-        return "redirect:/sgra/login";
+        redirectAttributes.addFlashAttribute("mensajeExito", MENSAJE_EXITO);
+        return REDIRECT_LOGIN_VISTA;
     }
+
+
+    private boolean esTokenValido(String token) {
+        return !establecerNuevaContraseñaService.validarToken(token);
+    }
+
+    private EstablecerNuevaContraseñaDTO crearDTOConToken(String token) {
+        EstablecerNuevaContraseñaDTO dto = new EstablecerNuevaContraseñaDTO();
+        dto.setTokenDTO(token);
+        return dto;
+    }
+
+    private void actualizarContraseñaSiExiste(String correo, String nuevaContraseña) {
+        usuarioRepository.findByCorreoElectronico(correo)
+                .ifPresent(usuario -> {
+                    usuario.setContraseña(passwordEncoder.encode(nuevaContraseña));
+                    usuarioRepository.save(usuario);
+                });
+
+        conductorRepository.findByCorreoElectronico(correo)
+                .ifPresent(conductor -> {
+                    conductor.setContraseña(passwordEncoder.encode(nuevaContraseña));
+                    conductorRepository.save(conductor);
+                });
+    }
+
+    private boolean esMismaContraseñaRegistrada(String correo, String nuevaContraseña) {
+        Optional<Usuario> usuario = usuarioRepository.findByCorreoElectronico(correo);
+        Optional<Conductor> conductor = conductorRepository.findByCorreoElectronico(correo);
+
+        return usuario.map(u -> passwordEncoder.matches(nuevaContraseña, u.getContraseña())).orElse(false) ||
+                conductor.map(c -> passwordEncoder.matches(nuevaContraseña, c.getContraseña())).orElse(false);
+    }
+
 
 }

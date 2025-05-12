@@ -51,7 +51,7 @@ function modificarAutobus(button) {
     document.getElementById('matricula-autobus-edit').value = matricula;
     document.getElementById('modelo-autobus-edit').value = modelo;
     document.getElementById('capacidad-autobus-edit').value = capacidad;
-    document.getElementById('estado-autobus-edit').value = estado;
+    document.getElementById('estado-autobus-edit').value = estado.toUpperCase().replace(/\s+/g, '_');
 
     const modal = new bootstrap.Modal(document.getElementById('modalEditarAutobus'));
     modal.show();

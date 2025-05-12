@@ -12,11 +12,10 @@ public class Usuario extends Persona {
 
     @Id
     private String id;
-    private final String rol = "USUARIO";
 
     @Override
     public String getRol() {
-        return this.rol;
+        return "USUARIO";
     }
 
 }

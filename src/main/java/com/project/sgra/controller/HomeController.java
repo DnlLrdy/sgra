@@ -8,9 +8,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/sgra/home")
 public class HomeController {
 
+    private static final String HOME_VISTA = "home-login-registro-contraseña/home";
+
     @GetMapping
     public String home() {
-        return "home/home";
+        return HOME_VISTA;
     }
 
 }

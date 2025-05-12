@@ -170,7 +170,7 @@
         </script>
     </div>
 
-    <div th:if="${abrirModalCrear != null}" th:inline="javascript">
+    <div th:if="${abrirModalAgregar != null}" th:inline="javascript">
         <script>
             document.addEventListener("DOMContentLoaded", function () {
                 const modal = new bootstrap.Modal(document.getElementById('modalCrearAutobus'));
@@ -187,6 +187,68 @@
             });
         </script>
     </div>
+
+    <div th:if="${mensajeExito != null}" th:inline="javascript">
+        <script>
+            const success = /*[[${mensajeExito}]]*/'';
+            if (success) {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top',
+                    showConfirmButton: false,
+                    timer: 3500,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
+                    },
+                    customClass: { popup: 'swal-popup' },
+                });
+                document.addEventListener('click', (e) => {
+                    if (!document.querySelector('.swal-popup').contains(e.target)) {
+                        Swal.close();
+                    }
+                });
+                Toast.fire({
+                    icon: 'success',
+                    title: success,
+                    iconColor: '#27ae60',
+                });
+            }
+        </script>
+    </div>
+
+
+    <div th:if="${mensajeError != null}" th:inline="javascript">
+        <script>
+            const error = /*[[${mensajeError}]]*/'';
+            if (error) {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top',
+                    showConfirmButton: false,
+                    timer: 3500,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
+                    },
+                    customClass: { popup: 'swal-popup' },
+                });
+                document.addEventListener('click', (e) => {
+                    if (!document.querySelector('.swal-popup').contains(e.target)) {
+                        Swal.close();
+                    }
+                });
+                Toast.fire({
+                    icon: 'error',
+                    title: error,
+                    iconColor: '#e74c3c',
+                });
+            }
+        </script>
+    </div>
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"

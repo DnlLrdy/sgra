@@ -1,5 +1,7 @@
 package com.project.sgra.dto;
 
+import com.project.sgra.validator.CorreoElectronicoUnico;
+import com.project.sgra.validator.NombreUsuarioUnico;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,40 +13,78 @@ import java.time.LocalDate;
 @Setter
 public class UsuarioDTO {
 
-    @NotBlank(message = "El primer nombre no puede estar vacío.")
-    @Size(max = 50, message = "El primer nombre no puede tener más de 50 caracteres.")
-    private String primerNombre;
+    public interface NotBlankAndNotNullValidator {
+    }
 
-    @Size(max = 50, message = "El segundo nombre no puede tener más de 50 caracteres.")
-    private String segundoNombre;
+    @NotBlank(message = "{usuarioDTO.primerNombreDTO.notBlank}", groups = NotBlankAndNotNullValidator.class)
+    @Size(max = 50, message = "{usuarioDTO.primerNombreDTO.size}")
+    private String primerNombreDTO;
 
-    @NotBlank(message = "El primer apellido no puede estar vacío.")
-    @Size(max = 50, message = "El primer apellido no puede tener más de 50 caracteres.")
-    private String primerApellido;
+    @Size(max = 50, message = "{usuarioDTO.segundoNombreDTO.size}")
+    private String segundoNombreDTO;
 
-    @Size(max = 50, message = "El segundo apellido no puede tener más de 50 caracteres.")
-    private String segundoApellido;
+    @NotBlank(message = "{usuarioDTO.primerApellidoDTO.notBlank}", groups = NotBlankAndNotNullValidator.class)
+    @Size(max = 50, message = "{usuarioDTO.primerApellidoDTO.size}")
+    private String primerApellidoDTO;
 
+    @Size(max = 50, message = "{usuarioDTO.segundoApellidoDTO.size}")
+    private String segundoApellidoDTO;
+
+    @NotNull(message = "{usuarioDTO.fechaNacimientoDTO.notNull}", groups = NotBlankAndNotNullValidator.class)
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    @NotNull(message = "La fecha de nacimiento no puede estar vacía.")
-    private LocalDate fechaNacimiento;
+    private LocalDate fechaNacimientoDTO;
 
-    @NotBlank(message = "El email no puede estar vacío.")
-    @Email(message = "El email debe ser válido.")
-    private String email;
+    @NotBlank(message = "{usuarioDTO.correoElectronicoDTO.notBlank}", groups = NotBlankAndNotNullValidator.class)
+    @Email(message = "{usuarioDTO.correoElectronicoDTO.email}")
+    @CorreoElectronicoUnico(message = "{usuarioDTO.correoElectronicoDTO.correoElectronicoUnico}")
+    private String correoElectronicoDTO;
 
-    @NotBlank(message = "El nombre de usuario no puede estar vacío.")
-    @Size(min = 8, max = 100, message = "El nombre de usuario debe tener entre 8 y 100 caracteres.")
-    private String nombreUsuario;
-
-    @NotBlank(message = "La contraseña no puede estar vacía.")
+    @NotBlank(message = "{usuarioDTO.nombreUsuarioDTO.notBlank}", groups = NotBlankAndNotNullValidator.class)
     @Pattern(
-            regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+=\\[\\]{};':\"\\\\|,.<>\\/?-])[A-Za-z\\d!@#$%^&*()_+=\\[\\]{};':\"\\\\|,.<>\\/?-]{8,100}$",
-            message = "La contraseña debe tener entre 8 y 100 caracteres, incluyendo al menos una letra mayúscula, una letra minúscula, un número y un carácter especial."
+            regexp = ".*[A-Z].*",
+            message = "{usuarioDTO.nombreUsuarioDTO.pattern.uppercase}"
     )
-    private String contraseña;
+    @Pattern(
+            regexp = ".*[a-z].*",
+            message = "{usuarioDTO.nombreUsuarioDTO.pattern.lowercase}"
+    )
+    @Pattern(
+            regexp = "^[A-Za-z][A-Za-z0-9]{7,19}$",
+            message = "{usuarioDTO.nombreUsuarioDTO.pattern.structure}"
+    )
+    @NombreUsuarioUnico(message = "{usuarioDTO.nombreUsuarioDTO.nombreUsuarioUnico}")
+    private String nombreUsuarioDTO;
 
-    @NotBlank(message = "El confirmar contraseña no puede estar vacío.")
-    private String confirmarContraseña;
+    @NotBlank(message = "{usuarioDTO.contraseñaDTO.notBlank}", groups = NotBlankAndNotNullValidator.class)
+    @Size(min = 8, max = 100, message = "{usuarioDTO.contraseñaDTO.size}")
+    @Pattern(
+            regexp = ".*[A-Z].*",
+            message = "{usuarioDTO.contraseñaDTO.pattern.uppercase}"
+    )
+    @Pattern(
+            regexp = ".*[a-z].*",
+            message = "{usuarioDTO.contraseñaDTO.pattern.lowercase}"
+    )
+    @Pattern(
+            regexp = ".*\\d.*",
+            message = "{usuarioDTO.contraseñaDTO.pattern.digit}"
+    )
+    @Pattern(
+            regexp = ".*[!@#$%^&*()_+=\\[\\]{};':\"\\\\|,.<>/?-].*",
+            message = "{usuarioDTO.contraseñaDTO.pattern.special}"
+    )
+    @Pattern(
+            regexp = "^\\S+$",
+            message = "{usuarioDTO.contraseñaDTO.pattern.noSpaces}"
+    )
+    private String contraseñaDTO;
+
+    @NotBlank(message = "{usuarioDTO.confirmarContraseña.notBlank}", groups = NotBlankAndNotNullValidator.class)
+    private String confirmarContraseñaDTO;
+
+    @AssertTrue(message = "{usuarioDTO.isContraseñasCoincidenDTO.assertTrue}")
+    public boolean isContraseñasCoincidenDTO() {
+        return contraseñaDTO != null && contraseñaDTO.equals(confirmarContraseñaDTO);
+    }
 
 }

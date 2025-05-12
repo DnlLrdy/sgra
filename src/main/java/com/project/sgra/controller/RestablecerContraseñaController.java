@@ -1,86 +1,80 @@
 package com.project.sgra.controller;
 
-import com.project.sgra.model.Conductor;
+import com.project.sgra.dto.RestablecerContraseñaDTO;
 import com.project.sgra.model.TokenRestablecerContraseña;
-import com.project.sgra.model.Usuario;
-import com.project.sgra.repository.ConductorRepository;
 import com.project.sgra.repository.TokenRestablecerContraseñaRepository;
-import com.project.sgra.repository.UsuarioRepository;
 import com.project.sgra.service.EmailService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.project.sgra.service.RestablecerContraseñaService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Optional;
+import java.util.List;
 import java.util.UUID;
 
 @Controller
-@RequestMapping("/sgra/restablecer-contraseña")
+@RequestMapping("/sgra/restablecer-contrasena")
 public class RestablecerContraseñaController {
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
+    private static final String RESTABLECER_CONTRASEÑA_VISTA = "home-login-registro-contraseña/restablecer-contraseña";
 
-    @Autowired
-    private ConductorRepository conductorRepository;
+    private static final String REDIRECT_RESTABLECER_CONTRASEÑA_VISTA = "redirect:/sgra/restablecer-contrasena";
+    private static final String REDIRECT_LOGIN_VISTA = "redirect:/sgra/login";
 
-    @Autowired
-    private TokenRestablecerContraseñaRepository tokenRestablecerContraseñaRepository;
+    private final TokenRestablecerContraseñaRepository tokenRestablecerContraseñaRepository;
+    private final RestablecerContraseñaService restablecerContraseñaService;
+    private final EmailService emailService;
 
-    @Autowired
-    private EmailService emailService;
+    public RestablecerContraseñaController(TokenRestablecerContraseñaRepository tokenRestablecerContraseñaRepository,
+                                           RestablecerContraseñaService restablecerContraseñaService,
+                                           EmailService emailService) {
 
-    @GetMapping
-    public String restablecerContraseña () {
-        return "restablecer-contraseña/restablecer-contraseña";
+        this.tokenRestablecerContraseñaRepository = tokenRestablecerContraseñaRepository;
+        this.restablecerContraseñaService = restablecerContraseñaService;
+        this.emailService = emailService;
     }
 
-    @PostMapping("/restableciendo-contraseña")
-    public String restableciendoContraseña(@RequestParam("email") String email, Model model, RedirectAttributes redirectAttributes) {
-        if (email == null || email.trim().isEmpty()) {
-            model.addAttribute("mensajeError", "El email no puede estar vacío.");
-            return "restablecer-contraseña/restablecer-contraseña";
+    @GetMapping
+    public String restablecerContraseña(Model model) {
+        model.addAttribute("restablecerContraseñaDTO",
+                model.containsAttribute("restablecerContraseñaDTO")
+                        ? model.getAttribute("restablecerContraseñaDTO")
+                        : new RestablecerContraseñaDTO());
+        return RESTABLECER_CONTRASEÑA_VISTA;
+    }
+
+    @PostMapping("/restableciendo-contrasena")
+    public String restableciendoContraseña(@ModelAttribute("restablecerContraseñaDTO") RestablecerContraseñaDTO restablecerContraseñaDTO,
+                                           RedirectAttributes redirectAttributes) {
+
+        LocalDateTime horaFechaActualColombia = LocalDateTime.now(ZoneId.of("America/Bogota"));
+
+        List<String> mensajesError = restablecerContraseñaService.
+                validarRestablecerContraseñaDTO(restablecerContraseñaDTO, restablecerContraseñaDTO.getCorreoElectronicoDTO(), horaFechaActualColombia);
+
+        if (!mensajesError.isEmpty()) {
+            redirectAttributes.addFlashAttribute("mensajesError", mensajesError);
+            redirectAttributes.addFlashAttribute("restablecerContraseñaDTO", restablecerContraseñaDTO);
+            return REDIRECT_RESTABLECER_CONTRASEÑA_VISTA;
         }
 
-        Optional<Usuario> usuario = usuarioRepository.findByEmail(email);
-
-        Optional<Conductor> conductor = conductorRepository.findByEmail(email);
-
-        if (usuario.isEmpty() && conductor.isEmpty()) {
-            model.addAttribute("mensajeError", "No encontramos una cuenta asociada a ese email.");
-            return "restablecer-contraseña/restablecer-contraseña";
-        }
-
-        ZoneId zonaColombia = ZoneId.of("America/Bogota");
-        LocalDateTime ahoraColombia = LocalDateTime.now(zonaColombia);
-
-        Optional<TokenRestablecerContraseña> tokenOpt = tokenRestablecerContraseñaRepository.findByEmailUsuarioAndFechaExpiracionAfter(email, ahoraColombia);
-
-        if (tokenOpt.isPresent()) {
-            model.addAttribute("mensajeError", "Ya hemos enviado anteriormente un enlace a tu email para restablecer tu contraseña.");
-            return "restablecer-contraseña/restablecer-contraseña";
-        }
+        restablecerContraseñaService.eliminarTokensInactivos(restablecerContraseñaDTO.getCorreoElectronicoDTO(), horaFechaActualColombia);
 
         String token = UUID.randomUUID().toString();
 
-        TokenRestablecerContraseña tokenRestablecerContraseña = new TokenRestablecerContraseña();
-        tokenRestablecerContraseña.setToken(token);
-        tokenRestablecerContraseña.setEmailUsuario(email);
-        tokenRestablecerContraseña.setFechaExpiracion(ahoraColombia.plusMinutes(15));
+        TokenRestablecerContraseña tokenRestablecerContraseña = restablecerContraseñaService.
+                crearTokenRestablecerContraseña(token, restablecerContraseñaDTO.getCorreoElectronicoDTO(), horaFechaActualColombia);
+
         tokenRestablecerContraseñaRepository.save(tokenRestablecerContraseña);
 
-        String resetLink = "http://localhost:8080/sgra/establecer-nueva-contraseña?token=" + token;
-        emailService.sendResetLink(email, resetLink);
+        String resetLink = "http://localhost:8080/sgra/establecer-nueva-contrasena?token=" + token;
+        emailService.sendResetLink(restablecerContraseñaDTO.getCorreoElectronicoDTO(), resetLink);
 
-        redirectAttributes.addFlashAttribute("mensajeExito", "Te hemos enviado un enlace a tu email para restablecer tu contraseña.");
-        return "redirect:/sgra/login";
+        redirectAttributes.addFlashAttribute("mensajeExito", "Te hemos enviado un enlace a tu correo electrónico para restablecer tu contraseña.");
+        return REDIRECT_LOGIN_VISTA;
     }
 
 }

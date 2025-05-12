@@ -4,7 +4,8 @@ import com.project.sgra.model.Persona;
 import com.project.sgra.repository.AdministradorRepository;
 import com.project.sgra.repository.ConductorRepository;
 import com.project.sgra.repository.UsuarioRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,39 +19,38 @@ import java.util.Optional;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    @Autowired
-    private AdministradorRepository administradorRepository;
+    private static final Logger logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
 
-    @Autowired
-    private ConductorRepository conductorRepository;
+    private final UsuarioRepository usuarioRepository;
+    private final ConductorRepository conductorRepository;
+    private final AdministradorRepository administradorRepository;
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
+    public CustomUserDetailsService(UsuarioRepository usuarioRepository,
+                                    ConductorRepository conductorRepository,
+                                    AdministradorRepository administradorRepository) {
+        this.usuarioRepository = usuarioRepository;
+        this.conductorRepository = conductorRepository;
+        this.administradorRepository = administradorRepository;
+    }
 
     public Optional<Persona> findByUsername(String nombreUsuario) {
-        Optional<? extends Persona> persona;
-
-        persona = administradorRepository.findByNombreUsuario(nombreUsuario);
-        if (persona.isPresent()) return Optional.of(persona.get());
-
-        persona = conductorRepository.findByNombreUsuario(nombreUsuario);
-        if (persona.isPresent()) return Optional.of(persona.get());
-
-        persona = usuarioRepository.findByNombreUsuario(nombreUsuario);
-        return persona.map(p -> (Persona) p);
+        return usuarioRepository.findByNombreUsuario(nombreUsuario)
+                .map(p -> (Persona) p)
+                .or(() -> conductorRepository.findByNombreUsuario(nombreUsuario).map(p -> (Persona) p))
+                .or(() -> administradorRepository.findByNombreUsuario(nombreUsuario).map(p -> (Persona) p));
     }
 
     @Override
     public UserDetails loadUserByUsername(String nombreUsuario) throws UsernameNotFoundException {
-        System.out.println("Intentando autenticar al usuario: " + nombreUsuario);
+        logger.info("Intentando autenticar al usuario: {}", nombreUsuario);
 
         Persona persona = findByUsername(nombreUsuario)
                 .orElseThrow(() -> {
-                    System.out.println("Usuario no encontrado en la base de datos.");
+                    logger.warn("Usuario no encontrado en la base de datos: {}", nombreUsuario);
                     return new UsernameNotFoundException("Usuario no encontrado.");
                 });
 
-        System.out.println("Usuario encontrado: " + persona.getNombreUsuario());
+        logger.info("Usuario autenticado correctamente: {}", persona.getNombreUsuario());
 
         return new User(
                 persona.getNombreUsuario(),

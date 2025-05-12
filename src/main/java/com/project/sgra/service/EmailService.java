@@ -2,50 +2,53 @@ package com.project.sgra.service;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import java.util.logging.Logger;
-
 @Service
 public class EmailService {
 
-    private static final Logger LOGGER = Logger.getLogger(EmailService.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
 
     private final JavaMailSender mailSender;
+    private final String fromEmail;
 
-    @Value("${spring.mail.username}")
-    private String fromEmail;
-
-    public EmailService(JavaMailSender mailSender) {
+    public EmailService(JavaMailSender mailSender, @Value("${spring.mail.username}") String fromEmail) {
         this.mailSender = mailSender;
+        this.fromEmail = fromEmail;
     }
 
     public void sendResetLink(String to, String link) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
             helper.setFrom(fromEmail);
             helper.setTo(to);
-            helper.setSubject("Recuperación de contraseña.");
+            helper.setSubject("Recuperación de contraseña");
 
-            String htmlContent = "<html><body>"
-                    + "<p>Hola,</p>"
-                    + "<p>Para restablecer tu contraseña, haz clic en el siguiente enlace:</p>"
-                    + "<p><a href=\"" + link + "\">Restablecer la contraseña</a></p>"
-                    + "<p>Este enlace expirará en 15 minutos.</p>"
-                    + "</body></html>";
+            String htmlContent = """
+                    <html>
+                        <body>
+                            <p>Hola,</p>
+                            <p>Para restablecer tu contraseña, haz clic en el siguiente enlace:</p>
+                            <p><a href="%s">Restablecer la contraseña</a></p>
+                            <p>Este enlace expirará en 15 minutos.</p>
+                        </body>
+                    </html>
+                    """.formatted(link);
 
             helper.setText(htmlContent, true);
-
             mailSender.send(message);
-            LOGGER.info("Email de recuperación enviado a: " + to);
+
+            logger.info("Correo de recuperación enviado a: {}", to);
         } catch (MessagingException e) {
-            LOGGER.severe("Error al enviar el email: " + e.getMessage());
-            throw new RuntimeException("No se pudo enviar el email de recuperación.", e);
+            logger.error("Error al enviar el correo de recuperación a {}: {}", to, e.getMessage(), e);
+            throw new IllegalStateException("No se pudo enviar el correo de recuperación.", e);
         }
     }
 

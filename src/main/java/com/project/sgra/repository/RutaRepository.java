@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface RutaRepository extends MongoRepository<Ruta, String> {
     Optional<Ruta> findByNombre(String nombre);
+
+    boolean existsByNombreAndIdNot(String nombre, String id);
 }

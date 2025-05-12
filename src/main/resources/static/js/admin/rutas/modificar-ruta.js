@@ -61,7 +61,6 @@ map.on('contextmenu', e => {
         const nombre = document.getElementById('nombre-parada').value.trim();
         const color = document.getElementById('color-parada').value;
 
-        if (nombre) { // Verificar que el nombre esté presente
             const parada = { nombre, latitud: ubicacion.lat, longitud: ubicacion.lng, color };
             paradas.push(parada);  // Añadir nueva parada al array
 
@@ -89,9 +88,6 @@ map.on('contextmenu', e => {
             marcadores.push(marcador);  // Añadir marcador a la lista
             actualizarListaParadas(); // Actualizar la lista en la UI
             modal.hide(); // Cerrar el modal
-        } else {
-            modal.hide(); // Si no se ingresó un nombre, cerrar el modal
-        }
     };
 });
 

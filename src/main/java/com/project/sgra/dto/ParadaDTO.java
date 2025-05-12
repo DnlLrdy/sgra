@@ -1,5 +1,7 @@
 package com.project.sgra.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.project.sgra.model.Parada;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,17 +10,25 @@ import lombok.Setter;
 @Setter
 public class ParadaDTO {
 
-    @NotBlank(message = "El nombre de la parada no puede estar vacío.")
-    @Size(max = 255, message = "El nombre de la parada no puede tener más de 255 caracteres.")
-    private String nombre;
+    @JsonProperty("nombre")
+    @NotBlank(message = "{paradaDTO.nombreDTO.notBlank}")
+    @Size(min = 3, max = 100, message = "{paradaDTO.nombreDTO.size}")
+    private String nombreDTO;
 
-    @NotNull(message = "La latitud es obligatoria.")
-    private Double latitud;
+    @JsonProperty("latitud")
+    @NotNull(message = "{paradaDTO.latitudDTO.notNull}")
+    @DecimalMin(value = "-90.0", message = "{paradaDTO.latitudDTO.decimalMin}")
+    @DecimalMax(value = "90.0", message = "{paradaDTO.latitudDTO.decimalMax}")
+    private Double latitudDTO;
 
-    @NotNull(message = "La longitud es obligatoria.")
-    private Double longitud;
+    @JsonProperty("longitud")
+    @NotNull(message = "{paradaDTO.longitudDTO.notNull}")
+    @DecimalMin(value = "-180.0", message = "{paradaDTO.longitudDTO.decimalMin}")
+    @DecimalMax(value = "180.0", message = "{paradaDTO.longitudDTO.decimalMax}")
+    private Double longitudDTO;
 
-    @NotBlank(message = "El color es obligatorio.")
-    private String color;
+    @JsonProperty("color")
+    @NotNull(message = "{paradaDTO.colorDTO.notNull}")
+    private Parada.Color colorDTO;
 
 }

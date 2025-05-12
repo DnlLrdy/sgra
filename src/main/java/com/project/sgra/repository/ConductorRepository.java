@@ -8,8 +8,11 @@ import java.util.Optional;
 
 @Repository
 public interface ConductorRepository extends MongoRepository<Conductor, String> {
-    Optional<Conductor> findByEmail(String email);
+    Optional<Conductor> findByCorreoElectronico(String correoElectronico);
+
     Optional<Conductor> findByNombreUsuario(String nombreUsuario);
-    boolean existsByEmail(String email);
+
+    boolean existsByCorreoElectronico(String correoElectronico);
+
     boolean existsByNombreUsuario(String nombreUsuario);
 }

@@ -14,7 +14,7 @@ public abstract class Persona {
     private String primerApellido;
     private String segundoApellido;
     private LocalDate fechaNacimiento;
-    private String email;
+    private String correoElectronico;
     private String nombreUsuario;
     private String contraseña;
 

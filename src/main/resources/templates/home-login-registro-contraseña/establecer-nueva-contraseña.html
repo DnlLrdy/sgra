@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Establecer Nueva Contraseña - [Nombre de tu Aplicación/Sitio]</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.19.1/dist/sweetalert2.all.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.19.1/dist/sweetalert2.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="../../../static/css/home-login-registro-contraseña/establecer-nueva-contraseña.css">
+    <link rel="stylesheet" th:href="@{/css/home-login-registro-contraseña/establecer-nueva-contraseña.css}">
+</head>
+
+<body>
+    <div class="reset-container">
+        <h2 class="reset-title">Establecer Nueva Contraseña</h2>
+        <form th:action="@{/sgra/establecer-nueva-contrasena/estableciendo-nueva-contrasena}" th:method="post"
+            th:object="${establecerNuevaContraseñaDTO}">
+            <div class="form-group">
+                <label for="newPassword" class="form-label">Nueva Contraseña</label>
+                <div class="input-wrapper password-wrapper">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="text" class="form-control" id="newPassword" th:field="*{nuevaContraseñaDTO}"
+                        placeholder="Ingresa tu nueva contraseña">
+                    <i class="fas fa-eye password-toggle-icon" id="toggleNewPassword"></i>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="confirmNewPassword" class="form-label">Confirmar Nueva Contraseña</label>
+                <div class="input-wrapper password-wrapper">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="text" class="form-control" id="confirmNewPassword"
+                        th:field="*{confirmarNuevaContraseñaDTO}" placeholder="Confirma tu nueva contraseña">
+                    <i class="fas fa-eye password-toggle-icon" id="toggleConfirmNewPassword"></i>
+                </div>
+            </div>
+
+            <div>
+                <input type="hidden" th:field="*{tokenDTO}" />
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-sync-alt"></i> Restablecer Contraseña
+            </button>
+        </form>
+    </div>
+
+    <script>
+        // Obtener elementos
+        const passwordInput = document.getElementById('newPassword');
+        const togglePasswordIcon = document.getElementById('toggleNewPassword');
+        const confirmPasswordInput = document.getElementById('confirmNewPassword');
+        const toggleConfirmPasswordIcon = document.getElementById('toggleConfirmNewPassword');
+
+        // Función para alternar la visibilidad de la contraseña
+        function togglePasswordVisibility(inputElement, iconElement) {
+            const type = inputElement.getAttribute('type') === 'password' ? 'text' : 'password';
+            inputElement.setAttribute('type', type);
+            iconElement.classList.toggle('fa-eye');
+            iconElement.classList.toggle('fa-eye-slash');
+        }
+
+        // Configurar los inputs a tipo password al cargar la página
+        window.onload = function () {
+            passwordInput.setAttribute('type', 'password');
+            confirmPasswordInput.setAttribute('type', 'password');
+        };
+
+        // Añadir evento de clic en los iconos
+        togglePasswordIcon.addEventListener('click', function () {
+            togglePasswordVisibility(passwordInput, this);
+        });
+
+        toggleConfirmPasswordIcon.addEventListener('click', function () {
+            togglePasswordVisibility(confirmPasswordInput, this);
+        });
+    </script>
+
+
+    <div th:if="${mensajesError != null}" th:inline="javascript">
+        <script>
+            const errors = /*[[${mensajesError}]]*/[];
+            if (errors.length > 0) {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top',
+                    showConfirmButton: false,
+                    timer: 3500,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
+                    },
+                    customClass: { popup: 'swal-popup' },
+                });
+                document.addEventListener('click', (e) => {
+                    if (!document.querySelector('.swal-popup').contains(e.target)) {
+                        Swal.close();
+                    }
+                });
+                let showAlert = (index) => {
+                    if (index < errors.length) {
+                        Toast.fire({
+                            icon: 'error',
+                            title: errors[index],
+                            iconColor: '#e74c3c',
+                        }).then(() => showAlert(index + 1));
+                    }
+                };
+                showAlert(0);
+            }
+        </script>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

@@ -11,14 +11,19 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/sgra/login")
 public class LoginController {
 
+    private static final String LOGIN_VISTA = "home-login-registro-contraseña/login";
+
+    private static final String REDIRECT_LOGIN_VISTA = "redirect:/sgra/login";
+    private static final String FORWARD_LOGIN_VISTA = "forward:/sgra/login";
+
     @GetMapping
     public String login(@RequestParam(value = "error", required = false) String error, RedirectAttributes redirectAttributes) {
         if (error != null) {
             redirectAttributes.addFlashAttribute("mensajeError", "No fue posible iniciar sesión. Revisa tu nombre de usuario y contraseña e inténtalo otra vez.");
-            return "redirect:/sgra/login";
+            return REDIRECT_LOGIN_VISTA;
         }
 
-        return "login/login";
+        return LOGIN_VISTA;
     }
 
     @PostMapping("/logging")
@@ -30,10 +35,10 @@ public class LoginController {
                 contraseña == null || contraseña.trim().isEmpty()) {
 
             redirectAttributes.addFlashAttribute("mensajeError", "El nombre de usuario y la contraseña no pueden estar vacíos.");
-            return "redirect:/sgra/login";
+            return REDIRECT_LOGIN_VISTA;
         }
 
-        return "forward:/sgra/login";
+        return FORWARD_LOGIN_VISTA;
     }
 
 }

@@ -3,92 +3,74 @@ package com.project.sgra.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.sgra.dto.ParadaDTO;
 import com.project.sgra.dto.RutaDTO;
-import com.project.sgra.model.Parada;
+import com.project.sgra.mapper.RutaMapper;
 import com.project.sgra.model.Ruta;
-import com.project.sgra.repository.RutaRepository;
 import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validation;
 import jakarta.validation.Validator;
-import jakarta.validation.ValidatorFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 
 import java.util.*;
 
 @Service
 public class RutaService {
 
-    @Autowired
-    private RutaRepository rutaRepository;
+    private final ObjectMapper objectMapper;
+    private final Validator validator;
+    private final RutaMapper rutaMapper;
 
-    public List<String> validarRuta(RutaDTO rutaDTO, String paradasJson, BindingResult bindingResult) {
+    public RutaService(ObjectMapper objectMapper, Validator validator, RutaMapper rutaMapper) {
+        this.objectMapper = objectMapper;
+        this.validator = validator;
+        this.rutaMapper = rutaMapper;
+    }
+
+    public List<String> validarRutaDTO(RutaDTO rutaDTO, String paradasJson) {
         List<String> mensajesError = new ArrayList<>();
 
-        Optional<Ruta> rutaExistente = rutaRepository.findByNombre(rutaDTO.getNombre());
+        validarFormatoParadas(paradasJson, rutaDTO, mensajesError);
 
-        if (rutaExistente.isPresent() && !rutaExistente.get().getId().equals(rutaDTO.getId())) {
-            bindingResult.rejectValue("nombre", null, "Ya existe una ruta con ese nombre.");
-        }
+        validarRestriccionesRutaDTO(rutaDTO, mensajesError);
 
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            List<ParadaDTO> paradas = Arrays.asList(mapper.readValue(paradasJson, ParadaDTO[].class));
-
-            rutaDTO.setParadas(paradas);
-
-            if (paradas.isEmpty()) {
-                bindingResult.rejectValue("paradas", null, "Debes crear al menos una parada en la ruta.");
-            }
-        } catch (Exception e) {
-            bindingResult.rejectValue("paradas", null, "Debes crear al menos una parada en la ruta.");
-        }
-
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
-        Set<ConstraintViolation<RutaDTO>> violations = validator.validate(rutaDTO);
-
-        for (ConstraintViolation<RutaDTO> violation : violations) {
-            bindingResult.rejectValue(violation.getPropertyPath().toString(), null, violation.getMessage());
-        }
-
-        if (bindingResult.hasErrors()) {
-            List<ObjectError> errors = bindingResult.getAllErrors();
-            for (ObjectError error : errors) {
-                if (error instanceof FieldError fieldError) {
-                    String field = fieldError.getField();
-                    String mensaje = fieldError.getDefaultMessage();
-
-                    if (field.matches("paradas\\[\\d+\\]\\..+")) {
-                        int index = Integer.parseInt(field.replaceAll("paradas\\[(\\d+)\\]\\..+", "$1"));
-                        mensaje = mensaje + " en la parada #" + (index + 1) + ".";
-                    }
-
-                    mensajesError.add(mensaje);
-                }
-            }
-        }
+        validarParadasDTO(rutaDTO, mensajesError);
 
         return mensajesError;
     }
 
-    public Ruta convertirDtoAEntidad(RutaDTO rutaDTO) {
-        Ruta ruta = new Ruta();
-        ruta.setNombre(rutaDTO.getNombre());
+    private void validarFormatoParadas(String paradasJson, RutaDTO rutaDTO, List<String> mensajesError) {
+        try {
+            List<ParadaDTO> paradasDTO = Arrays.asList(objectMapper.readValue(paradasJson, ParadaDTO[].class));
+            rutaDTO.setParadasDTO(paradasDTO);
+        } catch (Exception e) {
+            mensajesError.add("Formato invalido de paradas.");
+        }
+    }
 
-        List<Parada> paradas = rutaDTO.getParadas().stream().map(pDTO -> {
-            Parada parada = new Parada();
-            parada.setNombre(pDTO.getNombre());
-            parada.setLatitud(pDTO.getLatitud());
-            parada.setLongitud(pDTO.getLongitud());
-            parada.setColor(pDTO.getColor());
-            return parada;
-        }).toList();
+    private void validarRestriccionesRutaDTO(RutaDTO rutaDTO, List<String> mensajesError) {
+        Set<ConstraintViolation<RutaDTO>> violations = validator.validate(rutaDTO, RutaDTO.NotBlankValidator.class);
+        for (ConstraintViolation<RutaDTO> violation : violations) {
+            mensajesError.add(violation.getMessage());
+        }
 
-        ruta.setParadas(paradas);
-        return ruta;
+        if (mensajesError.isEmpty()){
+            Set<ConstraintViolation<RutaDTO>> violations2 = validator.validate(rutaDTO);
+            for (ConstraintViolation<RutaDTO> violation : violations2) {
+                mensajesError.add(violation.getMessage());
+            }
+        }
+    }
+
+    private void validarParadasDTO(RutaDTO rutaDTO, List<String> mensajesError) {
+        for (int i = 0; i < rutaDTO.getParadasDTO().size(); i++) {
+            ParadaDTO parada = rutaDTO.getParadasDTO().get(i);
+            Set<ConstraintViolation<ParadaDTO>> paradaViolations = validator.validate(parada);
+            for (ConstraintViolation<ParadaDTO> violation : paradaViolations) {
+                mensajesError.add("[Parada #" + (i + 1) + "] " + violation.getMessage());
+            }
+        }
+    }
+
+    public Ruta convertirRutaDtoAEntidad(RutaDTO rutaDTO) {
+        return rutaMapper.toEntity(rutaDTO);
     }
 
 }

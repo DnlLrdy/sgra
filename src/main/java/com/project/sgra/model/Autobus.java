@@ -15,8 +15,25 @@ public class Autobus {
     private String matricula;
     private String modelo;
     private int capacidad;
-    private String estado;
+    private Estado estado;
     private String rutaId;
     private String rutaNombre;
+
+    public enum Estado {
+        ACTIVO("Activo"),
+        EN_MANTENIMIENTO("En mantenimiento"),
+        FUERA_DE_SERVICIO("Fuera de servicio");
+
+        private final String estado;
+
+        Estado(String estado) {
+            this.estado = estado;
+        }
+
+        @Override
+        public String toString() {
+            return this.estado;
+        }
+    }
 
 }

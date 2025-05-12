@@ -19,12 +19,12 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final UserDetailsService customUserDetailsService;
-    private final AuthenticationSuccessHandler customAuthenticationSuccessHandler;
+    private final UserDetailsService userDetailsService;
+    private final AuthenticationSuccessHandler successHandler;
 
-    public SecurityConfig(UserDetailsService customUserDetailsService, AuthenticationSuccessHandler customAuthenticationSuccessHandler) {
-        this.customUserDetailsService = customUserDetailsService;
-        this.customAuthenticationSuccessHandler = customAuthenticationSuccessHandler;
+    public SecurityConfig(UserDetailsService userDetailsService, AuthenticationSuccessHandler successHandler) {
+        this.userDetailsService = userDetailsService;
+        this.successHandler = successHandler;
     }
 
     @Bean
@@ -34,15 +34,15 @@ public class SecurityConfig {
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(customUserDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder());
-        return authProvider;
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(userDetailsService);
+        provider.setPasswordEncoder(passwordEncoder());
+        return provider;
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
-        return authConfig.getAuthenticationManager();
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
     }
 
     @Bean
@@ -57,7 +57,7 @@ public class SecurityConfig {
                 .formLogin(form -> form
                         .loginPage("/sgra/login")
                         .loginProcessingUrl("/sgra/login")
-                        .successHandler(customAuthenticationSuccessHandler)
+                        .successHandler(successHandler)
                         .failureUrl("/sgra/login?error")
                         .usernameParameter("nombreUsuario")
                         .passwordParameter("contraseña")

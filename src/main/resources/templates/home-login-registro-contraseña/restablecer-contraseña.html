@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperar Contraseña - [Nombre de tu Aplicación/Sitio]</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.19.1/dist/sweetalert2.all.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.19.1/dist/sweetalert2.min.css" rel="stylesheet">
+
+
+    <link rel="stylesheet" href="../../../static/css/home-login-registro-contraseña/restablecer-contraseña.css">
+    <link rel="stylesheet" th:href="@{/css/home-login-registro-contraseña/restablecer-contraseña.css}">
+</head>
+
+<body>
+    <div class="recover-container">
+        <h2 class="recover-title">Recuperar Contraseña</h2>
+        <form th:action="@{/sgra/restablecer-contrasena/restableciendo-contrasena}" th:method="post"
+            th:object="${restablecerContraseñaDTO}">
+            <div class="form-group">
+                <label for="email" class="form-label">Correo Electrónico</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-envelope input-icon"></i>
+                    <input type="text" class="form-control" id="email" th:field="*{correoElectronicoDTO}"
+                        placeholder="Ingresa tu correo electrónico">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-key"></i> Enviar Enlace de Recuperación
+            </button>
+        </form>
+        <div class="login-link">
+            ¿Ya tienes una cuenta? <a th:href="@{/sgra/login}">Iniciar Sesión</a>
+        </div>
+    </div>
+
+    <div th:if="${mensajesError != null}" th:inline="javascript">
+        <script>
+            const errors = /*[[${mensajesError}]]*/[];
+            if (errors.length > 0) {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top',
+                    showConfirmButton: false,
+                    timer: 3500,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
+                    },
+                    customClass: { popup: 'swal-popup' },
+                });
+                document.addEventListener('click', (e) => {
+                    if (!document.querySelector('.swal-popup').contains(e.target)) {
+                        Swal.close();
+                    }
+                });
+                let showAlert = (index) => {
+                    if (index < errors.length) {
+                        Toast.fire({
+                            icon: 'error',
+                            title: errors[index],
+                            iconColor: '#e74c3c',
+                        }).then(() => showAlert(index + 1));
+                    }
+                };
+                showAlert(0);
+            }
+        </script>
+    </div>
+
+
+    <div th:if="${mensajeError != null}" th:inline="javascript">
+        <script>
+            const error = /*[[${mensajeError}]]*/'';
+            if (error) {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top',
+                    showConfirmButton: false,
+                    timer: 3500,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
+                    },
+                    customClass: { popup: 'swal-popup' },
+                });
+                document.addEventListener('click', (e) => {
+                    if (!document.querySelector('.swal-popup').contains(e.target)) {
+                        Swal.close();
+                    }
+                });
+                Toast.fire({
+                    icon: 'error',
+                    title: error,
+                    iconColor: '#e74c3c',
+                });
+            }
+        </script>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

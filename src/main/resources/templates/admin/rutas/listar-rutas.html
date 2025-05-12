@@ -12,8 +12,8 @@
         integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
-
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.19.1/dist/sweetalert2.all.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.19.1/dist/sweetalert2.min.css" rel="stylesheet">
 
     <link rel="stylesheet" href="../../../static/css/admin/rutas/listar-rutas.css">
     <link rel="stylesheet" th:href="@{/css/admin/rutas/listar-rutas.css}">
@@ -60,7 +60,7 @@
                             </option>
                             <option th:each="ruta : ${rutas}" th:value="${ruta.id}" th:text="${ruta.nombre}"></option>
                         </select>
-                        <form id="form-editar" th:action="@{/sgra/admin/rutas/modificar}" method="post"
+                        <form id="form-editar" th:action="@{/sgra/admin/rutas/editar}" method="get"
                             style="display: none;">
                             <input type="hidden" name="id" id="ruta-id-editar">
                             <button type="submit" class="btn btn-outline-warning">
@@ -258,6 +258,102 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <div th:if="${mensajesError != null}" th:inline="javascript">
+        <script>
+            const errors = /*[[${mensajesError}]]*/[];
+            if (errors.length > 0) {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top',
+                    showConfirmButton: false,
+                    timer: 3500,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
+                    },
+                    customClass: { popup: 'swal-popup' },
+                });
+                document.addEventListener('click', (e) => {
+                    if (!document.querySelector('.swal-popup').contains(e.target)) {
+                        Swal.close();
+                    }
+                });
+                let showAlert = (index) => {
+                    if (index < errors.length) {
+                        Toast.fire({
+                            icon: 'error',
+                            title: errors[index],
+                            iconColor: '#e74c3c',
+                        }).then(() => showAlert(index + 1));
+                    }
+                };
+                showAlert(0);
+            }
+        </script>
+    </div>
+
+    <div th:if="${mensajeExito != null}" th:inline="javascript">
+        <script>
+            const success = /*[[${mensajeExito}]]*/'';
+            if (success) {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top',
+                    showConfirmButton: false,
+                    timer: 3500,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
+                    },
+                    customClass: { popup: 'swal-popup' },
+                });
+                document.addEventListener('click', (e) => {
+                    if (!document.querySelector('.swal-popup').contains(e.target)) {
+                        Swal.close();
+                    }
+                });
+                Toast.fire({
+                    icon: 'success',
+                    title: success,
+                    iconColor: '#27ae60',
+                });
+            }
+        </script>
+    </div>
+
+
+    <div th:if="${mensajeError != null}" th:inline="javascript">
+        <script>
+            const error = /*[[${mensajeError}]]*/'';
+            if (error) {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top',
+                    showConfirmButton: false,
+                    timer: 3500,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
+                    },
+                    customClass: { popup: 'swal-popup' },
+                });
+                document.addEventListener('click', (e) => {
+                    if (!document.querySelector('.swal-popup').contains(e.target)) {
+                        Swal.close();
+                    }
+                });
+                Toast.fire({
+                    icon: 'error',
+                    title: error,
+                    iconColor: '#e74c3c',
+                });
+            }
+        </script>
     </div>
 
 

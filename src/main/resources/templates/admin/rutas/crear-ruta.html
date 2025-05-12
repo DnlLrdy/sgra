@@ -66,11 +66,11 @@
                                 <label class="form-label">Nombre de la ruta</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="bi bi-map"></i></span>
-                                    <input type="text" th:field="*{nombre}" class="form-control"
-                                        placeholder="Ingrese el nombre de la ruta" maxlength="100" required />
+                                    <input type="text" th:field="*{nombreDTO}" class="form-control"
+                                        placeholder="Ingrese el nombre de la ruta" />
                                 </div>
                             </div>
-                            <input type="hidden" id="paradas-input" name="paradasJson" />
+                            <input type="hidden" id="paradas-input" name="paradasJson" value="[]"/>
                         </form>
                     </div>
                 </div>

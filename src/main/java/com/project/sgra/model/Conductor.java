@@ -19,22 +19,47 @@ public class Conductor extends Persona {
     private String telefono;
     private String numeroLicencia;
     private LocalDate fechaVencimientoLicencia;
-    private EstadoConductor estado;
+    private Estado estado;
     private boolean disponibilidad;
-    private final String rol = "CONDUCTOR";
 
     @Override
     public String getRol() {
-        return this.rol;
+        return "CONDUCTOR";
     }
 
     public enum TipoDocumento {
-        CC,   // Cédula de ciudadanía
-        CE,   // Cédula de extranjería
+        CC("Cédula de ciudadanía"),
+        CE("Cédula de extranjería");
+
+        private final String tipoDocumento;
+
+        TipoDocumento(String tipoDocumento) {
+            this.tipoDocumento = tipoDocumento;
+        }
+
+        @Override
+        public String toString() {
+            return this.tipoDocumento;
+        }
     }
 
-    public enum EstadoConductor {
-        ACTIVO, INACTIVO, SUSPENDIDO, LICENCIA_VENCIDA
+    public enum Estado {
+        ACTIVO("Activo"),
+        INACTIVO("Inactivo"),
+        LICENCIA_VENCIDA("Licencia vencida"),
+        SUSPENDIDO("Suspendido"),
+        RETIRADO("Retirado");
+
+        private final String estado;
+
+        Estado(String estado) {
+            this.estado = estado;
+        }
+
+        @Override
+        public String toString() {
+            return this.estado;
+        }
     }
 
 }

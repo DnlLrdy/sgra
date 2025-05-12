@@ -9,6 +9,8 @@ import java.util.Optional;
 @Repository
 public interface AdministradorRepository extends MongoRepository<Administrador, String> {
     Optional<Administrador> findByNombreUsuario(String nombreUsuario);
-    boolean existsByEmail(String email);
+
+    boolean existsByCorreoElectronico(String correoElectronico);
+
     boolean existsByNombreUsuario(String nombreUsuario);
 }

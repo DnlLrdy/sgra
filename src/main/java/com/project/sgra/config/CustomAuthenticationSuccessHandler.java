@@ -13,17 +13,20 @@ import java.util.Set;
 @Component
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
+    private static final String ROLE_USUARIO = "ROLE_USUARIO";
+    private static final String ROLE_CONDUCTOR = "ROLE_CONDUCTOR";
+    private static final String ROLE_ADMIN = "ROLE_ADMINISTRADOR";
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
-
         Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
 
-        if (roles.contains("ROLE_ADMINISTRADOR")) {
-            response.sendRedirect("/sgra/admin/rutas");
-        } else if (roles.contains("ROLE_CONDUCTOR")) {
-            response.sendRedirect("/sgra/conductor");
-        } else if (roles.contains("ROLE_USUARIO")) {
+        if (roles.contains(ROLE_USUARIO)) {
             response.sendRedirect("/sgra/usuario");
+        } else if (roles.contains(ROLE_CONDUCTOR)) {
+            response.sendRedirect("/sgra/conductor");
+        } else if (roles.contains(ROLE_ADMIN)) {
+            response.sendRedirect("/sgra/admin/rutas");
         } else {
             response.sendRedirect("/sgra/login");
         }

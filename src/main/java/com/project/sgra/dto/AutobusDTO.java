@@ -1,7 +1,10 @@
 package com.project.sgra.dto;
 
+import com.project.sgra.model.Autobus;
+import com.project.sgra.validator.MatriculaAutobusUnica;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -9,23 +12,28 @@ import lombok.Setter;
 
 @Getter
 @Setter
+@MatriculaAutobusUnica(message = "{autobusDTO.matriculaAutobusUnica}")
 public class AutobusDTO {
 
-    private String id;
+    public interface NotBlankAndNotNullValidator {
+    }
 
-    @NotBlank(message = "La matricula del autobus no puede estar vacía.")
-    @Size(max = 10, message = "La matricula del autobuse no puede tener más de 10 caracteres.")
-    private String matricula;
+    @Pattern(regexp = "^[0-9a-fA-F]{24}$", message = "{autobusDTO.idDTO.pattern}")
+    private String idDTO;
 
-    @NotBlank(message = "El modelo del autobus no puede estar vacía.")
-    @Size(max = 50, message = "El modelo del autobuse no puede tener más de 50 caracteres.")
-    private String modelo;
+    @NotBlank(message = "{autobusDTO.matriculaDTO.notBlank}", groups = NotBlankAndNotNullValidator.class)
+    @Pattern(regexp = "^[A-Z]{3}-\\d{3}$", message = "{autobusDTO.matriculaDTO.pattern}")
+    private String matriculaDTO;
 
-    @NotNull(message = "La capacidad es obligatoria.")
-    @Positive(message = "La capacidad debe ser un número positivo.")
-    private int capacidad;
+    @NotBlank(message = "{autobusDTO.modeloDTO.notBlank}", groups = NotBlankAndNotNullValidator.class)
+    @Size(max = 50, message = "{autobusDTO.modeloDTO.size}")
+    private String modeloDTO;
 
-    @NotBlank(message = "El estado debe ser obligatorio.")
-    private String estado;
+    @NotNull(message = "{autobusDTO.capacidadDTO.notNull}", groups = NotBlankAndNotNullValidator.class)
+    @Positive(message = "{autobusDTO.capacidadDTO.positive}")
+    private int capacidadDTO;
+
+    @NotNull(message = "{autobusDTO.estadoDTO.notNull}", groups = NotBlankAndNotNullValidator.class)
+    private Autobus.Estado estadoDTO;
 
 }

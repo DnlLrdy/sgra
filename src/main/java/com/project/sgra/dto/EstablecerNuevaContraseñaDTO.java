@@ -2,6 +2,8 @@ package com.project.sgra.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,17 +11,42 @@ import lombok.Setter;
 @Setter
 public class EstablecerNuevaContraseñaDTO {
 
-    @NotBlank(message = "La nueva contraseña no puede estar vacía.")
+    public interface NotBlankValidator {
+    }
+
+    @NotBlank(message = "{establecerNuevaContraseñaDTO.tokenDTO.notBlank}", groups = NotBlankValidator.class)
+    private String tokenDTO;
+
+    @NotBlank(message = "{establecerNuevaContraseñaDTO.nuevaContraseñaDTO.notBlank}", groups = NotBlankValidator.class)
+    @Size(min = 8, max = 64, message = "{establecerNuevaContraseñaDTO.nuevaContraseñaDTO.size}")
     @Pattern(
-            regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+=\\[\\]{};':\"\\\\|,.<>\\/?-])[A-Za-z\\d!@#$%^&*()_+=\\[\\]{};':\"\\\\|,.<>\\/?-]{8,100}$",
-            message = "La nueva contraseña debe tener entre 8 y 100 caracteres, incluyendo al menos una letra mayúscula, una letra minúscula, un número y un carácter especial."
+            regexp = ".*[A-Z].*",
+            message = "{establecerNuevaContraseñaDTO.nuevaContraseñaDTO.pattern.uppercase}"
     )
-    private String nuevaContraseña;
+    @Pattern(
+            regexp = ".*[a-z].*",
+            message = "{establecerNuevaContraseñaDTO.nuevaContraseñaDTO.pattern.lowercase}"
+    )
+    @Pattern(
+            regexp = ".*\\d.*",
+            message = "{establecerNuevaContraseñaDTO.nuevaContraseñaDTO.pattern.digit}"
+    )
+    @Pattern(
+            regexp = ".*[!@#$%^&*()_+=\\[\\]{};':\"\\\\|,.<>/?-].*",
+            message = "{establecerNuevaContraseñaDTO.nuevaContraseñaDTO.pattern.special}"
+    )
+    @Pattern(
+            regexp = "^\\S+$",
+            message = "{establecerNuevaContraseñaDTO.nuevaContraseñaDTO.pattern.noSpaces}"
+    )
+    private String nuevaContraseñaDTO;
 
-    @NotBlank(message = "El confirmar nueva contraseña no puede estar vacío.")
-    private String confirmarNuevaContraseña;
+    @NotBlank(message = "{establecerNuevaContraseñaDTO.confirmarNuevaContraseñaDTO.notBlank}", groups = NotBlankValidator.class)
+    private String confirmarNuevaContraseñaDTO;
 
-    @NotBlank(message = "El token es obligatorio.")
-    private String token;
+    @AssertTrue(message = "{establecerNuevaContraseñaDTO.isNuevasContraseñasCoincidenDTO.assertTrue}")
+    public boolean isNuevasContraseñasCoincidenDTO() {
+        return nuevaContraseñaDTO != null && nuevaContraseñaDTO.equals(confirmarNuevaContraseñaDTO);
+    }
 
 }

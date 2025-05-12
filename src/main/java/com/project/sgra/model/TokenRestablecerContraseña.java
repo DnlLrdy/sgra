@@ -14,11 +14,8 @@ public class TokenRestablecerContraseña {
 
     @Id
     private String id;
-
     private String token;
-
-    private String emailUsuario;
-
+    private String correoElectronico;
     private LocalDateTime fechaExpiracion;
 
 }
