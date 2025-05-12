@@ -1,0 +1,125 @@
+body {
+    font-family: "Montserrat", sans-serif;
+    font-size: large;
+    background-color: #fff;
+    margin-top: 100px;
+    margin-bottom: 80px;
+    color: #333;
+}
+
+.titulo-seccion {
+    color: #6f42c1;
+    /* morado por defecto */
+    font-weight: 700;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+}
+
+.navbar {
+    background: linear-gradient(90deg, #6f42c1, #007bff);
+}
+
+.navbar .navbar-brand,
+.navbar .nav-link,
+#reloj {
+    color: white !important;
+}
+
+h2 {
+    color: #6f42c1;
+    font-weight: 600;
+}
+
+.btn-outline-primary {
+    border-color: #6f42c1;
+    color: #6f42c1;
+}
+
+.btn-outline-primary:hover {
+    background-color: #ff9100;
+    color: #fff;
+}
+
+.form-floating .form-control {
+    border: 2px solid #007bff;
+    border-radius: 8px;
+}
+
+.form-floating label {
+    color: #6f42c1;
+    font-weight: 500;
+    font-size: 0.95rem;
+    padding-left: 1.25rem;
+}
+
+.form-floating .form-control:focus+label {
+    color: #6f42c1;
+}
+
+
+.shadow-container {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 2rem;
+    background-color: #f8f9fa;
+}
+
+table thead {
+    background-color: #6f42c1;
+    color: white;
+}
+
+.btn-outline-primary i {
+    margin-right: 5px;
+}
+
+.table {
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: #ffffff;
+}
+
+.table thead th {
+    background-color: #6f42c1;
+    color: #fff;
+}
+
+.form-control {
+    border-radius: 8px;
+    border: 2px solid #007bff;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #6f42c1;
+    box-shadow: 0 0 8px rgba(111, 66, 193, 0.3);
+}
+
+#map {
+    height: 350px;
+    width: 100%;
+    border-radius: 12px;
+    margin-top: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 2px solid #6f42c1;
+    transition: transform 0.2s ease-in-out;
+}
+
+#map:hover {
+    transform: scale(1.01);
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f1e9ff;
+    transition: background-color 0.3s ease;
+}
+
+.table td,
+.table th {
+    vertical-align: middle;
+}
+
+.table .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.85rem;
+}
