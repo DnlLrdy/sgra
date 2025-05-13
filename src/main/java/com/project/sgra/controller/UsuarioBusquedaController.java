@@ -1,7 +1,7 @@
 package com.project.sgra.controller;
 
 import com.project.sgra.model.Ruta;
-import com.project.sgra.repository.RutaRepository;
+import com.project.sgra.service.BusquedaRutaService;
 import com.project.sgra.service.RutaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,10 +18,7 @@ import java.util.List;
 public class UsuarioBusquedaController {
 
     @Autowired
-    private RutaRepository rutaRepository;
-
-    @Autowired
-    private RutaService rutaService;
+    private BusquedaRutaService busquedaRutaService;
 
     @GetMapping("/buscar")
     public String buscarRutas(@RequestParam(required = false) String ubicacion,
@@ -29,16 +26,25 @@ public class UsuarioBusquedaController {
                               Model model) {
 
         List<Ruta> rutas = Collections.emptyList();
+        String errorMessage = null;
 
-        if (ubicacion != null && destino != null && !ubicacion.isEmpty() && !destino.isEmpty()) {
-            rutas = rutaRepository.findRutasByUbicacionAndDestino(ubicacion, destino);
+        // Solo buscar si ambos campos están llenos
+        if (ubicacion != null && destino != null &&
+                !ubicacion.isEmpty() && !destino.isEmpty()) {
+            rutas = busquedaRutaService.buscarRutasPorUbicacionYDestino(ubicacion, destino);
+        } else if ((ubicacion != null && !ubicacion.isEmpty()) || (destino != null && !destino.isEmpty())) {
+            errorMessage = "Debe ingresar ubicación y destino para buscar rutas.";
         }
 
         model.addAttribute("autobuses", rutas);
         model.addAttribute("ubicacion", ubicacion);
         model.addAttribute("destino", destino);
+        model.addAttribute("errorMessage", errorMessage);
 
         return "usuario/buscar-rutas";
     }
 
-}
+
+    }
+
+
