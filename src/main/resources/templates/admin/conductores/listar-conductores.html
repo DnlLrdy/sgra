@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SGRA - Gestión de Conductores</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.19.1/dist/sweetalert2.all.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.19.1/dist/sweetalert2.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <link rel="stylesheet" href="../../../static/css/admin/conductores/listar-conductores.css">
+    <link rel="stylesheet" th:href="@{/css/admin/conductores/listar-conductores.css}">
+</head>
+
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand">SGRA</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/sgra/admin/rutas}">Rutas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/sgra/admin/autobuses}" aria-current="page">Autobuses</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-danger" th:href="@{/sgra/logout}">Cerrar sesión</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-5">
+        <div class="row justify-content-center">
+
+            <div class="col-md-5">
+                <div class="card shadow">
+                    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                        <h3 class="mb-0"><i class="fas fa-user"></i> Lista de Conductores</h3>
+                        <button class="btn btn-light text-dark" onclick="agregarConductor()">
+                            <i class="fas fa-plus-circle"></i> Agregar un conductor
+                        </button>
+                    </div>
+                    <div class="card-body conductor-list p-3">
+                        <div th:if="${#lists.isEmpty(conductores)}" class="alert alert-dark text-center" role="alert">
+                            <strong>¡No hay conductores agregados!</strong><br>
+                            Agregue nuevos conductores.
+                        </div>
+
+                        <div th:each="conductor : ${conductores}" class="conductor-item">
+                            <div class="conductor-info" th:data-id="${conductor.id}"
+                                th:data-primerNombre="${conductor.primerNombre}"
+                                th:data-segundoNombre="${conductor.segundoNombre}"
+                                th:data-primerApellido="${conductor.primerApellido}"
+                                th:data-segundoApellido="${conductor.segundoApellido}"
+                                th:data-fechaNacimiento="${conductor.fechaNacimiento}"
+                                th:data-tipoDocumento="${conductor.tipoDocumento}"
+                                th:data-numeroDocumento="${conductor.numeroDocumento}"
+                                th:data-numeroLicencia="${conductor.numeroLicencia}"
+                                th:data-fechaVencimientoLicencia="${conductor.fechaVencimientoLicencia}"
+                                th:data-correoElectronico="${conductor.correoElectronico}"
+                                th:data-telefono="${conductor.telefono}"
+                                th:data-nombreUsuario="${conductor.nombreUsuario}" th:data-estado="${conductor.estado}"
+                                onclick="mostrarDetalleConductor(this)">
+                                <strong
+                                    th:text="${conductor.primerNombre} + ' ' + ${conductor.segundoNombre} + ' ' + ${conductor.primerApellido} + ' ' + ${conductor.segundoApellido}"></strong>
+                                <small
+                                    th:text="${conductor.tipoDocumento} + ' ' + ${conductor.numeroDocumento} + ' ' + '-' + ' ' + ${conductor.estado}"></small>
+                            </div>
+                            <div class="conductor-actions">
+                                <button class="btn btn-sm btn-outline-warning" th:data-id="${conductor.id}"
+                                    th:data-primerNombre="${conductor.primerNombre}"
+                                    th:data-segundoNombre="${conductor.segundoNombre}"
+                                    th:data-primerApellido="${conductor.primerApellido}"
+                                    th:data-segundoApellido="${conductor.segundoApellido}"
+                                    th:data-fechaNacimiento="${conductor.fechaNacimiento}"
+                                    th:data-tipoDocumento="${conductor.tipoDocumento}"
+                                    th:data-numeroDocumento="${conductor.numeroDocumento}"
+                                    th:data-numeroLicencia="${conductor.numeroLicencia}"
+                                    th:data-fechaVencimientoLicencia="${conductor.fechaVencimientoLicencia}"
+                                    th:data-correoElectronico="${conductor.correoElectronico}"
+                                    th:data-telefono="${conductor.telefono}"
+                                    th:data-nombreUsuario="${conductor.nombreUsuario}" onclick="modificarConductor(this)">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" th:data-id="${conductor.id}"
+                                    onclick="eliminarConductor(this)">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                        <h3 class="mb-0"><i class="fas fa-user-circle me-2"></i>Detalles del conductor</h3>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row mb-3">
+                            <div class="col-md-6 d-flex align-items-center">
+                                <i class="fas fa-user-alt me-2 text-success"></i>
+                                <strong class="me-2">Primer nombre:</strong>
+                                <span id="detalle-primerNombre">---</span>
+                            </div>
+                            <div class="col-md-6 d-flex align-items-center">
+                                <i class="fas fa-user-alt me-2 text-success"></i>
+                                <strong class="me-2">Segundo nombre:</strong>
+                                <span id="detalle-segundoNombre">---</span>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6 d-flex align-items-center">
+                                <i class="fas fa-user-tie me-2 text-info"></i>
+                                <strong class="me-2">Primer apellido:</strong>
+                                <span id="detalle-primerApellido">---</span>
+                            </div>
+                            <div class="col-md-6 d-flex align-items-center">
+                                <i class="fas fa-user-tie me-2 text-info"></i>
+                                <strong class="me-2">Segundo apellido:</strong>
+                                <span id="detalle-segundoApellido">---</span>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-12 d-flex align-items-center">
+                                <i class="fas fa-birthday-cake me-2 text-warning"></i>
+                                <strong class="me-2">Fecha de nacimiento:</strong>
+                                <span id="detalle-fechaNacimiento">---</span>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6 d-flex align-items-center">
+                                <i class="fas fa-id-card-alt me-2 text-danger"></i>
+                                <strong class="me-2">Tipo de documento:</strong>
+                                <span id="detalle-tipoDocumento">---</span>
+                            </div>
+                            <div class="col-md-6 d-flex align-items-center">
+                                <i class="fas fa-id-card me-2 text-danger"></i>
+                                <strong class="me-2">Numero de documento:</strong>
+                                <span id="detalle-numeroDocumento">---</span>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6 d-flex align-items-center">
+                                <i class="fas fa-credit-card me-2 text-primary"></i>
+                                <strong class="me-2">Numero de licencia:</strong>
+                                <span id="detalle-numeroLicencia">---</span>
+                            </div>
+                            <div class="col-md-6 d-flex align-items-center">
+                                <i class="fas fa-calendar-times me-2 text-primary"></i>
+                                <strong class="me-2">Fecha de vencimiento:</strong>
+                                <span id="detalle-fechaVencimiento">---</span>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6 d-flex align-items-center">
+                                <i class="fas fa-envelope-open-text me-2 text-warning"></i>
+                                <strong class="me-2">Correo electrónico:</strong>
+                                <span id="detalle-correo">---</span>
+                            </div>
+                            <div class="col-md-6 d-flex align-items-center">
+                                <i class="fas fa-phone-alt me-2 text-info"></i>
+                                <strong class="me-2">Teléfono:</strong>
+                                <span id="detalle-telefono">---</span>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-12 d-flex align-items-center">
+                                <i class="fas fa-user-tag me-2 text-secondary"></i>
+                                <strong class="me-2">Nombre de usuario:</strong>
+                                <span id="detalle-usuario">---</span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 d-flex align-items-center">
+                                <i class="fas fa-users-cog me-2 text-success"></i>
+                                <strong class="me-2">Estado:</strong>
+                                <span id="detalle-estado">---</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    
+    <div th:replace="admin/conductores/modales :: modalCrearConductor"></div>
+    <div th:replace="admin/conductores/modales :: modalEliminarConductor"></div>
+
+    <div class="modal fade" id="registroErrorModal" tabindex="-1" aria-labelledby="registroErrorModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 shadow-sm border-0">
+                <div class="modal-header border-bottom-0">
+                    <h5 class="modal-title fw-semibold text-danger" id="registroErrorModalLabel">
+                        <i class="fas fa-triangle-exclamation text-danger me-2"></i> Errores
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+
+                <div class="modal-body text-muted fs-6">
+                    <ul id="registroErrorMessage" class="list-unstyled mb-0">
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+
+        function showStep(step) {
+            // Ocultar todos los pasos
+            document.getElementById('step1').classList.add('d-none');
+            document.getElementById('step2').classList.add('d-none');
+            document.getElementById('step3').classList.add('d-none');
+
+            // Mostrar el paso actual
+            document.getElementById(`step${step}`).classList.remove('d-none');
+
+            // Actualizar botones
+            document.getElementById('prevButton').classList.toggle('d-none', step === 1);
+            document.getElementById('nextButton').classList.toggle('d-none', step === 3);
+            document.getElementById('submitButton').classList.toggle('d-none', step !== 3);
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Botón "Siguiente"
+            document.getElementById('nextButton').addEventListener('click', function () {
+                if (currentStep < 3) {
+                    currentStep++;
+                    showStep(currentStep);
+                }
+            });
+
+            // Botón "Regresar"
+            document.getElementById('prevButton').addEventListener('click', function () {
+                if (currentStep > 1) {
+                    currentStep--;
+                    showStep(currentStep);
+                }
+            });
+
+            // Mostrar el primer paso al cargar el modal
+            document.getElementById('modalCrearConductor').addEventListener('shown.bs.modal', function () {
+                currentStep = 1;
+                showStep(currentStep);
+            });
+
+            // Resetear pasos al cerrar el modal
+            document.getElementById('modalCrearConductor').addEventListener('hidden.bs.modal', function () {
+                currentStep = 1;
+                showStep(currentStep);
+            });
+        });
+
+        function agregarConductor() {
+            const modal = new bootstrap.Modal(document.getElementById('modalCrearConductor'));
+            modal.show();
+        }
+    </script>
+
+    <div th:if="${mensajeExito != null}" th:inline="javascript">
+        <script>
+            const success = /*[[${mensajeExito}]]*/'';
+            if (success) {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top',
+                    showConfirmButton: false,
+                    timer: 3500,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
+                    },
+                    customClass: { popup: 'swal-popup' },
+                });
+                document.addEventListener('click', (e) => {
+                    if (!document.querySelector('.swal-popup').contains(e.target)) {
+                        Swal.close();
+                    }
+                });
+                Toast.fire({
+                    icon: 'success',
+                    title: success,
+                    iconColor: '#27ae60',
+                });
+            }
+        </script>
+    </div>
+
+    <div th:if="${mensajeError != null}" th:inline="javascript">
+        <script>
+            const error = /*[[${mensajeError}]]*/'';
+            if (error) {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top',
+                    showConfirmButton: false,
+                    timer: 3500,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
+                    },
+                    customClass: { popup: 'swal-popup' },
+                });
+                document.addEventListener('click', (e) => {
+                    if (!document.querySelector('.swal-popup').contains(e.target)) {
+                        Swal.close();
+                    }
+                });
+                Toast.fire({
+                    icon: 'error',
+                    title: error,
+                    iconColor: '#e74c3c',
+                });
+            }
+        </script>
+    </div>
+
+    <div th:if="${mensajesError != null}" th:inline="javascript">
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const errors = /*[[${mensajesError}]]*/[];
+                if (errors.length > 0) {
+                    const errorContainer = document.getElementById("registroErrorMessage");
+                    errorContainer.innerHTML = errors.map(e => `<li>${e}</li>`).join("");
+                    errorContainer.innerHTML = `<ul>${errorContainer.innerHTML}</ul>`;
+
+                    const errorModalEl = document.getElementById('registroErrorModal');
+                    const errorModal = new bootstrap.Modal(errorModalEl);
+                    errorModal.show();
+                }
+            });
+        </script>
+    </div>
+
+    <div th:if="${abrirModalAgregar != null}" th:inline="javascript">
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const modal = new bootstrap.Modal(document.getElementById('modalCrearConductor'));
+                modal.show();
+            });
+        </script>
+    </div>
+
+    <div th:if="${abrirModalEditar != null}" th:inline="javascript">
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const modal = new bootstrap.Modal(document.getElementById('modalEditarConductor'));
+                modal.show();
+            });
+        </script>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+        crossorigin="anonymous"></script>
+    <script src="../../../static/js/admin/conductores/listar-conductores.js"></script>
+    <script th:src="@{/js/admin/conductores/listar-conductores.js}"></script>
+</body>
+
+</html>

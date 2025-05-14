@@ -1,0 +1,216 @@
+/* ======================== */
+/* Formularios y entradas   */
+/* ======================== */
+.form-group {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.form-label {
+    font-weight: 400;
+    color: #546e7a;
+    margin-bottom: 6px;
+    display: block;
+    font-size: 0.95rem;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.form-control {
+    border: 1px solid #cfd8dc;
+    border-radius: 8px;
+    padding: 10px 14px;
+    padding-left: 35px;
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-control:focus {
+    border-color: #64b5f6;
+    box-shadow: 0 0 0 0.2rem rgba(100, 181, 246, 0.25);
+}
+
+.input-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #78909c;
+    font-size: 1rem;
+}
+
+.password-wrapper .form-control {
+    padding-right: 35px;
+}
+
+.password-toggle-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #78909c;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.form-control[readonly],
+.form-control.bg-light {
+    border: 1px solid #dee2e6;
+    pointer-events: none;
+    background-color: #f8f9fa;
+    box-shadow: none;
+}
+
+/* ======================== */
+/* Botones                  */
+/* ======================== */
+.btn {
+    border-radius: 40px;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    transition: transform 0.3s;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+}
+
+.btn-primary {
+    background-color: #2e7d32;
+    border-color: #2e7d32;
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 400;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 30px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary:hover {
+    background-color: #1b5e20;
+    border-color: #1b5e20;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    transform: scale(1.02);
+}
+
+.btn-icon-xs {
+    padding: 0.4rem 0.5rem;
+    font-size: 1rem;
+    line-height: 1;
+    border-radius: 50px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+}
+
+/* Efecto hover uniforme */
+.btn-icon-xs:hover {
+    transform: scale(1.1);
+}
+
+/* ======================== */
+/* Diseño general           */
+/* ======================== */
+body {
+    font-family: 'Noto Sans JP', sans-serif;
+}
+
+.card {
+    border-radius: 10px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    border-radius: 10px 10px 0 0;
+    padding: 12px 16px;
+    font-size: 0.95rem;
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+}
+
+.form-row .form-group {
+    flex: 1;
+    margin-bottom: 15px;
+}
+
+/* ======================== */
+/* Lista de conductores     */
+/* ======================== */
+.conductor-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 0.6rem;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.conductor-item:hover {
+    background-color: #e2e6ea;
+    transform: translateY(-1px);
+}
+
+.conductor-item.selected {
+    background-color: #e2e6ea !important;
+    border: 2px solid #adb5bd; /* Bordes más visibles */
+    transform: none;
+}
+
+.conductor-item.selected:hover {
+    transform: none;
+}
+
+.conductor-info {
+    flex-grow: 1;
+    margin-right: 12px;
+    overflow: hidden;
+}
+
+.conductor-info strong {
+    display: block;
+    font-size: 1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.conductor-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* ======================== */
+/* Modal y errores          */
+/* ======================== */
+#registroErrorModal {
+    z-index: 1060 !important;
+}
+
+.modal-backdrop+.modal-backdrop {
+    z-index: 1055 !important;
+}
+
+#registroErrorMessage li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+#registroErrorMessage li:last-child {
+    border-bottom: none;
+}
