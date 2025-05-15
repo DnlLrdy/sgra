@@ -1,9 +1,12 @@
 package com.project.sgra.controller;
 
 import com.project.sgra.dto.ConductorDTO;
+import com.project.sgra.dto.EditarConductorDTO;
 import com.project.sgra.model.Conductor;
 import com.project.sgra.repository.ConductorRepository;
 import com.project.sgra.service.ConductorService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +34,7 @@ public class ConductorController {
     public String listarConductores(Model model) {
         model.addAttribute("conductores", conductorRepository.findAll());
         model.addAttribute("conductorDTO", model.containsAttribute("conductorDTO") ? model.getAttribute("conductorDTO") : new ConductorDTO());
+        model.addAttribute("editarConductorDTO", model.containsAttribute("editarConductorDTO") ? model.getAttribute("editarConductorDTO") : new EditarConductorDTO());
 
         return LISTAR_CONDUCTORES_VISTA;
     }
@@ -63,19 +67,19 @@ public class ConductorController {
     }
 
     @PostMapping("/actualizar")
-    public String actualizarConductor(@ModelAttribute("conductorDTO") ConductorDTO conductorDTO,
+    public String actualizarConductor(@ModelAttribute("editarConductorDTO") EditarConductorDTO editarConductorDTO,
                                       RedirectAttributes redirectAttributes) {
 
-        List<String> mensajesError = conductorService.validarCoductorDTO(conductorDTO);
+        List<String> mensajesError = conductorService.validarEditarCoductorDTO(editarConductorDTO);
 
         if (!mensajesError.isEmpty()) {
             redirectAttributes.addFlashAttribute("mensajesError", mensajesError);
-            redirectAttributes.addFlashAttribute("conductorDTO", conductorDTO);
+            redirectAttributes.addFlashAttribute("editarConductorDTO", editarConductorDTO);
             redirectAttributes.addFlashAttribute("abrirModalEditar", true);
             return REDIRECT_LISTAR_CONDUCTORES_VISTA;
         }
 
-        Conductor conductorDB = conductorRepository.findById(conductorDTO.getIdDTO()).orElse(null);
+        Conductor conductorDB = conductorRepository.findById(editarConductorDTO.getIdDTO()).orElse(null);
 
         if (conductorDB == null) {
             redirectAttributes.addFlashAttribute("mensajeError", "El conductor no existe.");
@@ -83,7 +87,7 @@ public class ConductorController {
         }
 
         try {
-            Conductor conductor = conductorService.convertirConductorDTOAEntidad(conductorDTO);
+            Conductor conductor = conductorService.convertirEditarConductorDTOAEntidad(editarConductorDTO);
             conductorService.actualizarConductor(conductorDB, conductor);
             conductorRepository.save(conductorDB);
             redirectAttributes.addFlashAttribute("mensajeExito", "Conductor actualizado correctamente.");
@@ -112,6 +116,30 @@ public class ConductorController {
         }
 
         return REDIRECT_LISTAR_CONDUCTORES_VISTA;
+    }
+
+    @PostMapping("/actualizar-estado")
+    @ResponseBody
+    public ResponseEntity<?> actualizarEstadoConductor(@RequestParam("id") String id, @RequestParam("estado") String estadoStr) {
+        Optional<Conductor> optionalConductor = conductorRepository.findById(id);
+
+        if (optionalConductor.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Conductor no encontrado");
+        }
+
+        Conductor conductor = optionalConductor.get();
+
+        try {
+            Conductor.Estado nuevoEstado = Conductor.Estado.valueOf(estadoStr);
+            conductor.setEstado(nuevoEstado);
+            conductorRepository.save(conductor);
+            return ResponseEntity.ok("Estado actualizado correctamente");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Estado inválido");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al actualizar el estado");
+        }
+
     }
 
 }

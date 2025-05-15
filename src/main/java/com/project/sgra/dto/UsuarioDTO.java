@@ -11,10 +11,15 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
+@NombreUsuarioUnico(message = "{usuarioDTO.nombreUsuarioDTO.nombreUsuarioUnico}")
+@CorreoElectronicoUnico(message = "{usuarioDTO.correoElectronicoDTO.correoElectronicoUnico}")
 public class UsuarioDTO {
 
     public interface NotBlankAndNotNullValidator {
     }
+
+    @Pattern(regexp = "^[0-9a-fA-F]{24}$", message = "{usuarioDTO.idDTO.pattern}")
+    private String idDTO;
 
     @NotBlank(message = "{usuarioDTO.primerNombreDTO.notBlank}", groups = NotBlankAndNotNullValidator.class)
     @Size(max = 50, message = "{usuarioDTO.primerNombreDTO.size}")
@@ -36,7 +41,6 @@ public class UsuarioDTO {
 
     @NotBlank(message = "{usuarioDTO.correoElectronicoDTO.notBlank}", groups = NotBlankAndNotNullValidator.class)
     @Email(message = "{usuarioDTO.correoElectronicoDTO.email}")
-    @CorreoElectronicoUnico(message = "{usuarioDTO.correoElectronicoDTO.correoElectronicoUnico}")
     private String correoElectronicoDTO;
 
     @NotBlank(message = "{usuarioDTO.nombreUsuarioDTO.notBlank}", groups = NotBlankAndNotNullValidator.class)
@@ -52,7 +56,7 @@ public class UsuarioDTO {
             regexp = "^[A-Za-z][A-Za-z0-9]{7,19}$",
             message = "{usuarioDTO.nombreUsuarioDTO.pattern.structure}"
     )
-    @NombreUsuarioUnico(message = "{usuarioDTO.nombreUsuarioDTO.nombreUsuarioUnico}")
+
     private String nombreUsuarioDTO;
 
     @NotBlank(message = "{usuarioDTO.contraseñaDTO.notBlank}", groups = NotBlankAndNotNullValidator.class)

@@ -189,7 +189,6 @@
     </div>
 </div>
 
-
 <div th:fragment="modalEditarConductor">
     <div class="modal fade" id="modalEditarConductor" tabindex="-1" aria-labelledby="modalEditarConductorLabel"
         aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
@@ -204,35 +203,57 @@
                 </div>
 
                 <!-- Formulario -->
-                <form th:action="@{/sgra/admin/conductores/actualizar}" method="post" th:object="${conductorDTO}">
+                <form th:action="@{/sgra/admin/conductores/actualizar}" method="post" th:object="${editarConductorDTO}">
+                    <input type="hidden" id="conductor-id-edit" name="id" th:field="*{idDTO}" />
+
                     <div class="modal-body text-muted fs-6">
                         <!-- Step 1: Información personal -->
                         <div id="editStep1">
                             <div class="form-row">
                                 <div class="form-group">
                                     <label class="form-label">Primer Nombre</label>
-                                    <input type="text" class="form-control" th:field="*{primerNombreDTO}">
+                                    <div class="input-wrapper">
+                                        <i class="fas fa-user input-icon"></i>
+                                        <input type="text" id="conductor-primerNombre-edit" class="form-control"
+                                            th:field="*{primerNombreDTO}" placeholder="Ingrese el primer nombre">
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">Segundo Nombre</label>
-                                    <input type="text" class="form-control" th:field="*{segundoNombreDTO}">
+                                    <div class="input-wrapper">
+                                        <i class="fas fa-user input-icon"></i>
+                                        <input type="text" id="conductor-segundoNombre-edit" class="form-control"
+                                            th:field="*{segundoNombreDTO}" placeholder="Ingrese el segundo nombre">
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="form-row">
                                 <div class="form-group">
                                     <label class="form-label">Primer Apellido</label>
-                                    <input type="text" class="form-control" th:field="*{primerApellidoDTO}">
+                                    <div class="input-wrapper">
+                                        <i class="fas fa-user input-icon"></i>
+                                        <input type="text" id="conductor-primerApellido-edit" class="form-control"
+                                            th:field="*{primerApellidoDTO}" placeholder="Ingrese el primer apellido">
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">Segundo Apellido</label>
-                                    <input type="text" class="form-control" th:field="*{segundoApellidoDTO}">
+                                    <div class="input-wrapper">
+                                        <i class="fas fa-user input-icon"></i>
+                                        <input type="text" id="conductor-segundoApellido-edit" class="form-control"
+                                            th:field="*{segundoApellidoDTO}" placeholder="Ingrese el segundo apellido">
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label class="form-label">Fecha de Nacimiento</label>
-                                <input type="date" class="form-control" th:field="*{fechaNacimientoDTO}">
+                                <div class="input-wrapper">
+                                    <i class="fas fa-calendar-alt input-icon"></i>
+                                    <input type="date" id="conductor-fechaNacimiento-edit" class="form-control"
+                                        th:field="*{fechaNacimientoDTO}">
+                                </div>
                             </div>
                         </div>
 
@@ -241,36 +262,62 @@
                             <div class="form-row">
                                 <div class="form-group">
                                     <label class="form-label">Tipo de Documento</label>
-                                    <select class="form-select" th:field="*{tipoDocumentoDTO}">
-                                        <option value="CC">Cédula de Ciudadanía</option>
-                                        <option value="CE">Cédula de Extranjería</option>
-                                    </select>
+                                    <div class="input-wrapper">
+                                        <i class="fas fa-id-card input-icon"></i>
+                                        <select id="conductor-tipoDocumento-edit" class="form-select form-control"
+                                            th:field="*{tipoDocumentoDTO}">
+                                            <option value="CC">Cédula de Ciudadanía</option>
+                                            <option value="CE">Cédula de Extranjería</option>
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">Número de Documento</label>
-                                    <input type="number" class="form-control" th:field="*{numeroDocumentoDTO}">
+                                    <div class="input-wrapper">
+                                        <i class="fas fa-file-alt input-icon"></i>
+                                        <input type="number" id="conductor-numeroDocumento-edit" class="form-control"
+                                            th:field="*{numeroDocumentoDTO}"
+                                            placeholder="Ingrese el número de documento">
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="form-row">
                                 <div class="form-group">
                                     <label class="form-label">Número de Licencia</label>
-                                    <input type="number" class="form-control" th:field="*{numeroLicenciaDTO}">
+                                    <div class="input-wrapper">
+                                        <i class="fas fa-id-card input-icon"></i>
+                                        <input type="number" id="conductor-numeroLicencia-edit" class="form-control"
+                                            th:field="*{numeroLicenciaDTO}" placeholder="Ingrese el número de licencia">
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">Fecha de Vencimiento</label>
-                                    <input type="date" class="form-control" th:field="*{fechaVencimientoLicenciaDTO}">
+                                    <div class="input-wrapper">
+                                        <i class="fas fa-calendar-check input-icon"></i>
+                                        <input type="date" id="conductor-fechaVencimiento-edit" class="form-control"
+                                            th:field="*{fechaVencimientoLicenciaDTO}">
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="form-row">
                                 <div class="form-group">
                                     <label class="form-label">Correo Electrónico</label>
-                                    <input type="text" class="form-control" th:field="*{correoElectronicoDTO}">
+                                    <div class="input-wrapper">
+                                        <i class="fas fa-envelope input-icon"></i>
+                                        <input type="text" id="conductor-correoElectronico-edit" class="form-control"
+                                            th:field="*{correoElectronicoDTO}"
+                                            placeholder="Ingrese el correo electrónico">
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">Teléfono</label>
-                                    <input type="number" class="form-control" th:field="*{telefonoDTO}">
+                                    <div class="input-wrapper">
+                                        <i class="fas fa-phone input-icon"></i>
+                                        <input type="number" id="conductor-telefono-edit" class="form-control"
+                                            th:field="*{telefonoDTO}" placeholder="Ingrese el teléfono">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -279,17 +326,10 @@
                         <div id="editStep3" class="d-none">
                             <div class="form-group">
                                 <label class="form-label">Nombre de Usuario</label>
-                                <input type="text" class="form-control" th:field="*{nombreUsuarioDTO}">
-                            </div>
-
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label class="form-label">Contraseña</label>
-                                    <input type="password" class="form-control" th:field="*{contraseñaDTO}">
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Confirmar Contraseña</label>
-                                    <input type="password" class="form-control" th:field="*{confirmarContraseñaDTO}">
+                                <div class="input-wrapper">
+                                    <i class="fas fa-user input-icon"></i>
+                                    <input type="text" id="conductor-nombreUsuario-edit" class="form-control"
+                                        th:field="*{nombreUsuarioDTO}" placeholder="Ingrese el nombre de usuario">
                                 </div>
                             </div>
                         </div>
@@ -302,10 +342,10 @@
                                 id="prevButtonEditar">Regresar</button>
                         </div>
                         <div>
-                            <button type="button" class="btn btn-primary rounded-pill"
+                            <button type="button" class="btn btn-warning rounded-pill"
                                 id="nextButtonEditar">Siguiente</button>
-                            <button type="submit" class="btn btn-success rounded-pill d-none"
-                                id="submitButtonEditar">Guardar Cambios</button>
+                            <button type="submit" class="btn btn-warning rounded-pill d-none"
+                                id="submitButtonEditar">Actualizar</button>
                         </div>
                     </div>
                 </form>
@@ -314,10 +354,10 @@
     </div>
 </div>
 
-<!-- Modal para eliminar conductor -->
 <div th:fragment="modalEliminarConductor">
-    <div class="modal fade" id="modalConfirmarEliminarConductor" tabindex="-1" aria-labelledby="modalEliminarConductorLabel"
-        aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal fade" id="modalConfirmarEliminarConductor" tabindex="-1"
+        aria-labelledby="modalEliminarConductorLabel" aria-hidden="true" data-bs-backdrop="static"
+        data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content rounded-4 shadow-sm border-0">
                 <!-- Header -->
@@ -353,5 +393,3 @@
         </div>
     </div>
 </div>
-
-

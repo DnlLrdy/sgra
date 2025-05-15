@@ -18,7 +18,7 @@ import java.time.LocalDate;
 @NumeroLicenciaUnico(message = "{conductorDTO.numeroLicenciaUnico}")
 @NombreUsuarioUnico(message = "{conductorDTO.nombreUsuarioDTO.nombreUsuarioUnico}")
 @CorreoElectronicoUnico(message = "{usuarioDTO.correoElectronicoDTO.correoElectronicoUnico}")
-public class ConductorDTO {
+public class EditarConductorDTO {
 
     public interface NotBlankAndNotNullValidator {
     }
@@ -78,38 +78,7 @@ public class ConductorDTO {
             regexp = "^[A-Za-z][A-Za-z0-9]{7,19}$",
             message = "{conductorDTO.nombreUsuarioDTO.pattern.structure}"
     )
+
     private String nombreUsuarioDTO;
-
-    @NotBlank(message = "{conductorDTO.contraseñaDTO.notBlank}", groups = NotBlankAndNotNullValidator.class)
-    @Size(min = 8, max = 100, message = "{conductorDTO.contraseñaDTO.size}")
-    @Pattern(
-            regexp = ".*[A-Z].*",
-            message = "{conductorDTO.contraseñaDTO.pattern.uppercase}"
-    )
-    @Pattern(
-            regexp = ".*[a-z].*",
-            message = "{conductorDTO.contraseñaDTO.pattern.lowercase}"
-    )
-    @Pattern(
-            regexp = ".*\\d.*",
-            message = "{conductorDTO.contraseñaDTO.pattern.digit}"
-    )
-    @Pattern(
-            regexp = ".*[!@#$%^&*()_+=\\[\\]{};':\"\\\\|,.<>/?-].*",
-            message = "{conductorDTO.contraseñaDTO.pattern.special}"
-    )
-    @Pattern(
-            regexp = "^\\S+$",
-            message = "{conductorDTO.contraseñaDTO.pattern.noSpaces}"
-    )
-    private String contraseñaDTO;
-
-    @NotBlank(message = "{conductorDTO.confirmarContraseñaDTO.notBlank}", groups = NotBlankAndNotNullValidator.class)
-    private String confirmarContraseñaDTO;
-
-    @AssertTrue(message = "{conductorDTO.isContraseñasCoincidenDTO.assertTrue}")
-    public boolean isContraseñasCoincidenDTO() {
-        return contraseñaDTO != null && contraseñaDTO.equals(confirmarContraseñaDTO);
-    }
 
 }

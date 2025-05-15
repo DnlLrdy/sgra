@@ -92,7 +92,7 @@
                                     th:data-fechaVencimientoLicencia="${conductor.fechaVencimientoLicencia}"
                                     th:data-correoElectronico="${conductor.correoElectronico}"
                                     th:data-telefono="${conductor.telefono}"
-                                    th:data-nombreUsuario="${conductor.nombreUsuario}" onclick="modificarConductor(this)">
+                                    th:data-nombreUsuario="${conductor.nombreUsuario}" onclick="editarConductor(this)">
                                     <i class="fas fa-edit"></i>
                                 </button>
                                 <button class="btn btn-sm btn-outline-danger" th:data-id="${conductor.id}"
@@ -111,6 +111,9 @@
                         <h3 class="mb-0"><i class="fas fa-user-circle me-2"></i>Detalles del conductor</h3>
                     </div>
                     <div class="card-body p-4">
+
+                        <input type="hidden" id="detalle-id">
+
                         <div class="row mb-3">
                             <div class="col-md-6 d-flex align-items-center">
                                 <i class="fas fa-user-alt me-2 text-success"></i>
@@ -196,9 +199,17 @@
                             <div class="col-md-12 d-flex align-items-center">
                                 <i class="fas fa-users-cog me-2 text-success"></i>
                                 <strong class="me-2">Estado:</strong>
-                                <span id="detalle-estado">---</span>
+                                <select id="detalle-estado" class="form-select d-inline w-auto"
+                                    onchange=cambiarEstadoConductor()>
+                                    <option value="ACTIVO">Activo</option>
+                                    <option value="INACTIVO">Inactivo</option>
+                                    <option value="LICENCIA_VENCIDA">Licencia vencida</option>
+                                    <option value="SUSPENDIDO">Suspendido</option>
+                                    <option value="RETIRADO">Retirado</option>
+                                </select>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -206,8 +217,9 @@
         </div>
     </div>
 
-    
+
     <div th:replace="admin/conductores/modales :: modalCrearConductor"></div>
+    <div th:replace="admin/conductores/modales :: modalEditarConductor"></div>
     <div th:replace="admin/conductores/modales :: modalEliminarConductor"></div>
 
     <div class="modal fade" id="registroErrorModal" tabindex="-1" aria-labelledby="registroErrorModalLabel"
@@ -228,60 +240,6 @@
             </div>
         </div>
     </div>
-
-    <script>
-        let currentStep = 1;
-
-        function showStep(step) {
-            // Ocultar todos los pasos
-            document.getElementById('step1').classList.add('d-none');
-            document.getElementById('step2').classList.add('d-none');
-            document.getElementById('step3').classList.add('d-none');
-
-            // Mostrar el paso actual
-            document.getElementById(`step${step}`).classList.remove('d-none');
-
-            // Actualizar botones
-            document.getElementById('prevButton').classList.toggle('d-none', step === 1);
-            document.getElementById('nextButton').classList.toggle('d-none', step === 3);
-            document.getElementById('submitButton').classList.toggle('d-none', step !== 3);
-        }
-
-        document.addEventListener('DOMContentLoaded', function () {
-            // Botón "Siguiente"
-            document.getElementById('nextButton').addEventListener('click', function () {
-                if (currentStep < 3) {
-                    currentStep++;
-                    showStep(currentStep);
-                }
-            });
-
-            // Botón "Regresar"
-            document.getElementById('prevButton').addEventListener('click', function () {
-                if (currentStep > 1) {
-                    currentStep--;
-                    showStep(currentStep);
-                }
-            });
-
-            // Mostrar el primer paso al cargar el modal
-            document.getElementById('modalCrearConductor').addEventListener('shown.bs.modal', function () {
-                currentStep = 1;
-                showStep(currentStep);
-            });
-
-            // Resetear pasos al cerrar el modal
-            document.getElementById('modalCrearConductor').addEventListener('hidden.bs.modal', function () {
-                currentStep = 1;
-                showStep(currentStep);
-            });
-        });
-
-        function agregarConductor() {
-            const modal = new bootstrap.Modal(document.getElementById('modalCrearConductor'));
-            modal.show();
-        }
-    </script>
 
     <div th:if="${mensajeExito != null}" th:inline="javascript">
         <script>

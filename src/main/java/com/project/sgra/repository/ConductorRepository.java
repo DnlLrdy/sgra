@@ -14,9 +14,11 @@ public interface ConductorRepository extends MongoRepository<Conductor, String> 
 
     boolean existsByCorreoElectronico(String correoElectronico);
 
-    boolean existsByNombreUsuario(String nombreUsuario);
-
     boolean existsByNumeroDocumentoAndIdNot(String numeroDocumento, String id);
 
     boolean existsByNumeroLicenciaAndIdNot(String numeroLicencia, String id);
+
+    boolean existsByNombreUsuarioAndIdNot(String nombreUsuario, String id);
+
+    boolean existsByCorreoElectronicoAndIdNot(String correoElectronico, String id);
 }

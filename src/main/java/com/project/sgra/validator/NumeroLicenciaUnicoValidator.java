@@ -1,13 +1,14 @@
 package com.project.sgra.validator;
 
 import com.project.sgra.dto.ConductorDTO;
+import com.project.sgra.dto.EditarConductorDTO;
 import com.project.sgra.repository.ConductorRepository;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.stereotype.Component;
 
 @Component
-public class NumeroLicenciaUnicoValidator implements ConstraintValidator<NumeroLicenciaUnico, ConductorDTO> {
+public class NumeroLicenciaUnicoValidator implements ConstraintValidator<NumeroLicenciaUnico, Object> {
 
     private final ConductorRepository conductorRepository;
 
@@ -16,10 +17,22 @@ public class NumeroLicenciaUnicoValidator implements ConstraintValidator<NumeroL
     }
 
     @Override
-    public boolean isValid(ConductorDTO conductorDTO, ConstraintValidatorContext context) {
-        if (conductorDTO == null) return true;
+    public boolean isValid(Object dto, ConstraintValidatorContext context) {
+        if (dto == null) return true;
 
-        return !conductorRepository.existsByNumeroLicenciaAndIdNot(conductorDTO.getNumeroLicenciaDTO(), conductorDTO.getIdDTO());
+        if (dto instanceof ConductorDTO conductorDTO) {
+            return !conductorRepository.existsByNumeroLicenciaAndIdNot(
+                    conductorDTO.getNumeroLicenciaDTO(), conductorDTO.getIdDTO()
+            );
+        }
+
+        if (dto instanceof EditarConductorDTO editarDTO) {
+            return !conductorRepository.existsByNumeroLicenciaAndIdNot(
+                    editarDTO.getNumeroLicenciaDTO(), editarDTO.getIdDTO()
+            );
+        }
+
+        return true;
     }
 
 }
