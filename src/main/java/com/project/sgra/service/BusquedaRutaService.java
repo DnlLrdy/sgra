@@ -13,6 +13,7 @@ public class BusquedaRutaService {
 
     @Autowired
     private RutaRepository rutaRepository;
+
     public List<Ruta> buscarRutasPorUbicacionYDestino(String ubicacion, String destino) {
         // Validación de parámetros
         if (ubicacion == null || ubicacion.isEmpty()) {

@@ -1,88 +1,99 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const rutasData = JSON.parse(document.getElementById('rutas-data').textContent);
-
-    const map = L.map('map').setView([10.395431, -75.472807], 13);
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '© OpenStreetMap'
-    }).addTo(map);
-
-    let rutaLayers = {};  // Guardar las capas por cada ruta
-
-    // Preparamos cada ruta y la guardamos (pero aún no la mostramos)
-    rutasData.forEach(ruta => {
-        const latlngs = [];
-        const markers = [];
-
-        ruta.paradas.forEach(parada => {
-            const markerIcon = L.icon({
-                iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-${parada.color}.png`,
-                shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-                iconSize: [25, 41],
-                iconAnchor: [12, 41],
-                popupAnchor: [1, -34],
-                shadowSize: [41, 41]
-            });
-
-            const marker = L.marker([parada.latitud, parada.longitud], { icon: markerIcon })
-                .bindPopup(`<b>${parada.nombre}</b><br><i>${ruta.nombre}</i>`);
-
-            latlngs.push([parada.latitud, parada.longitud]);
-            markers.push(marker);
-        });
-
-        const polyline = L.polyline(latlngs, { color: getColorAleatorio(), weight: 4, opacity: 0.7 });
-
-        rutaLayers[ruta.nombre] = { markers, polyline, latlngs };
-    });
-
-    // Manejo de clics en la lista de rutas
-    document.querySelectorAll('.list-group-item').forEach(link => {
-        link.addEventListener('click', function (e) {
-            e.preventDefault();
-            const nombreRuta = this.querySelector('span').textContent.trim();
-
-            mostrarSoloRuta(nombreRuta);
-            resaltarLinkActivo(this);
-        });
-    });
-
-    // Mostrar la primera ruta automáticamente al cargar
-    if (rutasData.length > 0) {
-        const primeraRuta = rutasData[0].nombre;
-        mostrarSoloRuta(primeraRuta);
-        resaltarLinkActivo(document.querySelector('.list-group-item'));
-    }
-
-    // Función para mostrar solo una ruta
-    function mostrarSoloRuta(nombreRuta) {
-        // Primero, eliminamos todas las capas actuales
-        Object.values(rutaLayers).forEach(obj => {
-            obj.markers.forEach(m => map.removeLayer(m));
-            map.removeLayer(obj.polyline);
-        });
-
-        // Luego añadimos la ruta seleccionada
-        const capa = rutaLayers[nombreRuta];
-        capa.markers.forEach(m => m.addTo(map));
-        capa.polyline.addTo(map);
-
-        // Ajustar el mapa a esa ruta
-        const bounds = L.latLngBounds(capa.latlngs);
-        map.fitBounds(bounds, { padding: [50, 50] });
-    }
-
-    // Función para resaltar el link activo
-    function resaltarLinkActivo(linkActivo) {
-        document.querySelectorAll('.list-group-item').forEach(l => l.classList.remove('active'));
-        linkActivo.classList.add('active');
-    }
-
+// Inicializar el mapa
+const map = L.map('map', {
+    center: [10.395431, -75.472807],
+    zoom: 18,
+    minZoom: 14,
+    maxZoom: 18,
+    maxBounds: [
+        [10.2000, -75.5700],
+        [10.5000, -75.3700]
+    ],
+    maxBoundsViscosity: 1.0
 });
 
-// Colores distintos por ruta
-function getColorAleatorio() {
-    const colores = ['blue', 'red', 'green', 'orange', 'purple'];
-    return colores[Math.floor(Math.random() * colores.length)];
+// Capa base
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+// Variables globales
+let marcadores = [];
+
+// Ícono personalizado para las paradas
+const iconoPersonalizado = L.icon({
+    iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32]
+});
+
+// Función para limpiar los marcadores del mapa
+function limpiarMarcadores() {
+    marcadores.forEach(marker => map.removeLayer(marker));
+    marcadores = [];
 }
+
+// Función para mostrar paradas en el mapa
+function mostrarParadas(paradas) {
+    if (!paradas || paradas.length === 0) return;
+
+    limpiarMarcadores();
+
+    const bounds = [];
+
+    const lista = document.getElementById("paradas-list");
+    if (lista) lista.innerHTML = '';
+
+    paradas.forEach((parada, index) => {
+        const latLng = [parada.latitud, parada.longitud];
+
+        const marker = L.marker(latLng, { icon: iconoPersonalizado })
+            .bindPopup(`<strong>${parada.nombre}</strong>`)
+            .addTo(map);
+
+        marcadores.push(marker);
+        bounds.push(latLng);
+
+        // Crear lista visual si existe el contenedor
+        if (lista) {
+            const isLongName = parada.nombre.length > 30;
+            const item = document.createElement('li');
+            item.className = 'list-group-item';
+            item.innerHTML = `
+                <div class="text-truncate-container">
+                    <strong class="nombre-parada" ${isLongName ? 'data-bs-toggle="tooltip" data-bs-placement="top" title="' + parada.nombre + '"' : ''}>
+                        ${index + 1}. ${parada.nombre}
+                    </strong>
+                    <br>
+                    <small class="text-muted">Lat: ${parada.latitud.toFixed(5)}, Lng: ${parada.longitud.toFixed(5)}</small>
+                </div>
+            `;
+            lista.appendChild(item);
+        }
+    });
+
+    if (bounds.length > 0) {
+        map.fitBounds(bounds, { padding: [50, 50] });
+    }
+}
+
+// Escuchar clics en la lista de rutas
+document.querySelectorAll('.ruta-item').forEach(item => {
+    item.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        const rutaId = this.getAttribute('data-id');
+        if (!rutaId) return;
+
+        fetch(`/sgra/usuario/ruta/${rutaId}/paradas`)
+            .then(response => {
+                if (!response.ok) throw new Error('Error al obtener las paradas');
+                return response.json();
+            })
+            .then(data => {
+                mostrarParadas(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('No se pudieron cargar las paradas.');
+            });
+    });
+});
