@@ -19,8 +19,6 @@ public class Autobus {
     private Estado estado;
     private String rutaId;
     private String rutaNombre;
-
-    @DBRef
     private Conductor conductor;
 
     public enum Estado {
