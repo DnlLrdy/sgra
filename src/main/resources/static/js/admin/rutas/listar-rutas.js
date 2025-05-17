@@ -248,9 +248,19 @@ function mostrarModalDesvincular(autobusId) {
 
 
 function mostrarDetallesAutobus(autobus) {
-    document.getElementById("detalle-autobus-modelo").textContent = autobus.modelo
-    document.getElementById("detalle-autobus-capacidad").textContent = autobus.capacidad
-
+    document.getElementById("detalle-autobus-modelo").textContent = autobus.modelo;
+    document.getElementById("detalle-autobus-capacidad").textContent = autobus.capacidad;
+    document.getElementById("detalle-conductor-nombres").textContent =
+        `${autobus.conductor.primerNombre} ${autobus.conductor.segundoNombre} ${autobus.conductor.primerApellido} ${autobus.conductor.segundoApellido}`.trim();
+    document.getElementById("detalle-conductor-tipoDocumento").textContent = autobus.conductor.tipoDocumento;
+    document.getElementById("detalle-conductor-numeroDocumento").textContent = autobus.conductor.numeroDocumento;
+    document.getElementById("detalle-conductor-estado").textContent = formatearEstado(autobus.conductor.estado);
+    
     const modal = new bootstrap.Modal(document.getElementById("modalDetallesAutobus"));
     modal.show();
+}
+
+function formatearEstado(estadoEnum) {
+    const texto = estadoEnum.toLowerCase().replace(/_/g, ' ');
+    return texto.charAt(0).toUpperCase() + texto.slice(1);
 }

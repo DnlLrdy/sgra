@@ -28,8 +28,8 @@ public class Conductor extends Persona {
     }
 
     public enum TipoDocumento {
-        CC("Cédula de ciudadanía"),
-        CE("Cédula de extranjería");
+        CC("CC"),
+        CE("CE");
 
         private final String tipoDocumento;
 

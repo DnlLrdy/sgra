@@ -6,10 +6,10 @@ import jakarta.validation.Payload;
 import java.lang.annotation.*;
 
 @Documented
-@Constraint(validatedBy = CorreoElectronicoUnicoValidator.class)
+@Constraint(validatedBy = NumeroDocumentoUnicoValidator.class)
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface CorreoElectronicoUnico {
+public @interface NumeroDocumentoUnico {
     String message();
 
     Class<?>[] groups() default {};

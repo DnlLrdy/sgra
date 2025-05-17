@@ -33,7 +33,7 @@
                         <a class="nav-link" th:href="@{/sgra/admin/autobuses}">Autobuses</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link">Conductores</a>
+                        <a class="nav-link" th:href="@{/sgra/admin/conductores}">Conductores</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-danger" th:href="@{/sgra/logout}">Cerrar sesión</a>
@@ -249,8 +249,27 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body text-muted fs-6">
-                    <p><strong>Modelo:</strong> <span id="detalle-autobus-modelo"></span></p>
-                    <p><strong>Capacidad:</strong> <span id="detalle-autobus-capacidad"></span></p>
+                    <div class="mb-4">
+                        <h6 class="text-dark fw-semibold mb-3">
+                            <i class="bi bi-info-circle me-2"></i>Información del Autobús
+                        </h6>
+                        <p class="mb-1"><strong>Modelo:</strong> <span id="detalle-autobus-modelo"></span></p>
+                        <p class="mb-0"><strong>Capacidad:</strong> <span id="detalle-autobus-capacidad"></span></p>
+                    </div>
+
+                    <hr>
+
+                    <div class="mt-4">
+                        <h6 class="text-dark fw-semibold mb-3">
+                            <i class="bi bi-person-vcard me-2"></i>Información del Conductor
+                        </h6>
+                        <p class="mb-1"><strong>Nombre:</strong> <span id="detalle-conductor-nombres"></span></p>
+                        <p class="mb-1">
+                            <strong><span id="detalle-conductor-tipoDocumento"></span></strong>
+                            <span id="detalle-conductor-numeroDocumento"></span>
+                        </p>
+                        <p class="mb-0"><strong>Estado:</strong> <span id="detalle-conductor-estado"></span></p>
+                    </div>
                 </div>
                 <div class="modal-footer border-top-0">
                     <button type="button" class="btn btn-outline-secondary rounded-pill px-4"
@@ -259,6 +278,7 @@
             </div>
         </div>
     </div>
+
 
     <div th:if="${mensajesError != null}" th:inline="javascript">
         <script>
