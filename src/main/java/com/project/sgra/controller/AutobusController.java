@@ -6,6 +6,8 @@ import com.project.sgra.repository.AutobusRepository;
 import com.project.sgra.repository.ConductorRepository;
 import com.project.sgra.service.AutobusService;
 import com.project.sgra.service.ConductorService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -133,6 +135,31 @@ public class AutobusController {
             redirectAttributes.addFlashAttribute("mensajeError", "Error al vincular conductor.");
         }
         return "redirect:/sgra/admin/autobuses";
+    }
+
+    @PostMapping("/desvincular-conductor/{id}")
+    @ResponseBody
+    public ResponseEntity<String> desvincularConductor(@PathVariable("id") String autobusId) {
+        Optional<Autobus> optionalAutobus = autobusRepository.findById(autobusId);
+
+        if (optionalAutobus.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Autobús no encontrado");
+        }
+
+        try {
+            Autobus autobus = optionalAutobus.get();
+
+            if (autobus.getConductor() == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("El autobús no tiene un conductor asignado");
+            }
+
+            autobus.setConductor(null); // Desvincula conductor
+            autobusRepository.save(autobus);
+
+            return ResponseEntity.ok("Conductor desvinculado correctamente");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al desvincular el conductor");
+        }
     }
 
 

@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface AutobusRepository extends MongoRepository<Autobus, String> {
@@ -13,5 +14,9 @@ public interface AutobusRepository extends MongoRepository<Autobus, String> {
 
     boolean existsByMatriculaAndIdNot(String matricula, String id);
 
-    List<Autobus> findByConductor(Conductor conductor);
+    List<Autobus> findByEstadoAndConductorIsNotNull(Autobus.Estado estado);
+
+    Optional<Autobus> findByConductor(Conductor conductor);
+
+    boolean existsByConductor(Conductor conductor);
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.sgra.dto.RutaDTO;
 import com.project.sgra.model.Autobus;
+import com.project.sgra.model.Conductor;
 import com.project.sgra.model.Ruta;
 import com.project.sgra.repository.AutobusRepository;
 import com.project.sgra.repository.RutaRepository;
@@ -42,7 +43,12 @@ public class RutaController {
     @GetMapping
     public String listarRutas(Model model) {
         model.addAttribute("rutas", rutaRepository.findAll());
-        model.addAttribute("autobuses", autobusRepository.findAll());
+        List<Autobus> autobuses = autobusRepository.findByEstadoAndConductorIsNotNull(Autobus.Estado.ACTIVO);
+        List<Autobus> filtrados = autobuses.stream()
+                .filter(a -> a.getConductor().getEstado() == Conductor.Estado.ACTIVO)
+                .toList();
+
+        model.addAttribute("autobuses", filtrados);
         return LISTAR_RUTAS_VISTA;
     }
 

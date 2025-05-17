@@ -129,7 +129,8 @@ function mostrarDetalleConductor(element) {
         correoElectronico: element.getAttribute("data-correoElectronico") || '---',
         telefono: element.getAttribute("data-telefono") || '---',
         nombreUsuario: element.getAttribute("data-nombreUsuario") || '---',
-        estado: element.getAttribute("data-estado") || '---'
+        estado: element.getAttribute("data-estado") || '---',
+        matricula: element.getAttribute("data-matricula") || '---'
     };
 
     document.getElementById('detalle-id').value = datos.id;
@@ -146,6 +147,11 @@ function mostrarDetalleConductor(element) {
     document.getElementById('detalle-telefono').textContent = datos.telefono;
     document.getElementById('detalle-usuario').textContent = datos.nombreUsuario;
     document.getElementById('detalle-estado').value = datos.estado.toUpperCase().replace(/\s+/g, '_');
+    document.getElementById('detalle-autobus').textContent = datos.matricula && datos.matricula.trim() !== ""
+        ? datos.matricula
+        : "No se ha vinculado con ningun autobus";
+
+
 }
 
 function agregarConductor() {

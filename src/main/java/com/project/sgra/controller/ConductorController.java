@@ -2,7 +2,9 @@ package com.project.sgra.controller;
 
 import com.project.sgra.dto.ConductorDTO;
 import com.project.sgra.dto.EditarConductorDTO;
+import com.project.sgra.model.Autobus;
 import com.project.sgra.model.Conductor;
+import com.project.sgra.repository.AutobusRepository;
 import com.project.sgra.repository.ConductorRepository;
 import com.project.sgra.service.ConductorService;
 import org.springframework.http.HttpStatus;
@@ -12,7 +14,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -23,16 +27,30 @@ public class ConductorController {
     private static final String REDIRECT_LISTAR_CONDUCTORES_VISTA = "redirect:/sgra/admin/conductores";
 
     private final ConductorRepository conductorRepository;
+    private final AutobusRepository autobusRepository;
     private final ConductorService conductorService;
 
-    public ConductorController(ConductorRepository conductorRepository, ConductorService conductorService) {
+    public ConductorController(ConductorRepository conductorRepository, AutobusRepository autobusRepository, ConductorService conductorService) {
         this.conductorRepository = conductorRepository;
+        this.autobusRepository = autobusRepository;
         this.conductorService = conductorService;
     }
 
     @GetMapping
     public String listarConductores(Model model) {
-        model.addAttribute("conductores", conductorRepository.findAll());
+        List<Conductor> conductores = conductorRepository.findAll();
+        List<Autobus> autobuses = autobusRepository.findAll();
+
+        Map<String, String> matriculasPorConductor = new HashMap<>();
+        for (Autobus a : autobuses) {
+            if (a.getConductor() != null) {
+                matriculasPorConductor.put(a.getConductor().getId(), a.getMatricula());
+            }
+        }
+
+        model.addAttribute("conductores", conductores);
+        model.addAttribute("matriculasPorConductor", matriculasPorConductor);
+
         model.addAttribute("conductorDTO", model.containsAttribute("conductorDTO") ? model.getAttribute("conductorDTO") : new ConductorDTO());
         model.addAttribute("editarConductorDTO", model.containsAttribute("editarConductorDTO") ? model.getAttribute("editarConductorDTO") : new EditarConductorDTO());
 
@@ -80,6 +98,7 @@ public class ConductorController {
         }
 
         Conductor conductorDB = conductorRepository.findById(editarConductorDTO.getIdDTO()).orElse(null);
+        Autobus autobus = autobusRepository.findByConductor(conductorDB).orElse(null);
 
         if (conductorDB == null) {
             redirectAttributes.addFlashAttribute("mensajeError", "El conductor no existe.");
@@ -89,7 +108,10 @@ public class ConductorController {
         try {
             Conductor conductor = conductorService.convertirEditarConductorDTOAEntidad(editarConductorDTO);
             conductorService.actualizarConductor(conductorDB, conductor);
+            autobus.setConductor(conductorDB);
+
             conductorRepository.save(conductorDB);
+            autobusRepository.save(autobus);
             redirectAttributes.addFlashAttribute("mensajeExito", "Conductor actualizado correctamente.");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("mensajeError", "Hubo un problema al actualizar el coductor.");
@@ -108,6 +130,15 @@ public class ConductorController {
             return REDIRECT_LISTAR_CONDUCTORES_VISTA;
         }
 
+        Conductor conductor = conductorOpt.get();
+
+        boolean conductorAsignado = autobusRepository.existsByConductor(conductor);
+
+        if (conductorAsignado) {
+            redirectAttributes.addFlashAttribute("mensajeError", "No se puede eliminar el conductor porque está asignado a un autobús.");
+            return REDIRECT_LISTAR_CONDUCTORES_VISTA;
+        }
+
         try {
             conductorRepository.deleteById(id);
             redirectAttributes.addFlashAttribute("mensajeExito", "El conductor fue eliminado correctamente.");
@@ -117,6 +148,7 @@ public class ConductorController {
 
         return REDIRECT_LISTAR_CONDUCTORES_VISTA;
     }
+
 
     @PostMapping("/actualizar-estado")
     @ResponseBody
@@ -128,6 +160,7 @@ public class ConductorController {
         }
 
         Conductor conductor = optionalConductor.get();
+        Autobus autobus = autobusRepository.findByConductor(conductor).orElse(null);
 
         try {
             Conductor.Estado nuevoEstado = Conductor.Estado.valueOf(estadoStr);
@@ -135,11 +168,21 @@ public class ConductorController {
             if (nuevoEstado == Conductor.Estado.ACTIVO) {
                 conductor.setEstado(nuevoEstado);
                 conductor.setDisponibilidad(true);
+
+                autobus.getConductor().setEstado(nuevoEstado);
+                autobus.getConductor().setDisponibilidad(true);
+
                 conductorRepository.save(conductor);
+                autobusRepository.save(autobus);
             } else {
                 conductor.setEstado(nuevoEstado);
                 conductor.setDisponibilidad(false);
+
+                autobus.getConductor().setEstado(nuevoEstado);
+                autobus.getConductor().setDisponibilidad(false);
+
                 conductorRepository.save(conductor);
+                autobusRepository.save(autobus);
             }
 
             return ResponseEntity.ok("Estado actualizado correctamente");

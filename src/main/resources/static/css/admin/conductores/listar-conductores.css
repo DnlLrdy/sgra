@@ -168,7 +168,8 @@ body {
 
 .conductor-item.selected {
     background-color: #e2e6ea !important;
-    border: 2px solid #adb5bd; /* Bordes más visibles */
+    border: 2px solid #adb5bd;
+    /* Bordes más visibles */
     transform: none;
 }
 
@@ -193,6 +194,11 @@ body {
 .conductor-actions {
     display: flex;
     gap: 0.5rem;
+}
+
+.conductor-list-scroll {
+    max-height: 595px;
+    overflow-y: auto;
 }
 
 /* ======================== */

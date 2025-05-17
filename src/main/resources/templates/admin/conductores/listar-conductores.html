@@ -53,7 +53,7 @@
                             <i class="fas fa-plus-circle"></i> Agregar un conductor
                         </button>
                     </div>
-                    <div class="card-body conductor-list p-3">
+                    <div class="card-body conductor-list conductor-list-scroll p-3">
                         <div th:if="${#lists.isEmpty(conductores)}" class="alert alert-dark text-center" role="alert">
                             <strong>¡No hay conductores agregados!</strong><br>
                             Agregue nuevos conductores.
@@ -73,6 +73,7 @@
                                 th:data-correoElectronico="${conductor.correoElectronico}"
                                 th:data-telefono="${conductor.telefono}"
                                 th:data-nombreUsuario="${conductor.nombreUsuario}" th:data-estado="${conductor.estado}"
+                                th:data-matricula="${matriculasPorConductor[conductor.id]}"
                                 onclick="mostrarDetalleConductor(this)">
                                 <strong
                                     th:text="${conductor.primerNombre} + ' ' + ${conductor.segundoNombre} + ' ' + ${conductor.primerApellido} + ' ' + ${conductor.segundoApellido}"></strong>
@@ -195,7 +196,7 @@
                             </div>
                         </div>
 
-                        <div class="row">
+                        <div class="row mb-3">
                             <div class="col-md-12 d-flex align-items-center">
                                 <i class="fas fa-users-cog me-2 text-success"></i>
                                 <strong class="me-2">Estado:</strong>
@@ -207,6 +208,14 @@
                                     <option value="SUSPENDIDO">Suspendido</option>
                                     <option value="RETIRADO">Retirado</option>
                                 </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 d-flex align-items-center">
+                                <i class="fas fa-bus me-2 text-secondary"></i>
+                                <strong class="me-2">Autobus asignado:</strong>
+                                <span id="detalle-autobus">---</span>
                             </div>
                         </div>
 

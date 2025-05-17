@@ -63,15 +63,17 @@
 
                         <!-- Lista de autobuses -->
                         <div th:each="autobus : ${autobuses}" class="bus-item">
-                            <div class="bus-info" th:data-matricula="${autobus.matricula}"
+                            <div class="bus-info" th:data-id="${autobus.id}" th:data-matricula="${autobus.matricula}"
                                 th:data-modelo="${autobus.modelo}" th:data-capacidad="${autobus.capacidad}"
                                 th:data-estado="${autobus.estado}" th:data-ruta="${autobus.rutaNombre}"
+                                th:data-conductor-id="${autobus.conductor != null ? autobus.conductor.id : ''}"
                                 th:data-conductor-primerNombre="${autobus.conductor != null ? autobus.conductor.primerNombre : ''}"
                                 th:data-conductor-segundoNombre="${autobus.conductor != null ? autobus.conductor.segundoNombre : ''}"
                                 th:data-conductor-primerApellido="${autobus.conductor != null ? autobus.conductor.primerApellido : ''}"
                                 th:data-conductor-segundoApellido="${autobus.conductor != null ? autobus.conductor.segundoApellido : ''}"
                                 th:data-conductor-tipoDocumento="${autobus.conductor != null ? autobus.conductor.tipoDocumento : ''}"
                                 th:data-conductor-numeroDocumento="${autobus.conductor != null ? autobus.conductor.numeroDocumento : ''}"
+                                th:data-conductor-estado="${autobus.conductor != null ? autobus.conductor.estado : ''}"
                                 onclick="mostrarDetalleDesdeData(this)">
                                 <strong th:text="'Matricula: ' + ${autobus.matricula}"></strong>
                                 <small th:text="'Modelo: ' + ${autobus.modelo}"></small>
@@ -96,13 +98,19 @@
 
             <div class="col-md-5">
                 <div class="card shadow rounded-4">
-                    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                    <div class="card-header bg-dark text-white d-flex align-items-center">
                         <h4 class="mb-0">
                             <i class="bi bi-info-circle-fill me-2"></i>Detalles del Autobús
                         </h4>
-                        <button class="btn btn-light" onclick="abrirModalVincularConductor()">
-                            <i class="bi bi-person-plus-fill me-1"></i> Vincular Conductor
-                        </button>
+                        <div class="d-flex ms-auto gap-2">
+                            <button class="btn btn-light" onclick="abrirModalVincularConductor()">
+                                <i class="bi bi-person-plus-fill me-1"></i> Vincular Conductor
+                            </button>
+                            <button id="btn-desvincular-conductor" class="btn btn-light"
+                                onclick="desvincularConductor(this)">
+                                <i class="bi bi-person-dash-fill me-1"></i> Desvincular Conductor
+                            </button>
+                        </div>
                     </div>
                     <div class="card-body px-4 py-3">
                         <ul class="list-group list-group-flush mb-3">
@@ -144,14 +152,22 @@
                                     <span id="detalle-conductor-nombres" class="fw-semibold">---</span>
                                 </div>
                             </div>
-                            <div class="d-flex align-items-center">
+                            <div class="d-flex align-items-center mb-2">
                                 <i class="bi bi-card-text me-3 text-secondary fs-4"></i>
                                 <div>
                                     <small class="text-muted">Documento</small><br>
                                     <span id="detalle-conductor-documento" class="fw-semibold">---</span>
                                 </div>
                             </div>
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-shield-check me-3 text-secondary fs-4"></i>
+                                <div>
+                                    <small class="text-muted">Estado</small><br>
+                                    <span id="detalle-conductor-estado" class="fw-semibold">---</span>
+                                </div>
+                            </div>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -159,42 +175,50 @@
         </div>
     </div>
 
-<div class="modal fade" id="modalVincularConductor" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <form method="post" th:action="@{/sgra/admin/autobuses/vincular-conductor}" class="modal-content needs-validation" novalidate>
-            <div class="modal-header bg-dark text-white">
-                <h5 class="modal-title" id="modalLabel">Vincular Conductor al Autobús</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-            </div>
-            <div class="modal-body">
-                <!-- Campo oculto para el ID del autobús -->
-                <input type="hidden" id="vincular-autobus-id" name="autobusId" />
+    <div class="modal fade" id="modalVincularConductor" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <form method="post" th:action="@{/sgra/admin/autobuses/vincular-conductor}"
+                class="modal-content bg-light border-0 shadow-sm needs-validation" novalidate>
+                <div class="modal-header bg-dark text-white border-0">
+                    <h5 class="modal-title" id="modalLabel">Vincular conductor al autobús</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="vincular-autobus-id" name="autobusId" />
 
-                <!-- Selector de conductor -->
-                <div class="mb-3">
-                    <label for="conductorId" class="form-label fw-semibold">Conductor</label>
-                    <select class="form-select" id="conductorId" name="conductorId" required>
-                        <option th:each="conductor : ${conductores}" 
-                                th:if="${conductor.disponibilidad}" 
-                                th:value="${conductor.id}" 
-                                th:text="${conductor.primerNombre + ' ' 
-                                          + (conductor.segundoNombre != null ? conductor.segundoNombre + ' ' : '') 
-                                          + conductor.primerApellido}">
-                        </option>
-                    </select>
-                    <div class="invalid-feedback">
-                        Por favor seleccione un conductor disponible.
+                    <!-- Mostrar mensaje si no hay conductores disponibles -->
+                    <div th:if="${#lists.isEmpty(conductores)}" class="alert alert-dark text-center">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        No hay conductores disponibles actualmente.
+                    </div>
+
+                    <!-- Mostrar select si hay conductores -->
+                    <div class="mb-3" th:unless="${#lists.isEmpty(conductores)}">
+                        <label for="conductorId" class="form-label fw-bold">Selecciona un conductor</label>
+                        <select class="form-select shadow-sm" id="conductorId" name="conductorId" required>
+                            <option value="" disabled selected>-- Seleccione --</option>
+                            <option th:each="conductor : ${conductores}" th:value="${conductor.id}" th:text="${conductor.primerNombre + ' ' 
+              + (conductor.segundoNombre != null ? conductor.segundoNombre + ' ' : '') 
+              + conductor.primerApellido + ' ' 
+              + (conductor.segundoApellido != null ? conductor.segundoApellido + ' ' : '') 
+              + '- ' + conductor.tipoDocumento + ' ' 
+              + conductor.numeroDocumento + ' - Estado: ' 
+              + conductor.estado}">
+                            </option>
+                        </select>
+                        <div class="invalid-feedback">Debes seleccionar un conductor.</div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-dark">Vincular</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-            </div>
-        </form>
+                <div class="modal-footer border-0">
+                    <button type="submit" class="btn btn-dark" th:disabled="${#lists.isEmpty(conductores)}">
+                        Vincular
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
-
 
     <div th:replace="admin/autobuses/modales :: modalCrearAutobus"></div>
     <div th:replace="admin/autobuses/modales :: modalModificarAutobus"></div>

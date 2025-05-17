@@ -10,12 +10,15 @@ import com.project.sgra.repository.AutobusRepository;
 import com.project.sgra.repository.ConductorRepository;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
+import org.bson.types.ObjectId;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class ConductorService {
@@ -101,14 +104,16 @@ public class ConductorService {
     }
 
     public List<Conductor> obtenerConductoresActivosSinAutobus() {
-        List<Conductor> conductoresActivos = conductorRepository.findByEstado(Conductor.Estado.ACTIVO);
+        List<String> idsConductoresConAutobus = autobusRepository.findAll()
+                .stream()
+                .map(Autobus::getConductor)
+                .filter(Objects::nonNull)
+                .map(Conductor::getId)
+                .distinct()
+                .collect(Collectors.toList());
 
-        return conductoresActivos.stream()
-                .filter(conductor -> {
-                    List<Autobus> autobuses = autobusRepository.findByConductor(conductor);
-                    return autobuses.isEmpty();
-                })
-                .toList();
+        return conductorRepository.findByEstadoAndIdNotIn(Conductor.Estado.ACTIVO, idsConductoresConAutobus);
     }
+
 
 }

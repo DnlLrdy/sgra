@@ -2,6 +2,7 @@ package com.project.sgra.repository;
 
 import com.project.sgra.model.Conductor;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,5 +24,7 @@ public interface ConductorRepository extends MongoRepository<Conductor, String> 
 
     boolean existsByCorreoElectronicoAndIdNot(String correoElectronico, String id);
 
-    List<Conductor> findByEstado(Conductor.Estado estado);
+    @Query("{ 'estado': ?0, '_id': { '$nin': ?1 } }")
+    List<Conductor> findByEstadoAndIdNotIn(Conductor.Estado estado, List<String> excludeIds);
+
 }
