@@ -3,7 +3,9 @@ package com.project.sgra.controller;
 import com.project.sgra.dto.AutobusDTO;
 import com.project.sgra.model.Autobus;
 import com.project.sgra.repository.AutobusRepository;
+import com.project.sgra.repository.ConductorRepository;
 import com.project.sgra.service.AutobusService;
+import com.project.sgra.service.ConductorService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,16 +22,19 @@ public class AutobusController {
     private static final String REDIRECT_LISTAR_AUTOBUSES_VISTA = "redirect:/sgra/admin/autobuses";
 
     private final AutobusRepository autobusRepository;
+    private final ConductorService conductorService;
     private final AutobusService autobusService;
 
-    public AutobusController(AutobusRepository autobusRepository, AutobusService autobusService) {
+    public AutobusController(AutobusRepository autobusRepository, ConductorService conductorService, AutobusService autobusService) {
         this.autobusRepository = autobusRepository;
+        this.conductorService = conductorService;
         this.autobusService = autobusService;
     }
 
     @GetMapping
     public String listarAutobuses(Model model) {
         model.addAttribute("autobuses", autobusRepository.findAll());
+        model.addAttribute("conductores", conductorService.obtenerConductoresActivosSinAutobus());
         model.addAttribute("autobusDTO", model.containsAttribute("autobusDTO") ? model.getAttribute("autobusDTO") : new AutobusDTO());
 
         return LISTAR_AUTOBUSES_VISTA;
@@ -118,5 +123,17 @@ public class AutobusController {
 
         return REDIRECT_LISTAR_AUTOBUSES_VISTA;
     }
+
+    @PostMapping("/vincular-conductor")
+    public String vincularConductor(@RequestParam String autobusId, @RequestParam String conductorId, RedirectAttributes redirectAttributes) {
+        try {
+            autobusService.vincularConductor(autobusId, conductorId);
+            redirectAttributes.addFlashAttribute("mensajeExito", "Conductor vinculado correctamente al autobús.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensajeError", "Error al vincular conductor.");
+        }
+        return "redirect:/sgra/admin/autobuses";
+    }
+
 
 }

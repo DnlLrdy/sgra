@@ -6,6 +6,8 @@ import com.project.sgra.mapper.ConductorMapper;
 import com.project.sgra.mapper.EditarConductorMapper;
 import com.project.sgra.model.Autobus;
 import com.project.sgra.model.Conductor;
+import com.project.sgra.repository.AutobusRepository;
+import com.project.sgra.repository.ConductorRepository;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,12 +20,16 @@ import java.util.Set;
 @Service
 public class ConductorService {
 
+    private final ConductorRepository conductorRepository;
+    private final AutobusRepository autobusRepository;
     private final ConductorMapper conductorMapper;
     private final EditarConductorMapper editarConductorMapper;
     private final Validator validator;
     private final PasswordEncoder passwordEncoder;
 
-    public ConductorService(ConductorMapper conductorMapper, EditarConductorMapper editarConductorMapper, Validator validator, PasswordEncoder passwordEncoder) {
+    public ConductorService(ConductorRepository conductorRepository, AutobusRepository autobusRepository, ConductorMapper conductorMapper, EditarConductorMapper editarConductorMapper, Validator validator, PasswordEncoder passwordEncoder) {
+        this.conductorRepository = conductorRepository;
+        this.autobusRepository = autobusRepository;
         this.conductorMapper = conductorMapper;
         this.editarConductorMapper = editarConductorMapper;
         this.validator = validator;
@@ -92,6 +98,17 @@ public class ConductorService {
         conductorDB.setCorreoElectronico(conductor.getCorreoElectronico());
         conductorDB.setTelefono(conductor.getTelefono());
         conductorDB.setNombreUsuario(conductor.getNombreUsuario());
+    }
+
+    public List<Conductor> obtenerConductoresActivosSinAutobus() {
+        List<Conductor> conductoresActivos = conductorRepository.findByEstado(Conductor.Estado.ACTIVO);
+
+        return conductoresActivos.stream()
+                .filter(conductor -> {
+                    List<Autobus> autobuses = autobusRepository.findByConductor(conductor);
+                    return autobuses.isEmpty();
+                })
+                .toList();
     }
 
 }

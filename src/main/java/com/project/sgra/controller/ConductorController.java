@@ -131,8 +131,17 @@ public class ConductorController {
 
         try {
             Conductor.Estado nuevoEstado = Conductor.Estado.valueOf(estadoStr);
-            conductor.setEstado(nuevoEstado);
-            conductorRepository.save(conductor);
+
+            if (nuevoEstado == Conductor.Estado.ACTIVO) {
+                conductor.setEstado(nuevoEstado);
+                conductor.setDisponibilidad(true);
+                conductorRepository.save(conductor);
+            } else {
+                conductor.setEstado(nuevoEstado);
+                conductor.setDisponibilidad(false);
+                conductorRepository.save(conductor);
+            }
+
             return ResponseEntity.ok("Estado actualizado correctamente");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Estado inválido");

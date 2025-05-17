@@ -8,7 +8,7 @@ function mostrarDetalleDesdeData(element) {
     const item = element.closest('.bus-item');
     item.classList.add('selected');
 
-    // Mostrar los detalles
+    // Mostrar los detalles del autobús
     const placa = element.getAttribute('data-matricula');
     const modelo = element.getAttribute('data-modelo');
     const capacidad = element.getAttribute('data-capacidad');
@@ -22,8 +22,25 @@ function mostrarDetalleDesdeData(element) {
     document.getElementById('detalle-ruta').textContent = ruta && ruta.trim() !== ""
         ? ruta
         : "No se ha vinculado con ninguna ruta";
-}
 
+    // Mostrar los detalles del conductor
+    const primerNombre = element.getAttribute('data-conductor-primerNombre');
+    const segundoNombre = element.getAttribute('data-conductor-segundoNombre');
+    const primerApellido = element.getAttribute('data-conductor-primerApellido');
+    const segundoApellido = element.getAttribute('data-conductor-segundoApellido');
+    const tipoDocumento = element.getAttribute('data-conductor-tipoDocumento');
+    const numeroDocumento = element.getAttribute('data-conductor-numeroDocumento');
+
+    // Verificamos si se asignó algún dato al conductor.
+    const nombresConductor = `${primerNombre || ""} ${segundoNombre || ""} ${primerApellido || ""} ${segundoApellido || ""}`.trim();
+    const documentoConductor = `${tipoDocumento || ""} ${numeroDocumento || ""}`.trim();
+
+    document.getElementById('detalle-conductor-nombres').textContent =
+        nombresConductor !== "" ? nombresConductor : "";
+
+    document.getElementById('detalle-conductor-documento').textContent =
+        documentoConductor !== "" ? documentoConductor : "";
+}
 
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -32,8 +49,6 @@ document.addEventListener("DOMContentLoaded", function () {
         mostrarDetalleDesdeData(primerBusInfo);
     }
 });
-
-
 
 function agregarAutobus() {
     const modal = new bootstrap.Modal(document.getElementById('modalCrearAutobus'));
@@ -62,5 +77,15 @@ function eliminarAutobus(button) {
     document.getElementById("autobusIdEliminar").value = id;
 
     const modal = new bootstrap.Modal(document.getElementById("modalConfirmarEliminarAutobus"));
+    modal.show();
+}
+
+function abrirModalVincularConductor() {
+    const selectedBus = document.querySelector('.bus-item.selected button[data-id]');
+
+    const busId = selectedBus.getAttribute('data-id');
+    document.getElementById('vincular-autobus-id').value = busId;
+
+    const modal = new bootstrap.Modal(document.getElementById('modalVincularConductor'));
     modal.show();
 }

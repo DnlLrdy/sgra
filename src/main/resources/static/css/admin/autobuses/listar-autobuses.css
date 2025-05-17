@@ -57,7 +57,7 @@
 }
 
 .bus-list {
-    max-height: 600px;
+    max-height: 570px;
     overflow-y: auto;
 }
 
@@ -75,22 +75,14 @@ body {
 }
 
 .bus-item.selected {
-    background-color: #e2e6ea; /* mismo color que el hover */
-    border: 2px solid #adb5bd; /* opcional: tono gris más suave */
-    transform: none; /* mantiene la posición */
+    background-color: #e2e6ea;
+    /* mismo color que el hover */
+    border: 2px solid #adb5bd;
+    /* opcional: tono gris más suave */
+    transform: none;
+    /* mantiene la posición */
 }
-
-
 
 .bus-item.selected:hover {
     transform: none;
 }
-
-
-
-
-
-
-
-
-
