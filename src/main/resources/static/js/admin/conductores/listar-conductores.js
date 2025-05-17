@@ -129,9 +129,12 @@ function mostrarDetalleConductor(element) {
         correoElectronico: element.getAttribute("data-correoElectronico") || '---',
         telefono: element.getAttribute("data-telefono") || '---',
         nombreUsuario: element.getAttribute("data-nombreUsuario") || '---',
-        estado: element.getAttribute("data-estado") || '---',
-        matricula: element.getAttribute("data-matricula") || '---'
+        estado: element.getAttribute("data-estado") || '---'
     };
+
+    // Evaluar matrícula con mensaje personalizado
+    const matricula = element.getAttribute("data-matricula");
+    datos.matricula = matricula && matricula.trim() !== '' ? matricula : 'No se le ha asignado ningun autobus';
 
     document.getElementById('detalle-id').value = datos.id;
     document.getElementById('detalle-primerNombre').textContent = datos.primerNombre;
@@ -147,12 +150,9 @@ function mostrarDetalleConductor(element) {
     document.getElementById('detalle-telefono').textContent = datos.telefono;
     document.getElementById('detalle-usuario').textContent = datos.nombreUsuario;
     document.getElementById('detalle-estado').value = datos.estado.toUpperCase().replace(/\s+/g, '_');
-    document.getElementById('detalle-autobus').textContent = datos.matricula && datos.matricula.trim() !== ""
-        ? datos.matricula
-        : "No se ha vinculado con ningun autobus";
-
-
+    document.getElementById('detalle-autobus').textContent = datos.matricula;
 }
+
 
 function agregarConductor() {
     const modal = new bootstrap.Modal(document.getElementById('modalCrearConductor'));
