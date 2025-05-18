@@ -19,4 +19,6 @@ public interface AutobusRepository extends MongoRepository<Autobus, String> {
     Optional<Autobus> findByConductor(Conductor conductor);
 
     boolean existsByConductor(Conductor conductor);
+
+    Optional<Autobus> findByConductorNombreUsuario(String nombreUsuario);
 }

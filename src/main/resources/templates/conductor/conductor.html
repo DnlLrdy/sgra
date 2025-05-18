@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GeoRoute - Panel del Conductor</title>
+
+    <!-- Bootstrap & Leaflet CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f5f7;
+            color: #343a40;
+            padding-top: 70px;
+        }
+
+        .navbar {
+            background-color: #1e1e2f;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.4rem;
+        }
+
+        .navbar .nav-link {
+            color: #f8d34c !important;
+            font-weight: 600;
+        }
+
+        .card {
+            border: none;
+            border-radius: 1rem;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+            background: #fff;
+        }
+
+        .card-header-custom {
+            font-size: 1.25rem;
+            font-weight: 700;
+            border-bottom: 2px solid #f8d34c;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #212529;
+            margin-bottom: 1rem;
+        }
+
+        .card-header-custom i {
+            color: #f8d34c;
+        }
+
+        .list-group-item {
+            border: none;
+            padding: 0.75rem 1rem;
+            font-size: 1.05rem;
+            border-left: 4px solid transparent;
+            transition: all 0.2s;
+            background: transparent;
+        }
+
+        .list-group-item:hover {
+            background-color: #fff6d6;
+            border-left-color: #f8d34c;
+        }
+
+        #map {
+            height: 550px;
+            border-radius: 0.75rem;
+        }
+
+        .section-subtle-note {
+            font-size: 0.85rem;
+            color: #6c757d;
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top shadow-sm px-3">
+        <div class="container-fluid">
+            <a class="navbar-brand text-warning" href="#">
+                <i class="fas fa-compass me-2"></i>GeoRoute
+            </a>
+            <div class="collapse navbar-collapse justify-content-end">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/sgra/logout}">
+                            <i class="fas fa-sign-out-alt me-1"></i> Cerrar sesión
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN -->
+    <main class="container-fluid mt-5 pt-3">
+        <div class="row g-4">
+            <!-- Panel izquierdo -->
+            <div class="col-12 col-lg-4 d-flex flex-column gap-4">
+                <!-- Autobús -->
+                <div class="card p-4">
+                    <div class="card-header-custom">
+                        <i class="fas fa-bus"></i> Autobús asignado
+                    </div>
+                    <p><strong>Placa:</strong> <span th:text="${autobus.matricula}">ABC-123</span></p>
+                    <p><strong>Modelo:</strong> <span th:text="${autobus.modelo}">Mercedes</span></p>
+                </div>
+
+                <!-- Paradas -->
+                <div class="card p-4 flex-grow-1 d-flex flex-column">
+                    <div class="card-header-custom">
+                        <i class="fas fa-location-dot"></i> Paradas
+                    </div>
+                    <ul class="list-group list-group-flush flex-grow-1" th:if="${ruta != null}">
+                        <li class="list-group-item" th:each="parada : ${ruta.paradas}">
+                            <i class="fas fa-map-pin me-2 text-warning"></i>
+                            <span th:text="${parada.nombre}">Nombre de la parada</span>
+                        </li>
+                    </ul>
+                    <div class="mt-3 section-subtle-note">
+                        Desliza para ver todas las paradas
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mapa -->
+            <div class="col-12 col-lg-8">
+                <div class="card p-4 h-100 d-flex flex-column">
+                    <div class="card-header-custom text-warning">
+                        <i class="fas fa-route"></i> <span th:text="${ruta.nombre}">Ruta Principal</span>
+                    </div>
+                    <div id="map" class="flex-grow-1 mt-2"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+        crossorigin="anonymous"></script>
+
+    <script src="../../static/js/conductor/conductor.js"></script>
+    <script th:src="@{/js/conductor/conductor.js}"></script>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        let paradas = /*[[${ruta.paradas}]]*/[];
+        console.log("Paradas cargadas:", paradas);
+        /*]]>*/
+    </script>
+
+    <script>
+        // Inicialización del mapa con Leaflet
+        const map = L.map('map', {
+            center: [10.395431, -75.472807],
+            zoom: 18,
+            minZoom: 14,
+            maxZoom: 18,
+            maxBounds: [
+                [10.2000, -75.5700],
+                [10.5000, -75.3700]
+            ],
+            maxBoundsViscosity: 1.0
+        });
+
+        // Cargar capa de OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+        const marcadores = [];
+        const bounds = [];
+
+        paradas.forEach((parada, index) => {
+            const latLng = [parada.latitud, parada.longitud];
+
+            const color = parada.color || 'blue';
+
+            const iconoPersonalizado = L.icon({
+                iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-${color}.png`,
+                shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                shadowSize: [41, 41]
+            });
+
+            const marker = L.marker(latLng, { icon: iconoPersonalizado })
+                .bindPopup(`<strong>${parada.nombre}</strong>`)
+                .addTo(map);
+
+            marcadores.push(marker);
+            bounds.push(latLng);
+
+            marker.on('click', () => {
+                marker.openPopup();
+            });
+        });
+
+        if (bounds.length > 0) {
+            map.fitBounds(bounds);
+        }
+    </script>
+</body>
+
+</html>
