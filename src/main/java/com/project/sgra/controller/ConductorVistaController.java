@@ -33,13 +33,11 @@ public class ConductorVistaController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String conductorNombreUsuario = authentication.getName();
 
-        // Buscar el autobús asociado al conductor
         Optional<Autobus> autobusOpt = autobusRepository.findByConductorNombreUsuario(conductorNombreUsuario);
 
         if (autobusOpt.isPresent()) {
             Autobus autobus = autobusOpt.get();
 
-            // Buscar la ruta asociada al autobús
             Optional<Ruta> rutaOpt = rutaRepository.findById(autobus.getRutaId());
 
             if (rutaOpt.isPresent()) {
@@ -47,16 +45,14 @@ public class ConductorVistaController {
                 model.addAttribute("autobus", autobus);
                 model.addAttribute("ruta", ruta);
             } else {
-                // Ruta no encontrada
                 model.addAttribute("error", "Ruta no encontrada para el autobús.");
             }
         } else {
-            // Autobús no encontrado
             model.addAttribute("error", "No se encontró un autobús para este conductor.");
         }
 
+        model.addAttribute("conductorNombreUsuario", conductorNombreUsuario);
         return CONDUCTOR_VISTA;
     }
-
 
 }

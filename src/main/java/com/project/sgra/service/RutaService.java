@@ -51,7 +51,7 @@ public class RutaService {
             mensajesError.add(violation.getMessage());
         }
 
-        if (mensajesError.isEmpty()){
+        if (mensajesError.isEmpty()) {
             Set<ConstraintViolation<RutaDTO>> violations2 = validator.validate(rutaDTO);
             for (ConstraintViolation<RutaDTO> violation : violations2) {
                 mensajesError.add(violation.getMessage());

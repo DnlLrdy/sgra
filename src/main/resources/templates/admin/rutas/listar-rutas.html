@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SGRA</title>
+    <title>GeoRoute</title>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
@@ -20,23 +20,47 @@
 </head>
 
 <body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand">SGRA</a>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+        <div class="container">
+            <a class="navbar-brand">GeoRoute</a>
+
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
+
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page">Rutas</a>
+                    </li>
+
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/sgra/admin/autobuses}">Autobuses</a>
                     </li>
+
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/sgra/admin/conductores}">Conductores</a>
                     </li>
+
                     <li class="nav-item">
-                        <a class="nav-link text-danger" th:href="@{/sgra/logout}">Cerrar sesión</a>
+                        <a class="nav-link" th:href="@{/sgra/admin/dashboard}">Dashboard</a>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person-circle me-1"></i>
+                            <span th:text="${administradorNombreUsuario}"></span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="userDropdown">
+                            <li>
+                                <a class="dropdown-item text-danger" th:href="@{/sgra/logout}">
+                                    <i class="bi bi-box-arrow-right me-2"></i>Cerrar sesión
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </div>
@@ -45,8 +69,8 @@
 
     <div class="container-fluid mt-5">
         <div class="row">
+
             <div class="col-md-8">
-                <!-- Tarjeta del selector de rutas -->
                 <div class="card shadow mb-3">
                     <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
                         <h3 class="mb-0"><i class="bi bi-signpost-split"></i> Seleccionar ruta</h3>
@@ -77,9 +101,7 @@
                     </div>
                 </div>
 
-
-                <!-- Tarjeta del mapa -->
-                <div class="card shadow">
+                <div class="card shadow mb-3">
                     <div class="card-body">
                         <div id="map" class="mb-4"></div>
                     </div>
@@ -87,7 +109,6 @@
             </div>
 
             <div class="col-md-4">
-                <!-- Card de paradas -->
                 <div class="card shadow">
                     <div class="card-header bg-dark text-white">
                         <h3 class="mb-0"><i class="bi bi-list-ul"></i> Lista de paradas</h3>
@@ -105,8 +126,7 @@
                     </div>
                 </div>
 
-                <!-- Card de autobuses debajo de paradas -->
-                <div class="card shadow mt-4">
+                <div class="card shadow mt-4 mb-5">
                     <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
                         <h3 class="mb-0"><i class="bi bi-bus-front"></i> Lista de autobuses</h3>
                         <a id="btn-vincular-autobus" class="btn btn-light text-dark d-none"
@@ -127,158 +147,13 @@
                 </div>
             </div>
 
-
         </div>
     </div>
 
-    <div class="modal fade" id="modalConfirmarEliminar" tabindex="-1" aria-labelledby="modalEliminarLabel"
-        aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content rounded-4 shadow-sm border-0">
-                <div class="modal-header bg-white border-bottom-0">
-                    <h5 class="modal-title text-danger-emphasis fw-semibold" id="modalEliminarLabel">
-                        <i class="bi bi-trash me-2 text-danger"></i>
-                        Eliminar ruta
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                </div>
-                <div class="modal-body text-muted fs-6">
-                    ¿Estás seguro de que deseas eliminar esta ruta? También se eliminarán todas sus paradas asociadas.
-                    <div class="mt-1 small text-secondary">
-                        Esta acción no se puede deshacer.
-                    </div>
-                </div>
-                <div class="modal-footer border-top-0 d-flex justify-content-between">
-                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">
-                        Cancelar
-                    </button>
-                    <button type="button" class="btn btn-danger rounded-pill px-4" onclick="confirmarEliminacion()">
-                        Eliminar
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal para seleccionar autobuses -->
-    <div th:fragment="modalSeleccionarAutobuses">
-        <div class="modal fade" id="modalSeleccionarAutobuses" tabindex="-1"
-            aria-labelledby="modalSeleccionarAutobusesLabel" aria-hidden="true" data-bs-backdrop="static"
-            data-bs-keyboard="false">
-            <div class="modal-dialog modal-lg modal-dialog-centered"> <!-- Modal más grande -->
-                <div class="modal-content rounded-4 shadow-sm border-0">
-                    <!-- Header -->
-                    <div class="modal-header bg-white border-bottom-0">
-                        <h5 class="modal-title text-black-emphasis fw-semibold" id="modalSeleccionarAutobusesLabel">
-                            <i class="bi bi-bus-front me-2"></i>Seleccionar Autobuses
-                        </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                    </div>
-
-                    <form th:action="@{/sgra/admin/rutas/vincular}" method="post">
-                        <input type="hidden" id="rutaId" name="rutaId" />
-                        <input type="hidden" id="rutaNombre" name="rutaNombre" />
-
-                        <!-- Body -->
-                        <div class="modal-body text-muted fs-6">
-                            <div id="modal-autobuses-container">
-                            </div>
-                        </div>
-
-                        <!-- Footer -->
-                        <div class="modal-footer border-top-0 d-flex justify-content-between">
-                            <button type="button" class="btn btn-outline-secondary rounded-pill px-4"
-                                data-bs-dismiss="modal">Cancelar</button>
-                            <button type="submit" id="btn-seleccionar-autobuses"
-                                class="btn btn-dark rounded-pill px-4">Agregar</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- Modal para desvincular autobús de la ruta -->
-    <div th:fragment="modalDesvincularAutobus">
-        <div class="modal fade" id="modalConfirmarDesvinculacion" tabindex="-1" aria-labelledby="modalDesvincularLabel"
-            aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content rounded-4 shadow-sm border-0">
-                    <!-- Header -->
-                    <div class="modal-header bg-white border-bottom-0">
-                        <h5 class="modal-title text-danger-emphasis fw-semibold" id="modalDesvincularLabel">
-                            <i class="bi bi-arrow-left-right me-2 text-danger"></i>Desvincular autobús de la ruta
-                        </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                    </div>
-
-                    <form th:action="@{/sgra/admin/rutas/desvincular}" method="post">
-
-                        <input type="hidden" name="autobusId" id="autobusIdDesvincular">
-
-                        <!-- Body -->
-                        <div class="modal-body text-muted fs-6">
-                            ¿Estás seguro de que deseas desvincular este autobús de la ruta?
-                            <div class="mt-1 small text-secondary">
-                                Esta acción no afectará al autobús ni a otras rutas.
-                            </div>
-                        </div>
-
-                        <!-- Footer -->
-                        <div class="modal-footer border-top-0 d-flex justify-content-between">
-                            <button type="button" class="btn btn-outline-secondary rounded-pill px-4"
-                                data-bs-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-danger rounded-pill px-4">Desvincular</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Detalles Autobús -->
-    <div class="modal fade" id="modalDetallesAutobus" tabindex="-1" aria-labelledby="modalDetallesAutobusLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content rounded-4 shadow-sm border-0">
-                <div class="modal-header bg-white border-bottom-0">
-                    <h5 class="modal-title text-dark fw-semibold" id="modalDetallesAutobusLabel">
-                        <i class="bi bi-bus-front me-2"></i>Detalles del Autobús
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                </div>
-                <div class="modal-body text-muted fs-6">
-                    <div class="mb-4">
-                        <h6 class="text-dark fw-semibold mb-3">
-                            <i class="bi bi-info-circle me-2"></i>Información del Autobús
-                        </h6>
-                        <p class="mb-1"><strong>Modelo:</strong> <span id="detalle-autobus-modelo"></span></p>
-                        <p class="mb-0"><strong>Capacidad:</strong> <span id="detalle-autobus-capacidad"></span></p>
-                    </div>
-
-                    <hr>
-
-                    <div class="mt-4">
-                        <h6 class="text-dark fw-semibold mb-3">
-                            <i class="bi bi-person-vcard me-2"></i>Información del Conductor
-                        </h6>
-                        <p class="mb-1"><strong>Nombre:</strong> <span id="detalle-conductor-nombres"></span></p>
-                        <p class="mb-1">
-                            <strong><span id="detalle-conductor-tipoDocumento"></span></strong>
-                            <span id="detalle-conductor-numeroDocumento"></span>
-                        </p>
-                        <p class="mb-0"><strong>Estado:</strong> <span id="detalle-conductor-estado"></span></p>
-                    </div>
-                </div>
-                <div class="modal-footer border-top-0">
-                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4"
-                        data-bs-dismiss="modal">Cerrar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    <div th:replace="admin/rutas/modales :: modalConfirmarEliminar"></div>
+    <div th:replace="admin/rutas/modales :: modalSeleccionarAutobuses"></div>
+    <div th:replace="admin/rutas/modales :: modalDesvincularAutobus"></div>
+    <div th:replace="admin/rutas/modales :: modalDetallesAutobus"></div>
 
     <div th:if="${mensajesError != null}" th:inline="javascript">
         <script>
@@ -345,7 +220,6 @@
         </script>
     </div>
 
-
     <div th:if="${mensajeError != null}" th:inline="javascript">
         <script>
             const error = /*[[${mensajeError}]]*/'';
@@ -375,8 +249,6 @@
             }
         </script>
     </div>
-
-
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>

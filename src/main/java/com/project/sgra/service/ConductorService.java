@@ -10,7 +10,6 @@ import com.project.sgra.repository.AutobusRepository;
 import com.project.sgra.repository.ConductorRepository;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
-import org.bson.types.ObjectId;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -114,6 +113,5 @@ public class ConductorService {
 
         return conductorRepository.findByEstadoAndIdNotIn(Conductor.Estado.ACTIVO, idsConductoresConAutobus);
     }
-
 
 }

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acceder - [Nombre de tu Aplicación/Sitio]</title>
+    <title>GeoRoute</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,10 +21,10 @@
 
 <body>
     <div class="login-container">
-        <h2 class="login-title">Acceder</h2>
+        <h2 class="login-title">Iniciar sesión</h2>
         <form th:action="@{/sgra/login/logging}" th:method="post">
             <div class="form-group">
-                <label for="username" class="form-label">Nombre de Usuario</label>
+                <label for="username" class="form-label">Nombre de usuario</label>
                 <div class="input-wrapper">
                     <i class="fas fa-user input-icon"></i>
                     <input type="text" class="form-control" id="username" name="nombreUsuario"
@@ -41,7 +41,7 @@
                 </div>
             </div>
             <button type="submit" class="btn btn-primary">
-                <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+                <i class="fas fa-sign-in-alt"></i> Iniciar sesión
             </button>
         </form>
         <div class="separator"><span>O</span></div>
@@ -92,7 +92,6 @@
             }
         </script>
     </div>
-
 
     <div th:if="${mensajeError != null}" th:inline="javascript">
         <script>

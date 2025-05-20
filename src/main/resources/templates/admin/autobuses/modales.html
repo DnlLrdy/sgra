@@ -1,10 +1,9 @@
-<!-- Modal para crear autobús -->
 <div th:fragment="modalCrearAutobus">
     <div class="modal fade" id="modalCrearAutobus" tabindex="-1" aria-labelledby="modalCrearAutobusLabel"
         aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content rounded-4 shadow-sm border-0">
-                <!-- Header -->
+
                 <div class="modal-header bg-white border-bottom-0">
                     <h5 class="modal-title text-info-emphasis fw-semibold" id="modalCrearAutobusLabel">
                         <i class="bi bi-plus-circle me-2"></i>Crear autobús
@@ -12,9 +11,8 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
 
-                <!-- Form -->
                 <form th:action="@{/sgra/admin/autobuses/guardar}" method="post" th:object="${autobusDTO}">
-                    <!-- Body -->
+
                     <div class="modal-body text-muted fs-6">
                         <label for="matricula-autobus" class="form-label">Matrícula</label>
                         <input type="text" id="matricula-autobus" name="matricula" class="form-control"
@@ -22,8 +20,8 @@
                             oninput="this.value = this.value.toUpperCase();">
 
                         <label for="modelo-autobus" class="form-label mt-3">Modelo</label>
-                        <input type="text" id="modelo-autobus" name="modelo" class="form-control" th:field="*{modeloDTO}"
-                            placeholder="Ingrese el modelo del autobús">
+                        <input type="text" id="modelo-autobus" name="modelo" class="form-control"
+                            th:field="*{modeloDTO}" placeholder="Ingrese el modelo del autobús">
 
                         <label for="capacidad-autobus" class="form-label mt-3">Capacidad</label>
                         <input type="number" id="capacidad-autobus" name="capacidad" class="form-control"
@@ -37,7 +35,6 @@
                         </select>
                     </div>
 
-                    <!-- Footer -->
                     <div class="modal-footer border-top-0 d-flex justify-content-between">
                         <button type="button" class="btn btn-outline-secondary rounded-pill px-4"
                             data-bs-dismiss="modal">Cancelar</button>
@@ -49,13 +46,12 @@
     </div>
 </div>
 
-<!-- Modal para modificar autobús -->
 <div th:fragment="modalModificarAutobus">
     <div class="modal fade" id="modalEditarAutobus" tabindex="-1" aria-labelledby="modalEditarAutobusLabel"
         aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content rounded-4 shadow-sm border-0">
-                <!-- Header -->
+
                 <div class="modal-header bg-white border-bottom-0">
                     <h5 class="modal-title text-warning-emphasis fw-semibold" id="modalEditarAutobusLabel">
                         <i class="bi bi-pencil-square me-2"></i>Modificar autobús
@@ -63,11 +59,10 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
 
-                <!-- Form -->
+
                 <form th:action="@{/sgra/admin/autobuses/actualizar}" method="post" th:object="${autobusDTO}">
                     <input type="hidden" id="autobus-id-edit" name="id" th:field="*{idDTO}" />
 
-                    <!-- Body -->
                     <div class="modal-body text-muted fs-6">
                         <label for="matricula-autobus-edit" class="form-label">Nueva matrícula</label>
                         <input type="text" id="matricula-autobus-edit" name="matricula" class="form-control"
@@ -90,7 +85,6 @@
                         </select>
                     </div>
 
-                    <!-- Footer -->
                     <div class="modal-footer border-top-0 d-flex justify-content-between">
                         <button type="button" class="btn btn-outline-secondary rounded-pill px-4"
                             data-bs-dismiss="modal">Cancelar</button>
@@ -102,14 +96,12 @@
     </div>
 </div>
 
-
-<!-- Modal para eliminar autobús -->
 <div th:fragment="modalEliminarAutobus">
     <div class="modal fade" id="modalConfirmarEliminarAutobus" tabindex="-1" aria-labelledby="modalEliminarAutobusLabel"
         aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content rounded-4 shadow-sm border-0">
-                <!-- Header -->
+
                 <div class="modal-header bg-white border-bottom-0">
                     <h5 class="modal-title text-danger-emphasis fw-semibold" id="modalEliminarAutobusLabel">
                         <i class="bi bi-trash me-2 text-danger"></i>Eliminar autobús
@@ -117,12 +109,10 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
 
-                <!-- Form -->
                 <form th:action="@{/sgra/admin/autobuses/eliminar}" method="post">
 
                     <input type="hidden" name="id" id="autobusIdEliminar">
 
-                    <!-- Body -->
                     <div class="modal-body text-muted fs-6">
                         ¿Estás seguro de que deseas eliminar este autobús?
                         <div class="mt-1 small text-secondary">
@@ -130,7 +120,6 @@
                         </div>
                     </div>
 
-                    <!-- Footer -->
                     <div class="modal-footer border-top-0 d-flex justify-content-between">
                         <button type="button" class="btn btn-outline-secondary rounded-pill px-4"
                             data-bs-dismiss="modal">Cancelar</button>
@@ -138,6 +127,51 @@
                     </div>
                 </form>
             </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="modalVincularConductor">
+    <div class="modal fade" id="modalVincularConductor" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <form method="post" th:action="@{/sgra/admin/autobuses/vincular-conductor}"
+                class="modal-content bg-light border-0 shadow-sm needs-validation" novalidate>
+                <div class="modal-header bg-dark text-white border-0">
+                    <h5 class="modal-title" id="modalLabel">Vincular conductor al autobús</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="vincular-autobus-id" name="autobusId" />
+
+                    <div th:if="${#lists.isEmpty(conductores)}" class="alert alert-dark text-center">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        No hay conductores disponibles actualmente.
+                    </div>
+
+                    <div class="mb-3" th:unless="${#lists.isEmpty(conductores)}">
+                        <label for="conductorId" class="form-label fw-bold">Selecciona un conductor</label>
+                        <select class="form-select shadow-sm" id="conductorId" name="conductorId" required>
+                            <option value="" disabled selected>-- Seleccione --</option>
+                            <option th:each="conductor : ${conductores}" th:value="${conductor.id}" th:text="${conductor.primerNombre + ' ' 
+              + (conductor.segundoNombre != null ? conductor.segundoNombre + ' ' : '') 
+              + conductor.primerApellido + ' ' 
+              + (conductor.segundoApellido != null ? conductor.segundoApellido + ' ' : '') 
+              + '- ' + conductor.tipoDocumento + ' ' 
+              + conductor.numeroDocumento + ' - Estado: ' 
+              + conductor.estado}">
+                            </option>
+                        </select>
+                        <div class="invalid-feedback">Debes seleccionar un conductor.</div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="submit" class="btn btn-dark" th:disabled="${#lists.isEmpty(conductores)}">
+                        Vincular
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

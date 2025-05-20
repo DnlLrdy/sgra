@@ -26,5 +26,4 @@ public interface ConductorRepository extends MongoRepository<Conductor, String> 
 
     @Query("{ 'estado': ?0, '_id': { '$nin': ?1 } }")
     List<Conductor> findByEstadoAndIdNotIn(Conductor.Estado estado, List<String> excludeIds);
-
 }

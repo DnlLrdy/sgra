@@ -3,11 +3,12 @@ package com.project.sgra.controller;
 import com.project.sgra.dto.AutobusDTO;
 import com.project.sgra.model.Autobus;
 import com.project.sgra.repository.AutobusRepository;
-import com.project.sgra.repository.ConductorRepository;
 import com.project.sgra.service.AutobusService;
 import com.project.sgra.service.ConductorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +40,7 @@ public class AutobusController {
         model.addAttribute("conductores", conductorService.obtenerConductoresActivosSinAutobus());
         model.addAttribute("autobusDTO", model.containsAttribute("autobusDTO") ? model.getAttribute("autobusDTO") : new AutobusDTO());
 
+        model.addAttribute("administradorNombreUsuario", administradorNombreUsuario());
         return LISTAR_AUTOBUSES_VISTA;
     }
 
@@ -162,5 +164,9 @@ public class AutobusController {
         }
     }
 
+    public String administradorNombreUsuario() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getName();
+    }
 
 }

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SGRA - Gestión de Autobuses</title>
+    <title>GeoRoute</title>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
@@ -20,23 +20,47 @@
 </head>
 
 <body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand">SGRA</a>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+        <div class="container">
+            <a class="navbar-brand">GeoRoute</a>
+
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
+
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/sgra/admin/rutas}">Rutas</a>
                     </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page">Autobuses</a>
+                    </li>
+
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/sgra/admin/conductores}">Conductores</a>
                     </li>
+
                     <li class="nav-item">
-                        <a class="nav-link text-danger" th:href="@{/sgra/logout}">Cerrar sesión</a>
+                        <a class="nav-link" th:href="@{/sgra/admin/dashboard}">Dashboard</a>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person-circle me-1"></i>
+                            <span th:text="${administradorNombreUsuario}"></span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="userDropdown">
+                            <li>
+                                <a class="dropdown-item text-danger" th:href="@{/sgra/logout}">
+                                    <i class="bi bi-box-arrow-right me-2"></i>Cerrar sesión
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </div>
@@ -44,9 +68,9 @@
     </nav>
 
     <div class="container-fluid mt-5">
-        <div class="row justify-content-center"> <!-- Añadí la clase justify-content-center para centrar las cards -->
-            <!-- Bus List Card -->
-            <div class="col-md-5"> <!-- Puedes ajustar el tamaño de la columna aquí si lo deseas -->
+        <div class="row justify-content-center">
+
+            <div class="col-md-5 mb-3">
                 <div class="card shadow">
                     <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
                         <h3 class="mb-0"><i class="bi bi-bus-front"></i> Lista de autobuses</h3>
@@ -55,13 +79,11 @@
                         </button>
                     </div>
                     <div class="card-body bus-list p-3">
-                        <!-- Mensaje cuando no hay rutas -->
                         <div th:if="${#lists.isEmpty(autobuses)}" class="alert alert-dark text-center" role="alert">
                             <strong>¡No hay autobuses agregados!</strong><br>
                             Agreguelos.
                         </div>
 
-                        <!-- Lista de autobuses -->
                         <div th:each="autobus : ${autobuses}" class="bus-item">
                             <div class="bus-info" th:data-id="${autobus.id}" th:data-matricula="${autobus.matricula}"
                                 th:data-modelo="${autobus.modelo}" th:data-capacidad="${autobus.capacidad}"
@@ -96,7 +118,7 @@
                 </div>
             </div>
 
-            <div class="col-md-5">
+            <div class="col-md-5 mb-5">
                 <div class="card shadow rounded-4">
                     <div class="card-header bg-dark text-white d-flex align-items-center">
                         <h4 class="mb-0">
@@ -175,89 +197,10 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modalVincularConductor" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <form method="post" th:action="@{/sgra/admin/autobuses/vincular-conductor}"
-                class="modal-content bg-light border-0 shadow-sm needs-validation" novalidate>
-                <div class="modal-header bg-dark text-white border-0">
-                    <h5 class="modal-title" id="modalLabel">Vincular conductor al autobús</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                        aria-label="Cerrar"></button>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" id="vincular-autobus-id" name="autobusId" />
-
-                    <!-- Mostrar mensaje si no hay conductores disponibles -->
-                    <div th:if="${#lists.isEmpty(conductores)}" class="alert alert-dark text-center">
-                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                        No hay conductores disponibles actualmente.
-                    </div>
-
-                    <!-- Mostrar select si hay conductores -->
-                    <div class="mb-3" th:unless="${#lists.isEmpty(conductores)}">
-                        <label for="conductorId" class="form-label fw-bold">Selecciona un conductor</label>
-                        <select class="form-select shadow-sm" id="conductorId" name="conductorId" required>
-                            <option value="" disabled selected>-- Seleccione --</option>
-                            <option th:each="conductor : ${conductores}" th:value="${conductor.id}" th:text="${conductor.primerNombre + ' ' 
-              + (conductor.segundoNombre != null ? conductor.segundoNombre + ' ' : '') 
-              + conductor.primerApellido + ' ' 
-              + (conductor.segundoApellido != null ? conductor.segundoApellido + ' ' : '') 
-              + '- ' + conductor.tipoDocumento + ' ' 
-              + conductor.numeroDocumento + ' - Estado: ' 
-              + conductor.estado}">
-                            </option>
-                        </select>
-                        <div class="invalid-feedback">Debes seleccionar un conductor.</div>
-                    </div>
-                </div>
-                <div class="modal-footer border-0">
-                    <button type="submit" class="btn btn-dark" th:disabled="${#lists.isEmpty(conductores)}">
-                        Vincular
-                    </button>
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
     <div th:replace="admin/autobuses/modales :: modalCrearAutobus"></div>
     <div th:replace="admin/autobuses/modales :: modalModificarAutobus"></div>
     <div th:replace="admin/autobuses/modales :: modalEliminarAutobus"></div>
-
-    <div th:if="${mensajesError != null}" th:inline="javascript">
-        <script>
-            const errors = /*[[${mensajesError}]]*/[];
-            if (errors.length > 0) {
-                const Toast = Swal.mixin({
-                    toast: true,
-                    position: 'top',
-                    showConfirmButton: false,
-                    timer: 3500,
-                    timerProgressBar: true,
-                    didOpen: (toast) => {
-                        toast.addEventListener('mouseenter', Swal.stopTimer);
-                        toast.addEventListener('mouseleave', Swal.resumeTimer);
-                    },
-                    customClass: { popup: 'swal-popup' },
-                });
-                document.addEventListener('click', (e) => {
-                    if (!document.querySelector('.swal-popup').contains(e.target)) {
-                        Swal.close();
-                    }
-                });
-                let showAlert = (index) => {
-                    if (index < errors.length) {
-                        Toast.fire({
-                            icon: 'error',
-                            title: errors[index],
-                            iconColor: '#e74c3c',
-                        }).then(() => showAlert(index + 1));
-                    }
-                };
-                showAlert(0);
-            }
-        </script>
-    </div>
+    <div th:replace="admin/autobuses/modales :: modalVincularConductor"></div>
 
     <div th:if="${abrirModalAgregar != null}" th:inline="javascript">
         <script>
@@ -307,7 +250,6 @@
         </script>
     </div>
 
-
     <div th:if="${mensajeError != null}" th:inline="javascript">
         <script>
             const error = /*[[${mensajeError}]]*/'';
@@ -338,6 +280,40 @@
         </script>
     </div>
 
+    <div th:if="${mensajesError != null}" th:inline="javascript">
+        <script>
+            const errors = /*[[${mensajesError}]]*/[];
+            if (errors.length > 0) {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top',
+                    showConfirmButton: false,
+                    timer: 3500,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
+                    },
+                    customClass: { popup: 'swal-popup' },
+                });
+                document.addEventListener('click', (e) => {
+                    if (!document.querySelector('.swal-popup').contains(e.target)) {
+                        Swal.close();
+                    }
+                });
+                let showAlert = (index) => {
+                    if (index < errors.length) {
+                        Toast.fire({
+                            icon: 'error',
+                            title: errors[index],
+                            iconColor: '#e74c3c',
+                        }).then(() => showAlert(index + 1));
+                    }
+                };
+                showAlert(0);
+            }
+        </script>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"

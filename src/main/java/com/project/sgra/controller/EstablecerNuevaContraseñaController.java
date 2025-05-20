@@ -138,5 +138,4 @@ public class EstablecerNuevaContraseñaController {
                 conductor.map(c -> passwordEncoder.matches(nuevaContraseña, c.getContraseña())).orElse(false);
     }
 
-
 }

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SGRA</title>
+    <title>GeoRoute</title>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
@@ -20,23 +20,47 @@
 </head>
 
 <body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand">SGRA</a>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+        <div class="container">
+            <a class="navbar-brand">GeoRoute</a>
+
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
+
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page">Rutas</a>
+                    </li>
+
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/sgra/admin/autobuses}">Autobuses</a>
                     </li>
+
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/sgra/admin/conductores}">Conductores</a>
                     </li>
+
                     <li class="nav-item">
-                        <a class="nav-link text-danger" th:href="@{/sgra/logout}">Cerrar sesión</a>
+                        <a class="nav-link" th:href="@{/sgra/admin/dashboard}">Dashboard</a>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person-circle me-1"></i>
+                            <span th:text="${administradorNombreUsuario}"></span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="userDropdown">
+                            <li>
+                                <a class="dropdown-item text-danger" th:href="@{/sgra/logout}">
+                                    <i class="bi bi-box-arrow-right me-2"></i>Cerrar sesión
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </div>
@@ -45,10 +69,11 @@
 
     <div class="container-fluid mt-5">
         <div class="row">
+
             <div class="col-md-8">
-                <!-- Tarjeta del formulario para crear una ruta -->
                 <div class="card shadow mb-3">
-                    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center flex-wrap">
+                    <div
+                        class="card-header bg-dark text-white d-flex justify-content-between align-items-center flex-wrap">
                         <h3 class="mb-0"><i class="bi bi-geo-alt"></i> Crear una ruta</h3>
                         <div class="d-flex gap-2 mt-2 mt-md-0">
                             <a th:href="@{/sgra/admin/rutas}" class="btn btn-light text-dark">
@@ -59,32 +84,29 @@
                             </button>
                         </div>
                     </div>
-            
+
                     <div class="card-body">
-                        <form id="form-ruta" th:action="@{/sgra/admin/rutas/guardar}" th:object="${rutaDTO}" method="post">
+                        <form id="form-ruta" th:action="@{/sgra/admin/rutas/guardar}" th:object="${rutaDTO}"
+                            method="post">
                             <div class="mb-3">
-                                <label class="form-label">Nombre de la ruta</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="bi bi-map"></i></span>
                                     <input type="text" th:field="*{nombreDTO}" class="form-control"
                                         placeholder="Ingrese el nombre de la ruta" />
                                 </div>
                             </div>
-                            <input type="hidden" id="paradas-input" name="paradasJson" value="[]"/>
+                            <input type="hidden" id="paradas-input" name="paradasJson" value="[]" />
                         </form>
                     </div>
                 </div>
-            
-                <!-- Tarjeta del mapa -->
-                <div class="card shadow">
+                <div class="card shadow mb-3">
                     <div class="card-body">
                         <div id="map" class="mb-4"></div>
                     </div>
                 </div>
             </div>
-            
 
-            <div class="col-md-4">
+            <div class="col-md-4 mb-5">
                 <div class="card shadow">
                     <div class="card-header bg-dark text-white">
                         <h3 class="mb-0"><i class="bi bi-list-ul"></i> Lista de paradas</h3>
@@ -105,6 +127,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 

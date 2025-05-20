@@ -9,6 +9,8 @@ import com.project.sgra.repository.ConductorRepository;
 import com.project.sgra.service.ConductorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -54,6 +56,7 @@ public class ConductorController {
         model.addAttribute("conductorDTO", model.containsAttribute("conductorDTO") ? model.getAttribute("conductorDTO") : new ConductorDTO());
         model.addAttribute("editarConductorDTO", model.containsAttribute("editarConductorDTO") ? model.getAttribute("editarConductorDTO") : new EditarConductorDTO());
 
+        model.addAttribute("administradorNombreUsuario", administradorNombreUsuario());
         return LISTAR_CONDUCTORES_VISTA;
     }
 
@@ -192,6 +195,11 @@ public class ConductorController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al actualizar el estado");
         }
 
+    }
+
+    public String administradorNombreUsuario() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getName();
     }
 
 }

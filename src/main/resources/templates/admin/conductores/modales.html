@@ -3,7 +3,7 @@
         aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content rounded-4 shadow-sm border-0">
-                <!-- Header -->
+
                 <div class="modal-header bg-white border-bottom-0">
                     <h5 class="modal-title text-info-emphasis fw-semibold" id="modalCrearConductorLabel">
                         <i class="bi bi-person-plus me-2"></i> Registrar Conductor
@@ -11,12 +11,10 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
 
-                <!-- Formulario -->
                 <form th:action="@{/sgra/admin/conductores/guardar}" method="post" th:object="${conductorDTO}">
-                    <!-- Step 1: Información Personal -->
+
                     <div class="modal-body text-muted fs-6">
                         <div id="step1">
-                            <!-- Información personal -->
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="primerNombre" class="form-label">Primer Nombre</label>
@@ -67,9 +65,7 @@
                             </div>
                         </div>
 
-                        <!-- Step 2: Documentos y Contacto -->
                         <div id="step2" class="d-none">
-                            <!-- Documentos -->
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="tipoDocumento" class="form-label">Tipo de Documento</label>
@@ -135,9 +131,7 @@
                             </div>
                         </div>
 
-                        <!-- Step 3: Datos de Usuario -->
                         <div id="step3" class="d-none">
-                            <!-- Datos de usuario -->
                             <div class="form-group">
                                 <label for="nombreUsuario" class="form-label">Nombre de Usuario</label>
                                 <div class="input-wrapper">
@@ -169,7 +163,7 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Footer -->
+
                         <div class="modal-footer border-top-0 d-flex justify-content-between" id="modalFooter">
                             <div id="footerLeft">
                                 <button type="button" class="btn btn-outline-secondary rounded-pill px-4 d-none"
@@ -194,7 +188,7 @@
         aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content rounded-4 shadow-sm border-0">
-                <!-- Header -->
+
                 <div class="modal-header bg-white border-bottom-0">
                     <h5 class="modal-title text-warning fw-semibold" id="modalEditarConductorLabel">
                         <i class="bi bi-pencil-square me-2"></i> Editar Conductor
@@ -202,12 +196,11 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
 
-                <!-- Formulario -->
+
                 <form th:action="@{/sgra/admin/conductores/actualizar}" method="post" th:object="${editarConductorDTO}">
                     <input type="hidden" id="conductor-id-edit" name="id" th:field="*{idDTO}" />
 
                     <div class="modal-body text-muted fs-6">
-                        <!-- Step 1: Información personal -->
                         <div id="editStep1">
                             <div class="form-row">
                                 <div class="form-group">
@@ -257,7 +250,6 @@
                             </div>
                         </div>
 
-                        <!-- Step 2: Documentos y contacto -->
                         <div id="editStep2" class="d-none">
                             <div class="form-row">
                                 <div class="form-group">
@@ -322,7 +314,6 @@
                             </div>
                         </div>
 
-                        <!-- Step 3: Datos de usuario -->
                         <div id="editStep3" class="d-none">
                             <div class="form-group">
                                 <label class="form-label">Nombre de Usuario</label>
@@ -335,7 +326,6 @@
                         </div>
                     </div>
 
-                    <!-- Footer con navegación -->
                     <div class="modal-footer border-top-0 d-flex justify-content-between" id="modalFooterEditar">
                         <div>
                             <button type="button" class="btn btn-outline-secondary rounded-pill d-none"
@@ -360,7 +350,7 @@
         data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content rounded-4 shadow-sm border-0">
-                <!-- Header -->
+
                 <div class="modal-header bg-white border-bottom-0">
                     <h5 class="modal-title text-danger-emphasis fw-semibold" id="modalEliminarConductorLabel">
                         <i class="fas fa-trash-alt me-2 text-danger"></i>Eliminar conductor
@@ -368,12 +358,10 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
 
-                <!-- Form -->
                 <form th:action="@{/sgra/admin/conductores/eliminar}" method="post">
 
                     <input type="hidden" name="id" id="conductorIdEliminar">
 
-                    <!-- Body -->
                     <div class="modal-body text-muted fs-6">
                         ¿Estás seguro de que deseas eliminar este conductor?
                         <div class="mt-1 small text-secondary">
@@ -381,7 +369,6 @@
                         </div>
                     </div>
 
-                    <!-- Footer -->
                     <div class="modal-footer border-top-0 d-flex justify-content-between">
                         <button type="button" class="btn btn-outline-secondary rounded-pill px-4"
                             data-bs-dismiss="modal">Cancelar</button>
@@ -389,6 +376,27 @@
                         </button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="registroErrorModal">
+    <div class="modal fade" id="registroErrorModal" tabindex="-1" aria-labelledby="registroErrorModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 shadow-sm border-0">
+                <div class="modal-header border-bottom-0">
+                    <h5 class="modal-title fw-semibold text-danger" id="registroErrorModalLabel">
+                        <i class="fas fa-triangle-exclamation text-danger me-2"></i> Errores
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+
+                <div class="modal-body text-muted fs-6">
+                    <ul id="registroErrorMessage" class="list-unstyled mb-0">
+                    </ul>
+                </div>
             </div>
         </div>
     </div>

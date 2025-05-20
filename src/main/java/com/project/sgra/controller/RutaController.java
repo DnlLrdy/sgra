@@ -9,6 +9,8 @@ import com.project.sgra.model.Ruta;
 import com.project.sgra.repository.AutobusRepository;
 import com.project.sgra.repository.RutaRepository;
 import com.project.sgra.service.RutaService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -49,12 +51,16 @@ public class RutaController {
                 .toList();
 
         model.addAttribute("autobuses", filtrados);
+
+        model.addAttribute("administradorNombreUsuario", administradorNombreUsuario());
         return LISTAR_RUTAS_VISTA;
     }
 
     @GetMapping("/crear")
     public String crearRuta(Model model) {
         model.addAttribute("rutaDTO", model.containsAttribute("rutaDTO") ? model.getAttribute("rutaDTO") : new RutaDTO());
+
+        model.addAttribute("administradorNombreUsuario", administradorNombreUsuario());
         return CREAR_RUTA_VISTA;
     }
 
@@ -105,6 +111,7 @@ public class RutaController {
             return REDIRECT_LISTAR_RUTAS_VISTA;
         }
 
+        model.addAttribute("administradorNombreUsuario", administradorNombreUsuario());
         return EDITAR_RUTA_VISTA;
     }
 
@@ -219,6 +226,11 @@ public class RutaController {
         }
 
         return REDIRECT_LISTAR_RUTAS_VISTA;
+    }
+
+    public String administradorNombreUsuario() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getName();
     }
 
 }

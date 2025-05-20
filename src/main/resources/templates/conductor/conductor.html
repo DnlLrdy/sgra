@@ -4,9 +4,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>GeoRoute - Panel del Conductor</title>
+    <title>GeoRoute</title>
 
-    <!-- Bootstrap & Leaflet CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
@@ -18,7 +17,6 @@
             font-family: 'Inter', sans-serif;
             background-color: #f4f5f7;
             color: #343a40;
-            padding-top: 70px;
         }
 
         .navbar {
@@ -85,70 +83,91 @@
 </head>
 
 <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+        <div class="container">
+            <a class="navbar-brand text-warning">GeoRoute</a>
 
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top shadow-sm px-3">
-        <div class="container-fluid">
-            <a class="navbar-brand text-warning" href="#">
-                <i class="fas fa-compass me-2"></i>GeoRoute
-            </a>
-            <div class="collapse navbar-collapse justify-content-end">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/sgra/logout}">
-                            <i class="fas fa-sign-out-alt me-1"></i> Cerrar sesión
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person-circle me-1"></i>
+                            <span th:text="${conductorNombreUsuario}"></span>
                         </a>
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="userDropdown">
+                            <li>
+                                <a class="dropdown-item text-danger" th:href="@{/sgra/logout}">
+                                    <i class="bi bi-box-arrow-right me-2"></i>Cerrar sesión
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- MAIN -->
     <main class="container-fluid mt-5 pt-3">
         <div class="row g-4">
-            <!-- Panel izquierdo -->
             <div class="col-12 col-lg-4 d-flex flex-column gap-4">
-                <!-- Autobús -->
-                <div class="card p-4">
+                <div class="card p-4" th:if="${autobus != null}">
                     <div class="card-header-custom">
                         <i class="fas fa-bus"></i> Autobús asignado
                     </div>
                     <p><strong>Placa:</strong> <span th:text="${autobus.matricula}">ABC-123</span></p>
                     <p><strong>Modelo:</strong> <span th:text="${autobus.modelo}">Mercedes</span></p>
                 </div>
+                <div class="card p-4 text-center text-muted" th:if="${autobus == null}">
+                    <div class="card-header-custom">
+                        <i class="fas fa-bus"></i> Autobús asignado
+                    </div>
+                    <p>No tiene un autobús asignado actualmente.</p>
+                </div>
 
-                <!-- Paradas -->
-                <div class="card p-4 flex-grow-1 d-flex flex-column">
+                <div class="card p-4 flex-grow-1 d-flex flex-column" th:if="${ruta != null}">
                     <div class="card-header-custom">
                         <i class="fas fa-location-dot"></i> Paradas
                     </div>
-                    <ul class="list-group list-group-flush flex-grow-1" th:if="${ruta != null}">
+                    <ul class="list-group list-group-flush flex-grow-1">
                         <li class="list-group-item parada-item" th:each="parada, iterStat : ${ruta.paradas}"
                             th:attr="data-index=${iterStat.index}">
                             <i class="fas fa-map-pin me-2 text-warning"></i>
                             <span th:text="${parada.nombre}">Nombre de la parada</span>
                         </li>
-
                     </ul>
                     <div class="mt-3 section-subtle-note">
                         Desliza para ver todas las paradas
                     </div>
                 </div>
+                <div class="card p-4 text-center text-muted" th:if="${ruta == null}">
+                    <div class="card-header-custom">
+                        <i class="fas fa-location-dot"></i> Paradas
+                    </div>
+                    <p>No tiene una ruta asignada actualmente.</p>
+                </div>
             </div>
 
-            <!-- Mapa -->
             <div class="col-12 col-lg-8">
-                <div class="card p-4 h-100 d-flex flex-column">
-                    <div class="card-header-custom text-warning">
+                <div class="card p-4 h-100 d-flex flex-column" th:if="${ruta != null}">
+                    <div class="card-header-custom text-dark">
                         <p>Ruta: <span th:text="${ruta.nombre}">Ruta Principal</span></p>
                     </div>
                     <div id="map" class="flex-grow-1 mt-2"></div>
+                </div>
+                <div class="card p-4 h-100 text-center text-muted d-flex align-items-center justify-content-center"
+                    th:if="${ruta == null}">
+                    <p>No hay ruta para mostrar en el mapa.</p>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Scripts -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
@@ -160,74 +179,72 @@
 
     <script th:inline="javascript">
         /*<![CDATA[*/
-        let paradas = /*[[${ruta.paradas}]]*/[];
+        let paradas = /*[[${ruta != null ? ruta.paradas : '[]'}]]*/[];
         console.log("Paradas cargadas:", paradas);
         /*]]>*/
     </script>
 
     <script>
-        // Inicialización del mapa con Leaflet
-        const map = L.map('map', {
-            center: [10.395431, -75.472807],
-            zoom: 18,
-            minZoom: 14,
-            maxZoom: 18,
-            maxBounds: [
-                [10.2000, -75.5700],
-                [10.5000, -75.3700]
-            ],
-            maxBoundsViscosity: 1.0
-        });
-
-        // Cargar capa de OpenStreetMap
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-
-        // Guardamos los marcadores y paradas en un arreglo
-        const marcadores = [];
-        const bounds = [];
-
-        paradas.forEach((parada, index) => {
-            const latLng = [parada.latitud, parada.longitud];
-            const color = parada.color || 'blue';
-
-            const iconoPersonalizado = L.icon({
-                iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-${color}.png`,
-                shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-                iconSize: [25, 41],
-                iconAnchor: [12, 41],
-                popupAnchor: [1, -34],
-                shadowSize: [41, 41]
+        if (paradas.length > 0) {
+            const map = L.map('map', {
+                center: [10.395431, -75.472807],
+                zoom: 18,
+                minZoom: 14,
+                maxZoom: 18,
+                maxBounds: [
+                    [10.2000, -75.5700],
+                    [10.5000, -75.3700]
+                ],
+                maxBoundsViscosity: 1.0
             });
 
-            const marker = L.marker(latLng, { icon: iconoPersonalizado })
-                .bindPopup(`<strong>${parada.nombre}</strong>`)
-                .addTo(map);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-            marcadores.push(marker);
-            bounds.push(latLng);
+            const marcadores = [];
+            const bounds = [];
 
-            marker.on('click', () => {
-                marker.openPopup();
-            });
-        });
+            paradas.forEach((parada, index) => {
+                const latLng = [parada.latitud, parada.longitud];
+                const color = parada.color || 'blue';
 
-        if (bounds.length > 0) {
-            map.fitBounds(bounds);
-        }
+                const iconoPersonalizado = L.icon({
+                    iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-${color}.png`,
+                    shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                    popupAnchor: [1, -34],
+                    shadowSize: [41, 41]
+                });
 
-        // Agrega los listeners después de cargar el DOM
-        document.addEventListener("DOMContentLoaded", () => {
-            document.querySelectorAll('.parada-item').forEach(item => {
-                item.addEventListener('click', () => {
-                    const index = parseInt(item.getAttribute('data-index'));
-                    const marker = marcadores[index];
-                    if (marker) {
-                        map.setView(marker.getLatLng(), 18);
-                        marker.openPopup();
-                    }
+                const marker = L.marker(latLng, { icon: iconoPersonalizado })
+                    .bindPopup(`<strong>${parada.nombre}</strong>`)
+                    .addTo(map);
+
+                marcadores.push(marker);
+                bounds.push(latLng);
+
+                marker.on('click', () => {
+                    marker.openPopup();
                 });
             });
-        });
+
+            if (bounds.length > 0) {
+                map.fitBounds(bounds);
+            }
+
+            document.addEventListener("DOMContentLoaded", () => {
+                document.querySelectorAll('.parada-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        const index = parseInt(item.getAttribute('data-index'));
+                        const marker = marcadores[index];
+                        if (marker) {
+                            map.setView(marker.getLatLng(), 18);
+                            marker.openPopup();
+                        }
+                    });
+                });
+            });
+        }
     </script>
 </body>
 
