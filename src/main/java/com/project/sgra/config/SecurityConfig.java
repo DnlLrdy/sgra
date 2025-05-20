@@ -51,7 +51,6 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/sgra/conductor/**").hasRole("CONDUCTOR")
-                        .requestMatchers("/sgra/usuario/**").hasRole("USUARIO")
                         .anyRequest().permitAll()
                 )
                 .formLogin(form -> form
