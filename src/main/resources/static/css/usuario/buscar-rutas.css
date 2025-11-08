@@ -18,22 +18,25 @@ body {
     overflow-x: hidden;
 }
 
-/* Navbar */
+/* ==================== NAVBAR ==================== */
 .navbar {
-    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    background-color: var(--light-color) !important; /* fondo claro */
+    color: var(--dark-color) !important;
     transition: all 0.3s ease;
     padding: 0.75rem 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
+/* Eliminar modo azul al hacer scroll */
 .navbar.scrolled {
-    background-color: var(--primary-color) !important;
+    background-color: var(--light-color) !important;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
 .navbar .navbar-brand,
 .navbar .nav-link,
 #reloj {
-    color: white !important;
+    color: var(--dark-color) !important;
 }
 
 .navbar-brand {
@@ -52,23 +55,17 @@ body {
     position: absolute;
     width: 0;
     height: 2px;
-    background: white;
+    background: var(--secondary-color);
     bottom: 0;
     left: 0;
     transition: width 0.3s ease;
 }
-.icon-input {
-    top: 50%;
-    left: 1rem;
-    transform: translateY(-50%);
-    z-index: 3;
-    pointer-events: none;
-}
+
 .nav-link:hover:after {
     width: 100%;
 }
 
-/* Títulos */
+/* ==================== TITULOS ==================== */
 h2, .titulo-seccion {
     color: var(--secondary-color);
     font-weight: 700;
@@ -79,7 +76,7 @@ h2 {
     font-weight: 600;
 }
 
-/* Botones */
+/* ==================== BOTONES ==================== */
 .btn-outline-primary {
     border-color: var(--secondary-color);
     color: var(--secondary-color);
@@ -94,7 +91,7 @@ h2 {
     margin-right: 5px;
 }
 
-/* Formularios */
+/* ==================== FORMULARIOS ==================== */
 .form-floating .form-control,
 .form-control {
     box-shadow: none !important;
@@ -117,7 +114,7 @@ h2 {
     padding-left: 1.25rem;
 }
 
-/* Contenedores con sombra */
+/* ==================== CONTENEDORES ==================== */
 .shadow-container {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     border-radius: 12px;
@@ -125,7 +122,7 @@ h2 {
     background-color: var(--light-color);
 }
 
-/* Tabla */
+/* ==================== TABLAS ==================== */
 .table {
     border-radius: 12px;
     overflow: hidden;
@@ -152,7 +149,7 @@ h2 {
     font-size: 0.85rem;
 }
 
-/* Mapa */
+/* ==================== MAPA ==================== */
 #map {
     height: 350px;
     width: 100%;
@@ -167,7 +164,7 @@ h2 {
     transform: scale(1.01);
 }
 
-/* Animaciones útiles */
+/* ==================== ANIMACIONES ==================== */
 .hover-top {
     transition: all 0.3s ease;
 }
@@ -177,7 +174,7 @@ h2 {
     box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
 }
 
-/* Footer & íconos sociales */
+/* ==================== FOOTER ==================== */
 footer a {
     transition: all 0.3s ease;
 }
@@ -190,7 +187,7 @@ footer a:hover {
     transform: translateY(-3px);
 }
 
-/* Secciones */
+/* ==================== SECCIONES ==================== */
 section {
     scroll-margin-top: 80px;
 }

@@ -7,279 +7,495 @@
     <title>GeoRoute</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Choices.js -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
     <link rel="stylesheet" th:href="@{/css/usuario/buscar-rutas.css}">
+    <style>
+        /* Estilos adicionales para modernizar los inputs */
+.input-group-modern {
+    position: relative;
+    margin-bottom: 1rem;
+}
+.input-group-modern .form-control {
+    border-radius: 10px;
+    border: 2px solid #e0e0e0;
+    padding-left: 50px;
+    padding-right: 15px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.input-group-modern .form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+.input-group-modern .input-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+    z-index: 5;
+}
+.btn-modern {
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.btn-modern:hover {
+    transform: translateY(-2px);
+}
+.shadow-container {
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+.titulo-seccion {
+    color: #333;
+    font-weight: 700;
+}
+
+/* Marcadores personalizados como círculos coloreados (LIMPIO Y FUNCIONAL) */
+.custom-marker .marker-circle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+.marker-red { background-color: #e74c3c; }
+.marker-blue { background-color: #3498db; }
+.marker-green { background-color: #27ae60; }
+.marker-orange { background-color: #e67e22; }
+.marker-purple { background-color: #9b59b6; }
+.marker-yellow { background-color: #f1c40f; }
+
+/* Resalta la fila o tarjeta seleccionada en la tabla/lista */
+.tabla-rutas .ruta-item.active,
+#rutasEncontradas .ruta-item.active {
+    background: linear-gradient(135deg, #2196f3, #1976d2);
+    border: 2px solid #1565c0;
+    color: #fff;
+    font-weight: 700;
+    transform: scale(1.02);
+    box-shadow: 0 0 12px rgba(33, 150, 243, 0.5);
+    transition: all 0.2s ease-in-out;
+    border-radius: 10px;
+}
+/* Hover sobre la ruta seleccionada */
+.tabla-rutas .ruta-item.active:hover,
+#rutasEncontradas .ruta-item.active:hover {
+    transform: scale(1.04);
+    box-shadow: 0 0 18px rgba(33, 150, 243, 0.7);
+}
+/* Filas normales (no seleccionadas) */
+.tabla-rutas .ruta-item,
+#rutasEncontradas .ruta-item {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+/* Hover normal */
+.tabla-rutas .ruta-item:hover,
+#rutasEncontradas .ruta-item:hover {
+    background-color: #e3f2fd;
+    border-color: #90caf9;
+}
+
+/* Estilos para Choices.js */
+.choices__inner {
+    border-radius: 10px !important;
+    border: 2px solid #e0e0e0 !important;
+    padding-left: 50px !important;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.choices__inner:focus-within {
+    border-color: #007bff !important;
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.25) !important;
+}
+.choices__list--dropdown {
+    border-radius: 10px;
+}
+/* Mejora para el mapa */
+#map {
+    height: 500px;
+}
+/* Estilos para las listas */
+.list-section {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+    </style>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top shadow">
-        <div class="container-fluid">
-            <a class="navbar-brand">GeoRoute</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="collapsibleNavbar">
-                <ul class="navbar-nav">
-                </ul>
-                <ul class="navbar-nav ms-auto align-items-center">
-                    <div id="reloj" class="text-white me-3"></div>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">
-                            <i class="fa-solid fa-circle-user fa-xl"></i> Cliente
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
-                            <li>
-                                <a class="dropdown-item" th:href="@{/sgra/logout}">
-                                    <i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar sesión
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
+<nav class="navbar navbar-expand-sm bg-light navbar-light fixed-top shadow">
+    <div class="container-fluid">
+        <img src="/images/logo_a-removebg-preview.png" alt="Logo de GeoRoute" style="height: 40px;">
+        <a class="navbar-brand">GeoRoute</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="navbar-nav">
+            </ul>
+            <ul class="navbar-nav ms-auto align-items-center">
+                <div id="reloj" class="text-dark me-3"></div>  <!-- CAMBIADO: text-white -> text-dark -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">
+                        <i class="fa-solid fa-circle-user fa-xl"></i>
+                        <span id="nombreUsuarioNavbar">Cliente</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">  <!-- CAMBIADO: quitado dropdown-menu-dark -->
+                        <li>
+                            <a class="dropdown-item" th:href="@{/sgra/logout}">
+                                <i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar sesión
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
         </div>
-    </nav>
 
-    <div class="container mt-5 mb-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-10">
-                <div class="row g-4">
+    </div>
+</nav>
 
-                    <!-- Columna izquierda: Formulario + Mapa -->
-                    <div class="col-md-7">
-                        <div class="shadow-container p-4 mb-3">
-                            <form th:action="@{/sgra/usuario/buscar}" method="get">
-                                <h4 class="text-center mb-4 titulo-seccion">
-                                    <i class="fa-solid fa-route"></i> Buscar rutas
-                                </h4>
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-12">
+            <div class="row g-4">
+                <!-- Columna izquierda: Campos de búsqueda y rutas encontradas -->
+                <div class="col-md-3">
+                    <div class="shadow-container p-4 mb-4">
+                        <form th:action="@{/sgra/usuario/buscar}" method="get">
+                            <h5 class="text-center mb-4 titulo-seccion">
+                                <i class="fa-solid fa-route"></i> Buscar rutas
+                            </h5>
 
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-floating mb-3 position-relative">
-                                            <i
-                                                class="fa-solid fa-map-location-dot icon-input position-absolute text-secondary"></i>
-                                            <input type="text" class="form-control ps-5" id="ubicacion" name="ubicacion"
-                                                placeholder="Ubicación" th:value="${ubicacion}">
-                                            <label for="ubicacion">Ubicación</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-floating mb-3 position-relative">
-                                            <i
-                                                class="fa-solid fa-map-location-dot icon-input position-absolute text-secondary"></i>
-                                            <input type="text" class="form-control ps-5" id="destino" name="destino"
-                                                placeholder="Destino" th:value="${destino}">
-                                            <label for="destino">Destino</label>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="input-group-modern">
+                                <i class="fa-solid fa-map-location-dot input-icon"></i>
+                                <select class="form-control" id="ubicacion" name="ubicacion" required>
+                                    <option value="">Selecciona ubicación de origen</option>
+                                    <!-- Opciones se cargarán dinámicamente -->
+                                </select>
+                            </div>
 
+                            <div class="input-group-modern">
+                                <i class="fa-solid fa-map-location-dot input-icon"></i>
+                                <select class="form-control" id="destino" name="destino" required>
+                                    <option value="">Selecciona destino</option>
+                                    <!-- Opciones se cargarán dinámicamente -->
+                                </select>
+                            </div>
 
-                                <div class="text-center mt-3 mb-4">
-                                    <button type="submit" class="btn btn-outline-primary shadow px-4">
-                                        <i class="fa-solid fa-magnifying-glass"></i> Buscar
-                                    </button>
-                                </div>
+                            <div class="d-flex justify-content-center mt-3 mb-4">
+                                <button type="submit" class="btn btn-primary btn-modern shadow px-4 me-2">
+                                    <i class="fa-solid fa-magnifying-glass"></i> Buscar
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary btn-modern px-4" onclick="limpiarCampos()">
+                                    <i class="fa-solid fa-eraser"></i> Limpiar
+                                </button>
+                            </div>
 
-                                <!-- Mensaje de error -->
-                                <div th:if="${errorMessage}" class="alert alert-warning text-center mt-2">
-                                    <i class="fa-solid fa-triangle-exclamation"></i> <span
-                                        th:text="${errorMessage}"></span>
-                                </div>
+                            <!-- Mensaje de error -->
+                            <div th:if="${errorMessage}" class="alert alert-warning text-center mt-2 rounded-3">
+                                <i class="fa-solid fa-triangle-exclamation"></i> <span th:text="${errorMessage}"></span>
+                            </div>
 
-                            </form>
+                        </form>
+                    </div>
+
+                    <!-- Rutas encontradas -->
+                    <div class="shadow-container p-4">
+                        <h5 class="text-center mb-3"><i class="fa-solid fa-table"></i> Rutas encontradas</h5>
+                        <div th:if="${not #lists.isEmpty(autobuses)}" class="list-section">
+                            <div class="list-group">
+                                <a th:each="ruta : ${autobuses}" href="#"
+                                   class="list-group-item list-group-item-action ruta-item" th:data-id="${ruta.id}"
+                                   th:text="${ruta.nombre}">
+                                </a>
+                            </div>
                         </div>
+                        <div th:if="${#lists.isEmpty(autobuses)}" class="text-center text-muted py-3">
+                            <i class="fa-solid fa-circle-info fa-2x mb-2"></i>
+                            <p class="mb-0">No se encontraron rutas.</p>
+                        </div>
+                    </div>
+                </div>
 
-                        <!-- Mapa debajo del buscador -->
-                        <div class="shadow-container p-3">
-                            <h5 class="text-center mb-3"><i class="fa-solid fa-map"></i> Mapa</h5>
-                            <div id="map" style="height: 400px;" class="rounded shadow mt-3"></div>
+                <!-- Columna central: Mapa -->
+                <div class="col-md-6">
+                    <div class="shadow-container p-3">
+                        <h5 class="text-center mb-3"><i class="fa-solid fa-map"></i> Mapa</h5>
+                        <div id="map" class="rounded shadow"></div>
+                    </div>
+                </div>
+
+                <!-- Columna derecha: Paradas y Autobuses -->
+                <div class="col-md-3">
+                    <!-- Paradas -->
+                    <div class="shadow-container p-4 mb-4">
+                        <h5 class="text-center mb-3"><i class="fa-solid fa-map-marker-alt"></i> Paradas</h5>
+                        <div id="paradas-container" class="list-section">
+                            <ul id="paradas-list" class="list-group"></ul>
                         </div>
                     </div>
 
-                    <!-- Columna derecha: Lista de rutas -->
-                    <div class="col-md-5">
-                        <div class="shadow-container p-4 h-100">
-                            <h5 class="text-center mb-3"><i class="fa-solid fa-table"></i> Rutas encontradas</h5>
-
-                            <!-- Mostrar lista SOLO si hay rutas encontradas -->
-                            <div th:if="${not #lists.isEmpty(autobuses)}">
-                                <div class="list-group">
-                                    <a th:each="ruta : ${autobuses}" href="#"
-                                        class="list-group-item list-group-item-action ruta-item" th:data-id="${ruta.id}"
-                                        th:text="${ruta.nombre}">
-                                    </a>
-                                </div>
-                            </div>
-
-                            <div th:if="${#lists.isEmpty(autobuses)}" class="text-center text-muted py-3">
-                                <i class="fa-solid fa-circle-info fa-2x mb-2"></i>
-                                <p class="mb-0">No se encontraron rutas.</p>
-                            </div>
-
-                            <!-- Contenedor para la lista de paradas -->
-                            <div id="paradas-container" class="mt-4" style="max-height: 300px; overflow-y: auto;">
-                                <ul id="paradas-list" class="list-group"></ul>
-                            </div>
-                            <div id="autobuses-container" class="mt-4" style="max-height: 300px; overflow-y: auto;">
-                                <h5 class="text-center mb-2"><i class="fa-solid fa-bus"></i> Autobuses asignados</h5>
-                                <ul id="autobuses-list" class="list-group"></ul>
-                            </div>
+                    <!-- Autobuses asignados -->
+                    <div class="shadow-container p-4">
+                        <h5 class="text-center mb-3"><i class="fa-solid fa-bus"></i> Autobuses asignados</h5>
+                        <div id="autobuses-container" class="list-section">
+                            <ul id="autobuses-list" class="list-group"></ul>
                         </div>
                     </div>
-
-
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- JSON de rutas si quieres mantenerlo -->
-    <script id="rutas-data" type="application/json" th:inline="none">
+<!-- JSON de rutas si quieres mantenerlo -->
+<script id="rutas-data" type="application/json" th:inline="none">
     [[${autobuses}]]
 </script>
 
-    <!-- Tu script -->
-    <script th:src="@{/js/usuario/buscar-rutas.js}"></script>
+<!-- Tu script -->
+<script th:src="@{/js/usuario/buscar-rutas.js}"></script>
 
-    <!-- Tu script principal -->
-    <script th:src="@{/js/usuario/buscar-rutas.js}"></script>
+<!-- Script para Choices.js y mapa -->
+<script>
+    // Función para limpiar campos
+    function limpiarCampos() {
+        const ubicacionChoices = choicesInstances.ubicacion;
+        const destinoChoices = choicesInstances.destino;
+        if (ubicacionChoices) ubicacionChoices.setChoiceByValue('');
+        if (destinoChoices) destinoChoices.setChoiceByValue('');
+    }
+    // Función para limpiar campos
+function limpiarCampos() {
+    // Redirigir a la página sin parámetros para limpiar todo, incluyendo la URL
+    window.location.href = '/sgra/usuario/buscar';
+}
 
-    <!-- Script para escuchar clics en las rutas -->
+    // Variables para instancias de Choices.js
+    let choicesInstances = {};
 
-    <script>
-        // Inicializar el mapa
-        const map = L.map('map', {
-            center: [10.395431, -75.472807],
-            zoom: 18,
-            minZoom: 14,
-            maxZoom: 18,
-            maxBounds: [
-                [10.2000, -75.5700],
-                [10.5000, -75.3700]
-            ],
-            maxBoundsViscosity: 1.0
-        });
+    // Inicializar Choices.js después de cargar paradas
+    document.addEventListener("DOMContentLoaded", async () => {
+        try {
+            const response = await fetch("/sgra/usuario/paradas/todas");
+            const paradas = await response.json();
 
-        // Capa base
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+            const ubicacionSelect = document.getElementById("ubicacion");
+            const destinoSelect = document.getElementById("destino");
 
-        // Variables globales
-        let marcadores = [];
+            // Agregar opciones a los selects
+            paradas.forEach(parada => {
+                const option1 = document.createElement("option");
+                option1.value = parada;
+                option1.textContent = parada;
+                ubicacionSelect.appendChild(option1);
 
-        // Ícono personalizado
-        const iconoPersonalizado = L.icon({
-            iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
-            iconSize: [32, 32],
-            iconAnchor: [16, 32],
-            popupAnchor: [0, -32]
-        });
-
-        // Limpiar marcadores del mapa
-        function limpiarMarcadores() {
-            marcadores.forEach(marker => map.removeLayer(marker));
-            marcadores = [];
-        }
-
-        // Mostrar paradas en el mapa + lista
-        function mostrarParadas(paradas) {
-            if (!paradas || paradas.length === 0) return;
-
-            limpiarMarcadores();
-
-            const bounds = [];
-            const lista = document.getElementById("paradas-list");
-            if (lista) lista.innerHTML = '';
-
-            paradas.forEach((parada, index) => {
-                const latLng = [parada.latitud, parada.longitud];
-
-                const marker = L.marker(latLng, { icon: iconoPersonalizado })
-                    .bindPopup(`<strong>${parada.nombre}</strong>`)
-                    .addTo(map);
-
-                marcadores.push(marker);
-                bounds.push(latLng);
-
-                if (lista) {
-                    const item = document.createElement('li');
-                    item.className = 'list-group-item';
-                    item.textContent = `${index + 1}. ${parada.nombre}`;
-
-                    item.addEventListener('click', () => {
-                        map.setView(latLng, 18);
-                        marker.openPopup();
-                    });
-
-                    lista.appendChild(item);
-                }
+                const option2 = document.createElement("option");
+                option2.value = parada;
+                option2.textContent = parada;
+                destinoSelect.appendChild(option2);
             });
 
-            if (bounds.length > 0) {
-                map.fitBounds(bounds, { padding: [50, 50] });
+            // Inicializar Choices.js para búsqueda
+            choicesInstances.ubicacion = new Choices(ubicacionSelect, {
+                searchEnabled: true,
+                searchPlaceholderValue: 'Buscar ubicación...',
+                noResultsText: 'No se encontraron resultados',
+                noChoicesText: 'No hay opciones disponibles',
+                itemSelectText: 'Seleccionar',
+                placeholder: true,
+                placeholderValue: 'Selecciona ubicación de origen'
+            });
+
+            choicesInstances.destino = new Choices(destinoSelect, {
+                searchEnabled: true,
+                searchPlaceholderValue: 'Buscar destino...',
+                noResultsText: 'No se encontraron resultados',
+                noChoicesText: 'No hay opciones disponibles',
+                itemSelectText: 'Seleccionar',
+                placeholder: true,
+                placeholderValue: 'Selecciona destino'
+            });
+
+            // Mantener valores seleccionados si existen (de th:value)
+            const ubicacionValue = '[[${ubicacion}]]';
+            const destinoValue = '[[${destino}]]';
+            if (ubicacionValue) {
+                choicesInstances.ubicacion.setChoiceByValue(ubicacionValue);
             }
+            if (destinoValue) {
+                choicesInstances.destino.setChoiceByValue(destinoValue);
+            }
+
+        } catch (error) {
+            console.error("Error cargando paradas:", error);
         }
+    });
 
-        // Mostrar autobuses en lista
-        function mostrarAutobuses(autobuses) {
-            const lista = document.getElementById("autobuses-list");
-            if (!lista) return;
+    // Inicializar el mapa
+    const map = L.map('map', {
+        center: [10.395431, -75.472807],
+        zoom: 18,
+        minZoom: 14,
+        maxZoom: 18,
+        maxBounds: [
+            [10.2000, -75.5700],
+            [10.5000, -75.3700]
+        ],
+        maxBoundsViscosity: 1.0
+    });
 
-            lista.innerHTML = '';
+    // Capa base
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-            if (!autobuses || autobuses.length === 0) {
-                lista.innerHTML = `<li class="list-group-item text-muted text-center">No hay autobuses asignados</li>`;
-                return;
-            }
 
-            autobuses.forEach((bus, index) => {
+    // Variables globales
+    let marcadores = [];
+
+    // Ícono personalizado
+    const iconoPersonalizado = L.icon({
+        iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
+        iconSize: [32, 32],
+        iconAnchor: [16, 32],
+        popupAnchor: [0, -32]
+    });
+
+
+    // Limpiar marcadores del mapa
+    function limpiarMarcadores() {
+        marcadores.forEach(marker => map.removeLayer(marker));
+        marcadores = [];
+    }
+
+    // Mostrar paradas en el mapa + lista
+    function mostrarParadas(paradas) {
+        if (!paradas || paradas.length === 0) return;
+
+        limpiarMarcadores();
+
+        const bounds = [];
+        const lista = document.getElementById("paradas-list");
+        if (lista) lista.innerHTML = '';
+
+        paradas.forEach((parada, index) => {
+            const latLng = [parada.latitud, parada.longitud];
+
+            const marker = L.marker(latLng, { icon: iconoPersonalizado })
+                .bindPopup(`<strong>${parada.nombre}</strong>`)
+                .addTo(map);
+
+            marcadores.push(marker);
+            bounds.push(latLng);
+
+            if (lista) {
                 const item = document.createElement('li');
                 item.className = 'list-group-item';
-                item.innerHTML = `
-                <strong>${index + 1}. Matrícula:</strong> ${bus.matricula}<br>
-                <small class="text-muted">Modelo: ${bus.modelo}</small>
-            `;
+                item.textContent = `${index + 1}. ${parada.nombre}`;
+
+                item.addEventListener('click', () => {
+                    map.setView(latLng, 18);
+                    marker.openPopup();
+                });
+
                 lista.appendChild(item);
-            });
+            }
+        });
+
+        if (bounds.length > 0) {
+            map.fitBounds(bounds, { padding: [50, 50] });
+        }
+    }
+
+    // Mostrar autobuses en lista
+    function mostrarAutobuses(autobuses) {
+        const lista = document.getElementById("autobuses-list");
+        if (!lista) return;
+
+        lista.innerHTML = '';
+
+        if (!autobuses || autobuses.length === 0) {
+            lista.innerHTML = `<li class="list-group-item text-muted text-center">No hay autobuses asignados</li>`;
+            return;
         }
 
-        // Escuchar clics en las rutas
-        document.addEventListener("DOMContentLoaded", function () {
-            const rutas = document.querySelectorAll('.ruta-item');
+        autobuses.forEach((bus, index) => {
+            const item = document.createElement('li');
+            item.className = 'list-group-item';
+            item.innerHTML = `
+            <strong>${index + 1}. Matrícula:</strong> ${bus.matricula}<br>
+            <small class="text-muted">Modelo: ${bus.modelo}</small>
+        `;
+            lista.appendChild(item);
+        });
+    }
 
-            rutas.forEach(ruta => {
-                ruta.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const rutaId = this.dataset.id;
+    // Escuchar clics en las rutas
+    document.addEventListener("DOMContentLoaded", function () {
+        const rutas = document.querySelectorAll('.ruta-item');
 
-                    // Cargar paradas
-                    fetch(`/sgra/usuario/ruta/${rutaId}/paradas`)
-                        .then(response => response.json())
-                        .then(paradas => {
-                            mostrarParadas(paradas);
-                        })
-                        .catch(error => {
-                            console.error('Error al cargar las paradas:', error);
-                        });
+        rutas.forEach(ruta => {
+            ruta.addEventListener('click', function (e) {
+                e.preventDefault();
+                const rutaId = this.dataset.id;
 
-                    // Cargar autobuses
-                    fetch(`/sgra/usuario/ruta/${rutaId}/autobuses`)
-                        .then(response => response.json())
-                        .then(autobuses => {
-                            mostrarAutobuses(autobuses);
-                        })
-                        .catch(error => {
-                            console.error('Error al cargar los autobuses:', error);
-                        });
-                });
+                rutas.forEach(r => r.classList.remove('active'));
+            this.classList.add('active');
+
+                // Cargar paradas
+                fetch(`/sgra/usuario/ruta/${rutaId}/paradas`)
+                    .then(response => response.json())
+                    .then(paradas => {
+                        mostrarParadas(paradas);
+                    })
+                    .catch(error => {
+                        console.error('Error al cargar las paradas:', error);
+                    });
+
+                // Cargar autobuses
+                fetch(`/sgra/usuario/ruta/${rutaId}/autobuses`)
+                    .then(response => response.json())
+                    .then(autobuses => {
+                        mostrarAutobuses(autobuses);
+                    })
+                    .catch(error => {
+                        console.error('Error al cargar los autobuses:', error);
+                    });
             });
         });
-    </script>
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        fetch("/sgra/usuario/perfil")
+            .then(response => response.json())
+            .then(data => {
+                const nombreEl = document.getElementById("nombreUsuarioNavbar");
+                if (data && data.nombreUsuario && nombreEl) {
+                    nombreEl.textContent = data.nombreUsuario;
+                }
+            })
+            .catch(err => console.error("Error al cargar nombre de usuario:", err));
+    });
 
-
+</script>
 
 </body>
 
