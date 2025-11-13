@@ -18,125 +18,121 @@
     <link rel="stylesheet" th:href="@{/css/usuario/buscar-rutas.css}">
     <style>
         /* Estilos adicionales para modernizar los inputs */
-.input-group-modern {
-    position: relative;
-    margin-bottom: 1rem;
-}
-.input-group-modern .form-control {
-    border-radius: 10px;
-    border: 2px solid #e0e0e0;
-    padding-left: 50px;
-    padding-right: 15px;
-    font-size: 1rem;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-.input-group-modern .form-control:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 10px rgba(0, 123, 255, 0.25);
-    outline: none;
-}
-.input-group-modern .input-icon {
-    position: absolute;
-    left: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #6c757d;
-    z-index: 5;
-}
-.btn-modern {
-    border-radius: 10px;
-    padding: 8px 16px;
-    font-weight: 600;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-.btn-modern:hover {
-    transform: translateY(-2px);
-}
-.shadow-container {
-    background: #fff;
-    border-radius: 15px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-}
-.titulo-seccion {
-    color: #333;
-    font-weight: 700;
-}
+        .input-group-modern {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+        /* Cuando Choices.js genera su DOM, contendrá .choices */
+        .input-group-modern .choices {
+            position: relative;
+        }
 
-/* Marcadores personalizados como círculos coloreados (LIMPIO Y FUNCIONAL) */
-.custom-marker .marker-circle {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    border: 2px solid #fff;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-}
-.marker-red { background-color: #e74c3c; }
-.marker-blue { background-color: #3498db; }
-.marker-green { background-color: #27ae60; }
-.marker-orange { background-color: #e67e22; }
-.marker-purple { background-color: #9b59b6; }
-.marker-yellow { background-color: #f1c40f; }
+        /* El icono se coloca dentro del contenedor .choices para que se alinee con el input */
+        .input-group-modern .input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+            z-index: 2;              /* Menor que el dropdown de Choices para que la lista aparezca encima */
+            pointer-events: none;    /* No bloquear clics en el input */
+            font-size: 1.05rem;
+        }
 
-/* Resalta la fila o tarjeta seleccionada en la tabla/lista */
-.tabla-rutas .ruta-item.active,
-#rutasEncontradas .ruta-item.active {
-    background: linear-gradient(135deg, #2196f3, #1976d2);
-    border: 2px solid #1565c0;
-    color: #fff;
-    font-weight: 700;
-    transform: scale(1.02);
-    box-shadow: 0 0 12px rgba(33, 150, 243, 0.5);
-    transition: all 0.2s ease-in-out;
-    border-radius: 10px;
-}
-/* Hover sobre la ruta seleccionada */
-.tabla-rutas .ruta-item.active:hover,
-#rutasEncontradas .ruta-item.active:hover {
-    transform: scale(1.04);
-    box-shadow: 0 0 18px rgba(33, 150, 243, 0.7);
-}
-/* Filas normales (no seleccionadas) */
-.tabla-rutas .ruta-item,
-#rutasEncontradas .ruta-item {
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    margin-bottom: 8px;
-    padding: 10px 15px;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-}
-/* Hover normal */
-.tabla-rutas .ruta-item:hover,
-#rutasEncontradas .ruta-item:hover {
-    background-color: #e3f2fd;
-    border-color: #90caf9;
-}
+        /* Ajustes para la caja creada por Choices.js */
+        .input-group-modern .choices__inner {
+            border-radius: 10px !important;
+            border: 2px solid #e0e0e0 !important;
+            padding-left: 50px !important; /* deja espacio para el icono */
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            min-height: 42px;
+            align-items: center;
+        }
+        .input-group-modern .choices__inner:focus-within {
+            border-color: #007bff !important;
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.15) !important;
+        }
 
-/* Estilos para Choices.js */
-.choices__inner {
-    border-radius: 10px !important;
-    border: 2px solid #e0e0e0 !important;
-    padding-left: 50px !important;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-.choices__inner:focus-within {
-    border-color: #007bff !important;
-    box-shadow: 0 0 10px rgba(0, 123, 255, 0.25) !important;
-}
-.choices__list--dropdown {
-    border-radius: 10px;
-}
-/* Mejora para el mapa */
-#map {
-    height: 500px;
-}
-/* Estilos para las listas */
-.list-section {
-    max-height: 200px;
-    overflow-y: auto;
-}
+        /* Asegurar que el dropdown aparezca por encima del icono y otros elementos */
+        .input-group-modern .choices__list--dropdown {
+            z-index: 10010 !important;
+            border-radius: 10px;
+        }
 
+        /* Pequeños ajustes visuales */
+        .btn-modern {
+            border-radius: 10px;
+            padding: 8px 16px;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .btn-modern:hover {
+            transform: translateY(-2px);
+        }
+        .shadow-container {
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+        .titulo-seccion {
+            color: #333;
+            font-weight: 700;
+        }
+
+        /* Marcadores personalizados */
+        .custom-marker .marker-circle {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Resalta la fila o tarjeta seleccionada */
+        .tabla-rutas .ruta-item.active,
+        #rutasEncontradas .ruta-item.active {
+            background: linear-gradient(135deg, #2196f3, #1976d2);
+            border: 2px solid #1565c0;
+            color: #fff;
+            font-weight: 700;
+            transform: scale(1.02);
+            box-shadow: 0 0 12px rgba(33, 150, 243, 0.18);
+            transition: all 0.2s ease-in-out;
+            border-radius: 10px;
+        }
+        .tabla-rutas .ruta-item,
+        #rutasEncontradas .ruta-item {
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: all 0.15s ease-in-out;
+        }
+
+        /* Mejora para el mapa */
+        #map {
+            height: 500px;
+        }
+        /* Estilos para las listas */
+        .list-section {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        /* Mejor legibilidad del select cuando Choices no está cargado aún */
+        select.form-control {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+
+        /* Asegurarse de que el icono no aparezca en pantallas muy pequeñas de forma demasiado grande */
+        @media (max-width: 576px) {
+            .input-group-modern .input-icon { left: 10px; font-size: 0.95rem; }
+            .input-group-modern .choices__inner { padding-left: 44px !important; }
+        }
     </style>
 </head>
 
@@ -152,13 +148,13 @@
             <ul class="navbar-nav">
             </ul>
             <ul class="navbar-nav ms-auto align-items-center">
-                <div id="reloj" class="text-dark me-3"></div>  <!-- CAMBIADO: text-white -> text-dark -->
+                <div id="reloj" class="text-dark me-3"></div>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">
                         <i class="fa-solid fa-circle-user fa-xl"></i>
                         <span id="nombreUsuarioNavbar">Cliente</span>
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end">  <!-- CAMBIADO: quitado dropdown-menu-dark -->
+                    <ul class="dropdown-menu dropdown-menu-end">
                         <li>
                             <a class="dropdown-item" th:href="@{/sgra/logout}">
                                 <i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar sesión
@@ -276,21 +272,28 @@
 
 <!-- Script para Choices.js y mapa -->
 <script>
-    // Función para limpiar campos
+    // Función para limpiar campos (redirecciona para quitar parámetros)
     function limpiarCampos() {
-        const ubicacionChoices = choicesInstances.ubicacion;
-        const destinoChoices = choicesInstances.destino;
-        if (ubicacionChoices) ubicacionChoices.setChoiceByValue('');
-        if (destinoChoices) destinoChoices.setChoiceByValue('');
+        window.location.href = '/sgra/usuario/buscar';
     }
-    // Función para limpiar campos
-function limpiarCampos() {
-    // Redirigir a la página sin parámetros para limpiar todo, incluyendo la URL
-    window.location.href = '/sgra/usuario/buscar';
-}
 
     // Variables para instancias de Choices.js
     let choicesInstances = {};
+
+    // Mueve el icono dentro del contenedor .choices generado por Choices.js para mejor alineación
+    function attachIconToChoices(selectId) {
+        const select = document.getElementById(selectId);
+        if (!select) return;
+        const container = select.closest('.input-group-modern');
+        if (!container) return;
+        const icon = container.querySelector('.input-icon');
+        // La librería Choices reemplaza el select por un nuevo DOM; buscamos el elemento .choices que crea
+        const choicesEl = container.querySelector('.choices');
+        if (choicesEl && icon) {
+            // Insertar el icono dentro del contenedor generado por Choices para que quede alineado
+            choicesEl.insertBefore(icon, choicesEl.firstChild);
+        }
+    }
 
     // Inicializar Choices.js después de cargar paradas
     document.addEventListener("DOMContentLoaded", async () => {
@@ -322,7 +325,9 @@ function limpiarCampos() {
                 noChoicesText: 'No hay opciones disponibles',
                 itemSelectText: 'Seleccionar',
                 placeholder: true,
-                placeholderValue: 'Selecciona ubicación de origen'
+                placeholderValue: 'Selecciona ubicación de origen',
+                shouldSort: false,
+                position: 'bottom'
             });
 
             choicesInstances.destino = new Choices(destinoSelect, {
@@ -332,8 +337,14 @@ function limpiarCampos() {
                 noChoicesText: 'No hay opciones disponibles',
                 itemSelectText: 'Seleccionar',
                 placeholder: true,
-                placeholderValue: 'Selecciona destino'
+                placeholderValue: 'Selecciona destino',
+                shouldSort: false,
+                position: 'bottom'
             });
+
+            // Mover iconos dentro del DOM generado por Choices para alinear correctamente
+            attachIconToChoices('ubicacion');
+            attachIconToChoices('destino');
 
             // Mantener valores seleccionados si existen (de th:value)
             const ubicacionValue = '[[${ubicacion}]]';
@@ -366,7 +377,6 @@ function limpiarCampos() {
     // Capa base
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-
     // Variables globales
     let marcadores = [];
 
@@ -377,7 +387,6 @@ function limpiarCampos() {
         iconAnchor: [16, 32],
         popupAnchor: [0, -32]
     });
-
 
     // Limpiar marcadores del mapa
     function limpiarMarcadores() {
@@ -457,7 +466,7 @@ function limpiarCampos() {
                 const rutaId = this.dataset.id;
 
                 rutas.forEach(r => r.classList.remove('active'));
-            this.classList.add('active');
+                this.classList.add('active');
 
                 // Cargar paradas
                 fetch(`/sgra/usuario/ruta/${rutaId}/paradas`)
@@ -494,7 +503,6 @@ function limpiarCampos() {
             })
             .catch(err => console.error("Error al cargar nombre de usuario:", err));
     });
-
 </script>
 
 </body>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.w3.org/1999/xhtml">
 
 <head>
     <meta charset="UTF-8" />
@@ -48,7 +48,9 @@
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page">Dashboard</a>
                     </li>
-
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/sgra/admin/prediccion}">Mantenimiento</a>
+                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
