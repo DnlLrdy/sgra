@@ -6,63 +6,154 @@
     --dark-color: #212529;
 }
 
+/* Reset / Base */
+* {
+    box-sizing: border-box;
+}
+
 body {
     font-family: 'Roboto', sans-serif;
     line-height: 1.6;
     color: var(--dark-color);
     overflow-x: hidden;
+    background-color: #fff;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 /* Navbar mejorado */
 .navbar {
     transition: all 0.3s ease;
     padding: 0.75rem 0;
+    background-color: var(--light-color); /* fondo inicial */
 }
 
+/* Mantener mismo color de fondo al hacer scroll; solo añadir sombra si lo deseas */
 .navbar.scrolled {
-    background-color: var(--primary-color) !important;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: var(--light-color) !important; /* mantiene #f8f9fa */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
 }
 
+/* Marca y links */
 .navbar-brand {
     font-weight: 700;
     font-size: 1.5rem;
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    gap: .5rem;
 }
 
+.navbar .navbar-toggler {
+    border: none;
+}
+
+/* Estilo de ícono del toggler cuando es navbar-light */
+.navbar-light .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='%23092a54' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+/* Links del navbar */
 .nav-link {
     font-weight: 500;
     padding: 0.5rem 1rem;
     position: relative;
+    color: var(--dark-color);
+    transition: color 0.2s ease;
 }
 
+/* Subraya en azul SOLO al hover/focus/active; inicialmente invisible */
 .nav-link:after {
     content: '';
     position: absolute;
     width: 0;
     height: 2px;
-    background: white;
+    background: var(--secondary-color); /* línea azul */
     bottom: 0;
     left: 0;
-    transition: width 0.3s ease;
+    transition: width 0.25s ease;
+    border-radius: 2px;
 }
 
-.nav-link:hover:after {
+/* Mostrar la línea al pasar el cursor, al recibir foco o cuando el enlace esté activo */
+.nav-link:hover,
+.nav-link:focus {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.nav-link:hover:after,
+.nav-link:focus:after,
+.nav-link.active:after {
     width: 100%;
+}
+
+/* Botón principal en navbar */
+.btn-outline-primary {
+    border-color: var(--secondary-color);
+    color: var(--secondary-color);
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--secondary-color);
+    color: #fff;
+    border-color: var(--secondary-color);
 }
 
 /* Hero Section mejorada */
 .hero-carousel {
     height: 90vh;
-    margin-top: 56px;
+    margin-top: 56px; /* espacio para navbar fijo */
+    position: relative;
+    overflow: hidden;
 }
 
 .carousel-item {
     height: 100%;
 }
 
+.carousel-item img {
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Overlay oscuro para legibilidad del texto en el carrusel */
+.carousel-overlay {
+    pointer-events: none;
+    mix-blend-mode: normal;
+}
+
+/* Contenido del hero */
+.hero-content {
+    z-index: 3;
+    padding: 0 1rem;
+}
+
 .hero-content h1 {
     font-size: 3rem;
-    line-height: 1.2;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    text-shadow: 0 6px 18px rgba(0,0,0,0.45);
+}
+
+.hero-content .lead {
+    font-size: 1.25rem;
+    max-width: 900px;
+    margin: 0 auto;
+    text-shadow: 0 4px 14px rgba(0,0,0,0.35);
+}
+
+/* Badges en hero */
+.hero-content .badge {
+    font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .hero-content h1 {
+        font-size: 2.5rem;
+    }
 }
 
 @media (max-width: 768px) {
@@ -85,38 +176,61 @@ body {
     align-items: center;
     justify-content: center;
     border-radius: 12px;
+    font-size: 1.25rem;
 }
 
 .hover-top {
-    transition: all 0.3s ease;
+    transition: transform 0.28s cubic-bezier(.2,.9,.3,1), box-shadow 0.28s ease;
 }
 
 .hover-top:hover {
     transform: translateY(-10px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 10px 20px rgba(9,42,84,0.08) !important;
 }
 
 /* Testimonios mejorados */
 .testimonial-card {
-    transition: all 0.3s ease;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .testimonial-card:hover {
     transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(9,42,84,0.06);
 }
 
 /* Formulario de contacto mejorado */
 .form-control-lg {
     padding: 0.75rem 1rem;
+    border-radius: 8px;
+    border: 1px solid #e6e9ee;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-control-lg:focus {
+    border-color: var(--secondary-color);
+    box-shadow: 0 6px 18px rgba(45,69,176,0.08);
+    outline: none;
 }
 
 /* Footer mejorado */
+footer {
+    background-color: #0d1726;
+    color: #ffffff;
+}
+
 footer a {
-    transition: all 0.3s ease;
+    transition: color 0.2s ease, transform 0.15s ease;
+    color: rgba(255,255,255,0.85);
+    text-decoration: none;
 }
 
 footer a:hover {
     color: var(--accent-color) !important;
+    transform: translateY(-3px);
+}
+
+.social-icon {
+    transition: transform 0.18s ease;
 }
 
 .social-icon:hover {
@@ -126,4 +240,43 @@ footer a:hover {
 /* Secciones */
 section {
     scroll-margin-top: 80px;
+}
+
+/* Utilities adicionales */
+.text-primary-strong {
+    color: var(--primary-color) !important;
+}
+
+.text-secondary-strong {
+    color: var(--secondary-color) !important;
+}
+
+/* Pequeñas animaciones y mejoras visuales */
+.btn-primary {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(45,69,176,0.12);
+}
+
+/* Accesibilidad: foco visible personalizado */
+a:focus, button:focus {
+    outline: 3px solid rgba(45,69,176,0.18);
+    outline-offset: 2px;
+}
+
+/* Small screens tweaks for spacing and readability */
+@media (max-width: 576px) {
+    .icon-box {
+        width: 60px;
+        height: 60px;
+    }
+
+    .hero-content .lead {
+        font-size: 1rem;
+    }
 }

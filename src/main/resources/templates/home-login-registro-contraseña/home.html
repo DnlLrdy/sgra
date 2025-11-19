@@ -19,36 +19,38 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top shadow-sm" style="background-color: #092a54;">
-        <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="#">
-                <i class="fas fa-route me-2"></i>
-                <span class="fw-bold">GeoRoute</span>
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto align-items-lg-center">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#inicio">Inicio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#como-funciona">Funcionalidades</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#testimonios">Casos de éxito</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#contacto">Contacto</a>
-                    </li>
-                    <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
-                        <a class="btn btn-outline-light rounded-pill px-4" th:href="@{/sgra/login}">Iniciar sesión</a>
-                    </li>
-                </ul>
-            </div>
+<nav class="navbar navbar-expand-lg navbar-light fixed-top shadow-sm" style="background-color: #f8f9fa;"> <!-- Cambié a navbar-light para texto oscuro y background gris claro -->
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" th:href="@{/sgra/home}">
+            <!-- Logo de la empresa: Ajusté el tamaño para que no haga el navbar demasiado ancho. Si necesitas cambiarlo, modifica la altura aquí. -->
+            <img src="/images/logo_a-removebg-preview.png" alt="Logo de GeoRoute" style="height: 40px;">
+
+            <span class="fw-bold">GeoRoute</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto align-items-lg-center">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/sgra/home} + '#inicio'">Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/sgra/home} + '#como-funciona'">Funcionalidades</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/sgra/home} + '#testimonios'">Casos de éxito</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/sgra/home} + '#contacto'">Contacto</a>
+                </li>
+                <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
+                    <a class="btn btn-outline-primary rounded-pill px-4" th:href="@{/sgra/login}">Iniciar sesión</a> <!-- Cambié a btn-outline-primary para que contraste con el fondo gris -->
+                </li>
+            </ul>
         </div>
-    </nav>
+    </div>
+</nav>
 
     <section id="inicio" class="hero-carousel position-relative">
         <div id="mainCarousel" class="carousel slide" data-bs-ride="carousel">
