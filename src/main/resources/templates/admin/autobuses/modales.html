@@ -153,12 +153,12 @@
                         <label for="conductorId" class="form-label fw-bold">Selecciona un conductor</label>
                         <select class="form-select shadow-sm" id="conductorId" name="conductorId" required>
                             <option value="" disabled selected>-- Seleccione --</option>
-                            <option th:each="conductor : ${conductores}" th:value="${conductor.id}" th:text="${conductor.primerNombre + ' ' 
-              + (conductor.segundoNombre != null ? conductor.segundoNombre + ' ' : '') 
-              + conductor.primerApellido + ' ' 
-              + (conductor.segundoApellido != null ? conductor.segundoApellido + ' ' : '') 
-              + '- ' + conductor.tipoDocumento + ' ' 
-              + conductor.numeroDocumento + ' - Estado: ' 
+                            <option th:each="conductor : ${conductores}" th:value="${conductor.id}" th:text="${conductor.primerNombre + ' '
+              + (conductor.segundoNombre != null ? conductor.segundoNombre + ' ' : '')
+              + conductor.primerApellido + ' '
+              + (conductor.segundoApellido != null ? conductor.segundoApellido + ' ' : '')
+              + '- ' + conductor.tipoDocumento + ' '
+              + conductor.numeroDocumento + ' - Estado: '
               + conductor.estado}">
                             </option>
                         </select>

@@ -7,9 +7,9 @@
     <title>GeoRoute</title>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+          xintegrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.19.1/dist/sweetalert2.all.min.js"></script>
@@ -20,256 +20,259 @@
 </head>
 
 <body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
-        <div class="container">
-            <a class="navbar-brand">GeoRoute</a>
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm border-bottom">
+    <div class="container">
+        <img src="/images/logo_a-removebg-preview.png" alt="Logo de GeoRoute" style="height: 40px;">
+        <a class="navbar-brand">GeoRoute</a>
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
 
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page">Rutas</a>
-                    </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page">Rutas</a>
+                </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/sgra/admin/autobuses}">Autobuses</a>
-                    </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/sgra/admin/autobuses}">Autobuses</a>
+                </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/sgra/admin/conductores}">Conductores</a>
-                    </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/sgra/admin/conductores}">Conductores</a>
+                </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/sgra/admin/dashboard}">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/sgra/admin/prediccion}">Mantenimiento</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-person-circle me-1"></i>
-                            <span th:text="${administradorNombreUsuario}"></span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="userDropdown">
-                            <li>
-                                <a class="dropdown-item text-danger" th:href="@{/sgra/logout}">
-                                    <i class="bi bi-box-arrow-right me-2"></i>Cerrar sesión
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/sgra/admin/dashboard}">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/sgra/admin/prediccion}">Mantenimiento</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-person-circle me-1"></i>
+                        <span th:text="${administradorNombreUsuario}"></span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li>
+                            <a class="dropdown-item text-danger" th:href="@{/sgra/logout}">
+                                <i class="bi bi-box-arrow-right me-2"></i>Cerrar sesión
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid mt-5">
+    <div class="row">
+
+        <div class="col-md-8">
+            <div class="card shadow mb-3">
+                <div class="card-header bg-white text-dark d-flex justify-content-between align-items-center border-bottom">
+                    <h3 class="mb-0"><i class="bi bi-signpost-split"></i> Seleccionar ruta</h3>
+                    <!-- BOTÓN MODIFICADO: btn-primary a btn-outline-primary -->
+                    <a th:href="@{/sgra/admin/rutas/crear}" class="btn btn-outline-primary">
+                        <i class="bi bi-plus-circle"></i> Crear una ruta
+                    </a>
+                </div>
+                <div class="card-body d-flex gap-2">
+                    <select id="selector-rutas" class="form-select" th:disabled="${#lists.isEmpty(rutas)}">
+                        <option th:if="${#lists.isEmpty(rutas)}" value="" disabled selected>¡No hay rutas creadas!
+                        </option>
+                        <option th:each="ruta : ${rutas}" th:value="${ruta.id}" th:text="${ruta.nombre}"></option>
+                    </select>
+                    <form id="form-editar" th:action="@{/sgra/admin/rutas/editar}" method="get"
+                          style="display: none;">
+                        <input type="hidden" name="id" id="ruta-id-editar">
+                        <button type="submit" class="btn btn-outline-warning">
+                            <i class="bi bi-pencil-square"></i>
+                        </button>
+                    </form>
+                    <form id="form-eliminar" th:action="@{/sgra/admin/rutas/eliminar}" method="post"
+                          style="display: none;">
+                        <input type="hidden" name="id" id="ruta-id-eliminar">
+                        <button type="button" class="btn btn-outline-danger" onclick="mostrarModalEliminar()">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card shadow mb-3">
+                <div class="card-body">
+                    <div id="map" class="mb-4"></div>
+                </div>
             </div>
         </div>
-    </nav>
 
-    <div class="container-fluid mt-5">
-        <div class="row">
-
-            <div class="col-md-8">
-                <div class="card shadow mb-3">
-                    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
-                        <h3 class="mb-0"><i class="bi bi-signpost-split"></i> Seleccionar ruta</h3>
-                        <a th:href="@{/sgra/admin/rutas/crear}" class="btn btn-light text-dark">
-                            <i class="bi bi-plus-circle"></i> Crear una ruta
-                        </a>
-                    </div>
-                    <div class="card-body d-flex gap-2">
-                        <select id="selector-rutas" class="form-select" th:disabled="${#lists.isEmpty(rutas)}">
-                            <option th:if="${#lists.isEmpty(rutas)}" value="" disabled selected>¡No hay rutas creadas!
-                            </option>
-                            <option th:each="ruta : ${rutas}" th:value="${ruta.id}" th:text="${ruta.nombre}"></option>
-                        </select>
-                        <form id="form-editar" th:action="@{/sgra/admin/rutas/editar}" method="get"
-                            style="display: none;">
-                            <input type="hidden" name="id" id="ruta-id-editar">
-                            <button type="submit" class="btn btn-outline-warning">
-                                <i class="bi bi-pencil-square"></i>
-                            </button>
-                        </form>
-                        <form id="form-eliminar" th:action="@{/sgra/admin/rutas/eliminar}" method="post"
-                            style="display: none;">
-                            <input type="hidden" name="id" id="ruta-id-eliminar">
-                            <button type="button" class="btn btn-outline-danger" onclick="mostrarModalEliminar()">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </form>
-                    </div>
+        <div class="col-md-4">
+            <div class="card shadow">
+                <div class="card-header bg-white text-dark border-bottom">
+                    <h3 class="mb-0"><i class="bi bi-list-ul"></i> Lista de paradas</h3>
                 </div>
 
-                <div class="card shadow mb-3">
-                    <div class="card-body">
-                        <div id="map" class="mb-4"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="card shadow">
-                    <div class="card-header bg-dark text-white">
-                        <h3 class="mb-0"><i class="bi bi-list-ul"></i> Lista de paradas</h3>
-                    </div>
-
-                    <div class="card-body p-2">
-                        <div id="paradas-container" class="mt-2">
-                            <ul id="paradas-list" class="list-group">
-                                <div th:if="${#lists.isEmpty(rutas)}" class="alert alert-dark text-center" role="alert">
-                                    <strong>¡No hay paradas creadas!</strong><br>
-                                    Crea una ruta para crear paradas.
-                                </div>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card shadow mt-4 mb-5">
-                    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
-                        <h3 class="mb-0"><i class="bi bi-bus-front"></i> Lista de autobuses</h3>
-                        <a id="btn-vincular-autobus" class="btn btn-light text-dark d-none"
-                            onclick="mostrarModalAutobuses()">
-                            <i class="bi bi-plus-circle"></i> Vincular un autobus
-                        </a>
-                    </div>
-
-                    <div class="card-body p-2">
-                        <div id="autobuses-container" class="mt-2">
-                            <div id="alerta-sin-autobuses" class="alert alert-dark text-center" role="alert">
-                                <strong>¡No hay autobuses disponibles!</strong><br>
-                                Registra autobuses para asignarlos a rutas.
+                <div class="card-body p-2">
+                    <div id="paradas-container" class="mt-2">
+                        <ul id="paradas-list" class="list-group">
+                            <div th:if="${#lists.isEmpty(rutas)}" class="alert alert-dark text-center" role="alert">
+                                <strong>¡No hay paradas creadas!</strong><br>
+                                Crea una ruta para crear paradas.
                             </div>
-                            <ul id="autobuses-list" class="list-group"></ul>
-                        </div>
+                        </ul>
                     </div>
                 </div>
             </div>
 
+            <div class="card shadow mt-4 mb-5">
+                <div class="card-header bg-white text-dark d-flex justify-content-between align-items-center border-bottom">
+                    <h3 class="mb-0"><i class="bi bi-bus-front"></i> Lista de autobuses</h3>
+                    <!-- BOTÓN MODIFICADO: btn-primary a btn-outline-primary -->
+                    <a id="btn-vincular-autobus" class="btn btn-outline-primary d-none"
+                       onclick="mostrarModalAutobuses()">
+                        <i class="bi bi-plus-circle"></i> Vincular un autobus
+                    </a>
+                </div>
+
+                <div class="card-body p-2">
+                    <div id="autobuses-container" class="mt-2">
+                        <div id="alerta-sin-autobuses" class="alert alert-dark text-center" role="alert">
+                            <strong>¡No hay autobuses disponibles!</strong><br>
+                            Registra autobuses para asignarlos a rutas.
+                        </div>
+                        <ul id="autobuses-list" class="list-group"></ul>
+                    </div>
+                </div>
+            </div>
         </div>
+
     </div>
+</div>
 
-    <div th:replace="admin/rutas/modales :: modalConfirmarEliminar"></div>
-    <div th:replace="admin/rutas/modales :: modalSeleccionarAutobuses"></div>
-    <div th:replace="admin/rutas/modales :: modalDesvincularAutobus"></div>
-    <div th:replace="admin/rutas/modales :: modalDetallesAutobus"></div>
+<div th:replace="admin/rutas/modales :: modalConfirmarEliminar"></div>
+<div th:replace="admin/rutas/modales :: modalSeleccionarAutobuses"></div>
+<div th:replace="admin/rutas/modales :: modalDesvincularAutobus"></div>
+<div th:replace="admin/rutas/modales :: modalDetallesAutobus"></div>
 
-    <div th:if="${mensajesError != null}" th:inline="javascript">
-        <script>
-            const errors = /*[[${mensajesError}]]*/[];
-            if (errors.length > 0) {
-                const Toast = Swal.mixin({
-                    toast: true,
-                    position: 'top',
-                    showConfirmButton: false,
-                    timer: 3500,
-                    timerProgressBar: true,
-                    didOpen: (toast) => {
-                        toast.addEventListener('mouseenter', Swal.stopTimer);
-                        toast.addEventListener('mouseleave', Swal.resumeTimer);
-                    },
-                    customClass: { popup: 'swal-popup' },
-                });
-                document.addEventListener('click', (e) => {
-                    if (!document.querySelector('.swal-popup').contains(e.target)) {
-                        Swal.close();
-                    }
-                });
-                let showAlert = (index) => {
-                    if (index < errors.length) {
-                        Toast.fire({
-                            icon: 'error',
-                            title: errors[index],
-                            iconColor: '#e74c3c',
-                        }).then(() => showAlert(index + 1));
-                    }
-                };
-                showAlert(0);
-            }
-        </script>
-    </div>
-
-    <div th:if="${mensajeExito != null}" th:inline="javascript">
-        <script>
-            const success = /*[[${mensajeExito}]]*/'';
-            if (success) {
-                const Toast = Swal.mixin({
-                    toast: true,
-                    position: 'top',
-                    showConfirmButton: false,
-                    timer: 3500,
-                    timerProgressBar: true,
-                    didOpen: (toast) => {
-                        toast.addEventListener('mouseenter', Swal.stopTimer);
-                        toast.addEventListener('mouseleave', Swal.resumeTimer);
-                    },
-                    customClass: { popup: 'swal-popup' },
-                });
-                document.addEventListener('click', (e) => {
-                    if (!document.querySelector('.swal-popup').contains(e.target)) {
-                        Swal.close();
-                    }
-                });
-                Toast.fire({
-                    icon: 'success',
-                    title: success,
-                    iconColor: '#27ae60',
-                });
-            }
-        </script>
-    </div>
-
-    <div th:if="${mensajeError != null}" th:inline="javascript">
-        <script>
-            const error = /*[[${mensajeError}]]*/'';
-            if (error) {
-                const Toast = Swal.mixin({
-                    toast: true,
-                    position: 'top',
-                    showConfirmButton: false,
-                    timer: 3500,
-                    timerProgressBar: true,
-                    didOpen: (toast) => {
-                        toast.addEventListener('mouseenter', Swal.stopTimer);
-                        toast.addEventListener('mouseleave', Swal.resumeTimer);
-                    },
-                    customClass: { popup: 'swal-popup' },
-                });
-                document.addEventListener('click', (e) => {
-                    if (!document.querySelector('.swal-popup').contains(e.target)) {
-                        Swal.close();
-                    }
-                });
-                Toast.fire({
-                    icon: 'error',
-                    title: error,
-                    iconColor: '#e74c3c',
-                });
-            }
-        </script>
-    </div>
-
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
-
-    <script th:inline="javascript">
-        /*<![CDATA[*/
-        var rutas = /*[[${rutas}]]*/[];
-        /*]]>*/
-        /*<![CDATA[*/
-        var autobuses = /*[[${autobuses}]]*/[];
-        /*]]>*/
+<div th:if="${mensajesError != null}" th:inline="javascript">
+    <script>
+        const errors = /*[[${mensajesError}]]*/[];
+        if (errors.length > 0) {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top',
+                showConfirmButton: false,
+                timer: 3500,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer);
+                    toast.addEventListener('mouseleave', Swal.resumeTimer);
+                },
+                customClass: { popup: 'swal-popup' },
+            });
+            document.addEventListener('click', (e) => {
+                if (!document.querySelector('.swal-popup').contains(e.target)) {
+                    Swal.close();
+                }
+            });
+            let showAlert = (index) => {
+                if (index < errors.length) {
+                    Toast.fire({
+                        icon: 'error',
+                        title: errors[index],
+                        iconColor: '#e74c3c',
+                    }).then(() => showAlert(index + 1));
+                }
+            };
+            showAlert(0);
+        }
     </script>
+</div>
 
-    <script src="../../../static/js/admin/rutas/listar-rutas.js"></script>
-    <script th:src="@{/js/admin/rutas/listar-rutas.js}"></script>
+<div th:if="${mensajeExito != null}" th:inline="javascript">
+    <script>
+        const success = /*[[${mensajeExito}]]*/'';
+        if (success) {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top',
+                showConfirmButton: false,
+                timer: 3500,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer);
+                    toast.addEventListener('mouseleave', Swal.resumeTimer);
+                },
+                customClass: { popup: 'swal-popup' },
+            });
+            document.addEventListener('click', (e) => {
+                if (!document.querySelector('.swal-popup').contains(e.target)) {
+                    Swal.close();
+                }
+            });
+            Toast.fire({
+                icon: 'success',
+                title: success,
+                iconColor: '#27ae60',
+            });
+        }
+    </script>
+</div>
+
+<div th:if="${mensajeError != null}" th:inline="javascript">
+    <script>
+        const error = /*[[${mensajeError}]]*/'';
+        if (error) {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top',
+                showConfirmButton: false,
+                timer: 3500,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer);
+                    toast.addEventListener('mouseleave', Swal.resumeTimer);
+                },
+                customClass: { popup: 'swal-popup' },
+            });
+            document.addEventListener('click', (e) => {
+                if (!document.querySelector('.swal-popup').contains(e.target)) {
+                    Swal.close();
+                }
+            });
+            Toast.fire({
+                icon: 'error',
+                title: error,
+                iconColor: '#e74c3c',
+            });
+        }
+    </script>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+        xintegrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var rutas = /*[[${rutas}]]*/[];
+    /*]]>*/
+    /*<![CDATA[*/
+    var autobuses = /*[[${autobuses}]]*/[];
+    /*]]>*/
+</script>
+
+<script src="../../../static/js/admin/rutas/listar-rutas.js"></script>
+<script th:src="@{/js/admin/rutas/listar-rutas.js}"></script>
 </body>
 
 </html>
