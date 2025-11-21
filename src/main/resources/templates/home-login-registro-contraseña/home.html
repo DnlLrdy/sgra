@@ -4,74 +4,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description"
-        content="GeoRoute - Sistema de Gestión de Rutas y Autobuses para optimizar el transporte público">
+    <meta name="description" content="GeoRoute - Software de gestión y visualización de rutas de autobuses">
     <title>GeoRoute</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <link rel="icon" type="image/x-icon" href="../../static/images/logo.png">
-    <link rel="icon" type="image/x-icon" th:href="@{/images/logo.png}">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="../../../static/css/home-login-registro-contraseña/home.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="icon" type="image/x-icon" th:href="@{/images/logo-bg.png}">
     <link rel="stylesheet" th:href="@{/css/home-login-registro-contraseña/home.css}">
 </head>
 
 <body>
-<nav class="navbar navbar-expand-lg navbar-light fixed-top shadow-sm" style="background-color: #f8f9fa;"> <!-- Cambié a navbar-light para texto oscuro y background gris claro -->
-    <div class="container">
-        <a class="navbar-brand d-flex align-items-center" th:href="@{/home}">
-            <!-- Logo de la empresa: Ajusté el tamaño para que no haga el navbar demasiado ancho. Si necesitas cambiarlo, modifica la altura aquí. -->
-            <img src="/images/logo_a-removebg-preview.png" alt="Logo de GeoRoute" style="height: 40px;">
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top shadow-sm">
+        <div class="container">
+            <div class="navbar-brand d-flex align-items-center">
+                <img src="/images/logo-nobg.png" alt="Logo de GeoRoute" height="40" class="me-2">
+                <span class="fw-bold fs-4">GeoRoute</span>
+            </div>
 
-            <span class="fw-bold">GeoRoute</span>
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto align-items-lg-center">
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/home} + '#inicio'">Inicio</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/home} + '#como-funciona'">Funcionalidades</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/home} + '#testimonios'">Casos de éxito</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/home} + '#contacto'">Contacto</a>
-                </li>
-                <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
-                    <a class="btn btn-outline-primary rounded-pill px-4" th:href="@{/login}">Iniciar sesión</a> <!-- Cambié a btn-outline-primary para que contraste con el fondo gris -->
-                </li>
-            </ul>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-lg-center" id="menuMobile">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/home} + '#inicio'">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/home} + '#funcionalidades'">Funcionalidades</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/home} + '#testimonios'">Testimonios</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/home} + '#contacto'">Contacto</a>
+                    </li>
+                    <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
+                        <a class="btn btn-outline-primary rounded-pill px-4" th:href="@{/login}">Iniciar sesión</a>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
     <section id="inicio" class="hero-carousel position-relative">
         <div id="mainCarousel" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-inner">
                 <div class="carousel-item active">
                     <img src="https://i.ytimg.com/vi/eGt2eABqsOA/maxresdefault.jpg" class="d-block w-100"
-                        alt="Transporte público" style="height: 90vh; object-fit: cover;">
-                    <div class="carousel-overlay position-absolute top-0 start-0 w-100 h-100"
-                        style="background: linear-gradient(to right, rgba(9,42,84,0.9), rgba(9,42,84,0.7));"></div>
+                        alt="Transporte público">
+                    <div class="carousel-overlay"></div>
                 </div>
+
                 <div class="carousel-item">
                     <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
-                        class="d-block w-100" alt="Autobuses urbanos" style="height: 90vh; object-fit: cover;">
-                    <div class="carousel-overlay position-absolute top-0 start-0 w-100 h-100"
-                        style="background: linear-gradient(to right, rgba(9,42,84,0.9), rgba(9,42,84,0.7));"></div>
+                        class="d-block w-100" alt="Autobuses urbanos">
+                    <div class="carousel-overlay"></div>
                 </div>
+
                 <div class="carousel-item">
                     <img src="https://s3.ppllstatics.com/laverdad/www/multimedia/202210/14/media/cortadas/movibuss-kvZF-U180375939060KQF-1248x770@La%20Verdad.jpg"
-                        class="d-block w-100" alt="Autobuses" style="height: 90vh; object-fit: cover;">
-                    <div class="carousel-overlay position-absolute top-0 start-0 w-100 h-100"
-                        style="background: linear-gradient(to right, rgba(9,42,84,0.9), rgba(9,42,84,0.7));"></div>
+                        class="d-block w-100" alt="Autobuses">
+                    <div class="carousel-overlay"></div>
                 </div>
             </div>
         </div>
@@ -79,15 +75,17 @@
         <div class="hero-content container position-absolute top-50 start-50 translate-middle text-center text-white">
             <div class="row justify-content-center">
                 <div class="col-lg-10">
-                    <h1 class="display-3 fw-bold mb-4 animate__animated animate__fadeInDown">Software de gestión de
-                        rutas
-                        de autobuses</h1>
-                    <p class="lead mb-5 fs-4 animate__animated animate__fadeIn animate__delay-1s">Optimiza la operación
-                        de tu flota de transporte con nuestra solución integral</p>
+                    <h1 class="display-3 fw-bold mb-4 animate__animated animate__fadeInDown">
+                        Software de gestión y visualización de rutas de autobuses
+                    </h1>
+                    <p class="lead mb-5 fs-4 animate__animated animate__fadeIn animate__delay-1s">
+                        Visualiza en tiempo real las rutas de autobuses, consulta paradas cercanas y encuentra el mejor
+                        trayecto con facilidad usando GeoRoute.
+                    </p>
                     <div
                         class="d-flex justify-content-center gap-3 animate__animated animate__fadeIn animate__delay-2s">
-                        <a href="#como-funciona" class="btn btn-primary btn-lg px-4 rounded-pill">Conoce más</a>
-                        <a th:href="@{/login}" class="btn btn-outline-light btn-lg px-4 rounded-pill">Acceder al
+                        <a href="#funcionalidades" class="btn btn-primary btn-lg px-4 rounded-pill">Conoce más</a>
+                        <a th:href="@{/login}" class="btn btn-outline-light btn-lg px-4 rounded-pill">Accede al
                             software</a>
                     </div>
                 </div>
@@ -95,27 +93,33 @@
         </div>
     </section>
 
-    <section id="como-funciona" class="py-5 bg-white">
+    <section id="funcionalidades" class="py-5 bg-light">
         <div class="container py-5">
             <div class="text-center mb-5">
                 <span class="badge bg-primary bg-opacity-10 text-primary mb-3">FUNCIONALIDADES</span>
-                <h2 class="fw-bold mb-3">Nuestras soluciones integrales</h2>
-                <p class="lead text-muted mx-auto" style="max-width: 700px;">Nuestro software de gestión de rutas de
-                    autobuses (GeoRoute) proporciona herramientas para la gestión eficiente del transporte
-                    público</p>
+                <h2 class="fw-bold mb-3">Soluciones integrales para una movilidad eficiente</h2>
+                <p class="lead text-muted mx-auto" style="max-width: 700px;">
+                    GeoRoute ofrece herramientas completas para visualizar, administrar y optimizar las rutas de
+                    transporte público.
+                </p>
             </div>
 
             <div class="row g-4">
+
                 <div class="col-md-4">
                     <div class="card border-0 shadow-sm h-100 hover-top">
                         <div class="card-body p-4 text-center">
-                            <div class="icon-box bg-primary bg-opacity-10 text-primary mb-4">
+                            <div
+                                class="icon-box bg-primary bg-opacity-10 text-primary mb-4 mx-auto d-flex justify-content-center align-items-center">
                                 <i class="fas fa-route fs-3"></i>
                             </div>
                             <h4 class="mb-3">Gestión de rutas</h4>
-                            <p class="text-muted">Planifica y optimiza rutas de transporte de manera fácil y rápido.</p>
-                            <a href="#" class="btn btn-link text-primary text-decoration-none p-0">Saber más <i
-                                    class="fas fa-arrow-right ms-2"></i></a>
+                            <p class="text-muted">
+                                Crea, organiza y optimiza rutas de autobuses con una interfaz clara e intuitiva.
+                            </p>
+                            <a href="#" class="btn btn-link text-primary text-decoration-none p-0">
+                                Saber más <i class="fas fa-arrow-right ms-2"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -123,13 +127,17 @@
                 <div class="col-md-4">
                     <div class="card border-0 shadow-sm h-100 hover-top">
                         <div class="card-body p-4 text-center">
-                            <div class="icon-box bg-primary bg-opacity-10 text-primary mb-4">
+                            <div
+                                class="icon-box bg-primary bg-opacity-10 text-primary mb-4 mx-auto d-flex justify-content-center align-items-center">
                                 <i class="fas fa-bus fs-3"></i>
                             </div>
                             <h4 class="mb-3">Control de flota</h4>
-                            <p class="text-muted">Administramos los vehículos y asignaciones.</p>
-                            <a href="#" class="btn btn-link text-primary text-decoration-none p-0">Saber más <i
-                                    class="fas fa-arrow-right ms-2"></i></a>
+                            <p class="text-muted">
+                                Administra vehículos, asignaciones y recorridos de manera centralizada y eficiente.
+                            </p>
+                            <a href="#" class="btn btn-link text-primary text-decoration-none p-0">
+                                Saber más <i class="fas fa-arrow-right ms-2"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -137,16 +145,21 @@
                 <div class="col-md-4">
                     <div class="card border-0 shadow-sm h-100 hover-top">
                         <div class="card-body p-4 text-center">
-                            <div class="icon-box bg-primary bg-opacity-10 text-primary mb-4">
+                            <div
+                                class="icon-box bg-primary bg-opacity-10 text-primary mb-4 mx-auto d-flex justify-content-center align-items-center">
                                 <i class="fas fa-chart-line fs-3"></i>
                             </div>
-                            <h4 class="mb-3">Analíticos</h4>
-                            <p class="text-muted">Reportes y estadísticas para la toma de decisiones.</p>
-                            <a href="#" class="btn btn-link text-primary text-decoration-none p-0">Saber más <i
-                                    class="fas fa-arrow-right ms-2"></i></a>
+                            <h4 class="mb-3">Análisis y reportes</h4>
+                            <p class="text-muted">
+                                Visualiza estadísticas y métricas clave para mejorar la toma de decisiones.
+                            </p>
+                            <a href="#" class="btn btn-link text-primary text-decoration-none p-0">
+                                Saber más <i class="fas fa-arrow-right ms-2"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </section>
@@ -233,7 +246,7 @@
         </div>
     </section>
 
-    <section id="contacto" class="py-5 bg-white">
+    <section id="contacto" class="py-5 bg-light">
         <div class="container py-5">
             <div class="row justify-content-center">
                 <div class="col-lg-8">
@@ -272,27 +285,21 @@
 
     <footer class="py-5 bg-dark text-white">
         <div class="container py-4">
-            <div class="row">
-                <div class="col-lg-4 mb-4 mb-lg-0">
-                    <h3 class="d-flex align-items-center mb-4">
-                        <i class="fas fa-route me-2"></i>
-                        <span>GeoRoute</span>
-                    </h3>
-                    <p>Software de gestión de rutas de autobuses para optimizar el transporte público urbano e
-                        interurbano.</p>
-                </div>
-                <div class="col-lg-2 col-md-6 mb-4 mb-md-0">
+            <div class="row justify-content-center text-center">
+
+                <div class="col-lg-2 col-md-6 mb-4 mb-md-0 text-center">
                     <h5 class="mb-4">Enlaces</h5>
                     <ul class="list-unstyled">
                         <li class="mb-2"><a href="#inicio" class="text-white text-decoration-none">Inicio</a></li>
-                        <li class="mb-2"><a href="#como-funciona"
+                        <li class="mb-2"><a href="#funcionalidades"
                                 class="text-white text-decoration-none">Funcionalidades</a></li>
-                        <li class="mb-2"><a href="#testimonios" class="text-white text-decoration-none">Casos de
-                                éxito</a></li>
+                        <li class="mb-2"><a href="#testimonios" class="text-white text-decoration-none">Testimonios</a>
+                        </li>
                         <li class="mb-2"><a href="#contacto" class="text-white text-decoration-none">Contacto</a></li>
                     </ul>
                 </div>
-                <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+
+                <div class="col-lg-3 col-md-6 mb-4 mb-md-0 text-center">
                     <h5 class="mb-4">Contacto</h5>
                     <ul class="list-unstyled">
                         <li class="mb-2"><i class="fas fa-envelope me-2"></i> contacto@georoute.com</li>
@@ -300,22 +307,33 @@
                         <li class="mb-2"><i class="fas fa-map-marker-alt me-2"></i> Cartagena, Colombia</li>
                     </ul>
                 </div>
-                <div class="col-lg-3 col-md-6">
+
+                <div class="col-lg-3 col-md-6 text-center">
                     <h5 class="mb-4">Síguenos</h5>
-                    <div class="d-flex gap-3">
+                    <div class="d-flex justify-content-center gap-3">
                         <a href="#" class="text-white fs-5"><i class="fab fa-facebook-f"></i></a>
                         <a href="#" class="text-white fs-5"><i class="fab fa-twitter"></i></a>
                         <a href="#" class="text-white fs-5"><i class="fab fa-linkedin-in"></i></a>
                         <a href="#" class="text-white fs-5"><i class="fab fa-instagram"></i></a>
                     </div>
                 </div>
+
             </div>
+
             <hr class="my-4 opacity-25">
+
             <div class="text-center">
                 <p class="mb-0">&copy; 2025 GeoRoute. Todos los derechos reservados.</p>
             </div>
         </div>
     </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js"
+        integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y"
+        crossorigin="anonymous"></script>
 
     <script>
         window.addEventListener('scroll', function () {

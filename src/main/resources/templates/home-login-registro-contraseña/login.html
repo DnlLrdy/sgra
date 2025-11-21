@@ -1,176 +1,160 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="GeoRoute - Software de gestión y visualización de rutas de autobuses">
     <title>GeoRoute</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-          integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
-          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="icon" type="image/x-icon" th:href="@{/images/logo-bg.png}">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.19.1/dist/sweetalert2.all.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.19.1/dist/sweetalert2.min.css" rel="stylesheet">
-
-    <link rel="stylesheet" href="../../../static/css/home-login-registro-contraseña/login.css">
     <link rel="stylesheet" th:href="@{/css/home-login-registro-contraseña/login.css}">
-
-    <style>
-        /* Estilos para hover en el navbar */
-        .navbar .nav-link:hover {
-            color: #007bff !important; /* Azul para hover en enlaces */
-            transition: color 0.3s ease; /* Transición suave */
-        }
-        .navbar .btn-outline-primary:hover {
-            background-color: #007bff; /* Fondo azul claro en hover para el botón */
-            border-color: #007bff;
-            color: white;
-            transition: all 0.3s ease; /* Transición suave */
-        }
-    </style>
 </head>
 
-<body style="padding-top: 80px;"> <!-- Agregado padding-top para compensar el navbar fijo y evitar que tape el contenido -->
-<nav class="navbar navbar-expand-lg navbar-light fixed-top shadow-sm" style="background-color: #f8f9fa;"> <!-- Cambié a navbar-light para texto oscuro y background gris claro -->
-    <div class="container">
-        <a class="navbar-brand d-flex align-items-center" th:href="@{/home}">
-            <!-- Logo de la empresa: Ajusté el tamaño para que no haga el navbar demasiado ancho. Si necesitas cambiarlo, modifica la altura aquí. -->
-            <img src="/images/logo_a-removebg-preview.png" alt="Logo de GeoRoute" style="height: 40px;">
+<body style="padding-top: 80px;">
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top shadow-sm">
+        <div class="container">
+            <div class="navbar-brand d-flex align-items-center">
+                <img src="/images/logo-nobg.png" alt="Logo de GeoRoute" height="40" class="me-2">
+                <span class="fw-bold fs-4">GeoRoute</span>
+            </div>
 
-            <span class="fw-bold">GeoRoute</span>
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto align-items-lg-center">
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/home} + '#inicio'">Inicio</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/home} + '#como-funciona'">Funcionalidades</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/home} + '#testimonios'">Casos de éxito</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/home} + '#contacto'">Contacto</a>
-                </li>
-                <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
-                    <a class="btn btn-outline-primary rounded-pill px-4" th:href="@{/login}">Iniciar sesión</a> <!-- Cambié a btn-outline-primary para que contraste con el fondo gris -->
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-<div class="login-container">
-    <h2 class="login-title">Iniciar sesión</h2>
-    <form th:action="@{/login/logging}" th:method="post">
-        <div class="form-group">
-            <label for="username" class="form-label">Nombre de usuario</label>
-            <div class="input-wrapper">
-                <i class="fas fa-user input-icon"></i>
-                <input type="text" class="form-control" id="username" name="nombreUsuario"
-                       placeholder="Ingresa tu nombre de usuario">
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-lg-center" id="menuMobile">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/home} + '#inicio'">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/home} + '#funcionalidades'">Funcionalidades</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/home} + '#testimonios'">Testimonios</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/home} + '#contacto'">Contacto</a>
+                    </li>
+                    <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
+                        <a class="btn btn-outline-primary rounded-pill px-4" th:href="@{/login}">Iniciar sesión</a>
+                    </li>
+                </ul>
             </div>
         </div>
-        <div class="form-group">
-            <label for="password" class="form-label">Contraseña</label>
-            <div class="input-wrapper password-wrapper">
-                <i class="fas fa-lock input-icon"></i>
-                <input type="password" class="form-control" id="password" name="contraseña"
-                       placeholder="Ingresa tu contraseña">
-                <i class="fas fa-eye password-toggle-icon" id="togglePassword"></i>
+    </nav>
+
+    <div class="login-container">
+        <h2 class="login-title">Iniciar sesión</h2>
+        <form th:action="@{/login/logging}" th:method="post">
+            <div class="form-group">
+                <label for="username" class="form-label">Nombre de usuario</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-user input-icon"></i>
+                    <input type="text" class="form-control" id="username" name="nombreUsuario"
+                        placeholder="Ingresa tu nombre de usuario">
+                </div>
             </div>
+            <div class="form-group">
+                <label for="password" class="form-label">Contraseña</label>
+                <div class="input-wrapper password-wrapper">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="password" class="form-control" id="password" name="contraseña"
+                        placeholder="Ingresa tu contraseña">
+                    <i class="fas fa-eye password-toggle-icon" id="togglePassword"></i>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-sign-in-alt"></i> Iniciar sesión
+            </button>
+        </form>
+        <div class="separator"><span>O</span></div>
+        <div class="auth-options">
+            <a th:href="@{/registro}">Crear una cuenta</a>
+            <a th:href="@{/restablecer-contrasena}">¿Olvidaste tu contraseña?</a>
         </div>
-        <button type="submit" class="btn btn-primary">
-            <i class="fas fa-sign-in-alt"></i> Iniciar sesión
-        </button>
-    </form>
-    <div class="separator"><span>O</span></div>
-    <div class="auth-options">
-        <a th:href="@{/registro}">Crear una cuenta</a>
-        <a th:href="@{/restablecer-contrasena}">¿Olvidaste tu contraseña?</a>
     </div>
-</div>
 
-<script>
-    const passwordInput = document.getElementById('password');
-    const togglePasswordIcon = document.getElementById('togglePassword');
-
-    togglePasswordIcon.addEventListener('click', function () {
-        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-        passwordInput.setAttribute('type', type);
-        this.classList.toggle('fa-eye');
-        this.classList.toggle('fa-eye-slash');
-    });
-</script>
-
-<div th:if="${mensajeExito != null}" th:inline="javascript">
     <script>
-        const success = /*[[${mensajeExito}]]*/'';
-        if (success) {
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top',
-                showConfirmButton: false,
-                timer: 3500,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer);
-                    toast.addEventListener('mouseleave', Swal.resumeTimer);
-                },
-                customClass: { popup: 'swal-popup' },
-            });
-            document.addEventListener('click', (e) => {
-                if (!document.querySelector('.swal-popup').contains(e.target)) {
-                    Swal.close();
-                }
-            });
-            Toast.fire({
-                icon: 'success',
-                title: success,
-                iconColor: '#27ae60',
-            });
-        }
-    </script>
-</div>
+        const passwordInput = document.getElementById('password');
+        const togglePasswordIcon = document.getElementById('togglePassword');
 
-<div th:if="${mensajeError != null}" th:inline="javascript">
-    <script>
-        const error = /*[[${mensajeError}]]*/'';
-        if (error) {
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top',
-                showConfirmButton: false,
-                timer: 3500,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer);
-                    toast.addEventListener('mouseleave', Swal.resumeTimer);
-                },
-                customClass: { popup: 'swal-popup' },
-            });
-            document.addEventListener('click', (e) => {
-                if (!document.querySelector('.swal-popup').contains(e.target)) {
-                    Swal.close();
-                }
-            });
-            Toast.fire({
-                icon: 'error',
-                title: error,
-                iconColor: '#e74c3c',
-            });
-        }
+        togglePasswordIcon.addEventListener('click', function () {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
     </script>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <div th:if="${mensajeExito != null}" th:inline="javascript">
+        <script>
+            const success = /*[[${mensajeExito}]]*/'';
+            if (success) {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top',
+                    showConfirmButton: false,
+                    timer: 3500,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
+                    },
+                    customClass: { popup: 'swal-popup' },
+                });
+                document.addEventListener('click', (e) => {
+                    if (!document.querySelector('.swal-popup').contains(e.target)) {
+                        Swal.close();
+                    }
+                });
+                Toast.fire({
+                    icon: 'success',
+                    title: success,
+                    iconColor: '#27ae60',
+                });
+            }
+        </script>
+    </div>
+
+    <div th:if="${mensajeError != null}" th:inline="javascript">
+        <script>
+            const error = /*[[${mensajeError}]]*/'';
+            if (error) {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top',
+                    showConfirmButton: false,
+                    timer: 3500,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
+                    },
+                    customClass: { popup: 'swal-popup' },
+                });
+                document.addEventListener('click', (e) => {
+                    if (!document.querySelector('.swal-popup').contains(e.target)) {
+                        Swal.close();
+                    }
+                });
+                Toast.fire({
+                    icon: 'error',
+                    title: error,
+                    iconColor: '#e74c3c',
+                });
+            }
+        </script>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
