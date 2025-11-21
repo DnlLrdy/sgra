@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/sgra/admin/dashboard")
+@RequestMapping("/admin/dashboard")
 public class DashboardController {
 
     private static final String DASHBOARD_VISTA = "admin/dashboard/dashboard";

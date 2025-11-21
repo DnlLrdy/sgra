@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/sgra/admin")
+@RequestMapping("/admin")
 public class AdminPredictionController {
 
     @GetMapping("/prediccion")

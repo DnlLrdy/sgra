@@ -23,7 +23,7 @@
 <body>
     <div class="recover-container">
         <h2 class="recover-title">Recuperar contraseña</h2>
-        <form th:action="@{/sgra/restablecer-contrasena/restableciendo-contrasena}" th:method="post"
+        <form th:action="@{/restablecer-contrasena/restableciendo-contrasena}" th:method="post"
             th:object="${restablecerContraseñaDTO}">
             <div class="form-group">
                 <label for="email" class="form-label">Correo electrónico</label>
@@ -38,7 +38,7 @@
             </button>
         </form>
         <div class="login-link">
-            ¿Ya tienes una cuenta? <a th:href="@{/sgra/login}">Iniciar sesión</a>
+            ¿Ya tienes una cuenta? <a th:href="@{/login}">Iniciar sesión</a>
         </div>
     </div>
 

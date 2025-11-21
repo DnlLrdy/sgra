@@ -176,7 +176,7 @@ function desvincularConductor(button) {
         confirmButtonText: 'Sí, desvincular'
     }).then((result) => {
         if (result.isConfirmed) {
-            fetch(`/sgra/admin/autobuses/desvincular-conductor/${id}`, {
+            fetch(`/admin/autobuses/desvincular-conductor/${id}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/sgra/conductor")
+@RequestMapping("/conductor")
 public class ConductorVistaController {
 
     private static final String CONDUCTOR_VISTA = "conductor/conductor";
-    private static final String REDIRECT_CONDUCTOR_VISTA = "redirect:/sgra/conductor";
+    private static final String REDIRECT_CONDUCTOR_VISTA = "redirect:/conductor";
 
     private final AutobusRepository autobusRepository;
     private final RutaRepository rutaRepository;

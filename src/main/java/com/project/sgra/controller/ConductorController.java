@@ -22,11 +22,11 @@ import java.util.Map;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/sgra/admin/conductores")
+@RequestMapping("/admin/conductores")
 public class ConductorController {
 
     private static final String LISTAR_CONDUCTORES_VISTA = "admin/conductores/listar-conductores";
-    private static final String REDIRECT_LISTAR_CONDUCTORES_VISTA = "redirect:/sgra/admin/conductores";
+    private static final String REDIRECT_LISTAR_CONDUCTORES_VISTA = "redirect:/admin/conductores";
 
     private final ConductorRepository conductorRepository;
     private final AutobusRepository autobusRepository;

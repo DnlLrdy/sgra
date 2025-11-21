@@ -11,7 +11,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
 
-                <form th:action="@{/sgra/admin/autobuses/guardar}" method="post" th:object="${autobusDTO}">
+                <form th:action="@{/admin/autobuses/guardar}" method="post" th:object="${autobusDTO}">
 
                     <div class="modal-body text-muted fs-6">
                         <label for="matricula-autobus" class="form-label">Matrícula</label>
@@ -60,7 +60,7 @@
                 </div>
 
 
-                <form th:action="@{/sgra/admin/autobuses/actualizar}" method="post" th:object="${autobusDTO}">
+                <form th:action="@{/admin/autobuses/actualizar}" method="post" th:object="${autobusDTO}">
                     <input type="hidden" id="autobus-id-edit" name="id" th:field="*{idDTO}" />
 
                     <div class="modal-body text-muted fs-6">
@@ -109,7 +109,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
 
-                <form th:action="@{/sgra/admin/autobuses/eliminar}" method="post">
+                <form th:action="@{/admin/autobuses/eliminar}" method="post">
 
                     <input type="hidden" name="id" id="autobusIdEliminar">
 
@@ -134,7 +134,7 @@
 <div th:fragment="modalVincularConductor">
     <div class="modal fade" id="modalVincularConductor" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
-            <form method="post" th:action="@{/sgra/admin/autobuses/vincular-conductor}"
+            <form method="post" th:action="@{/admin/autobuses/vincular-conductor}"
                 class="modal-content bg-light border-0 shadow-sm needs-validation" novalidate>
                 <div class="modal-header bg-dark text-white border-0">
                     <h5 class="modal-title" id="modalLabel">Vincular conductor al autobús</h5>

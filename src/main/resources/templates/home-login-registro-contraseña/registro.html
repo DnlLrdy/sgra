@@ -20,7 +20,7 @@
 <body>
     <div class="signup-container">
         <h2 class="signup-title">Crear cuenta</h2>
-        <form th:action="@{/sgra/registro/registrar}" th:method="post" th:object="${usuarioDTO}">
+        <form th:action="@{/registro/registrar}" th:method="post" th:object="${usuarioDTO}">
             <div class="form-row">
                 <div class="form-group">
                     <label for="firstName" class="form-label">Primer nombre</label>
@@ -105,7 +105,7 @@
             </button>
         </form>
         <div class="login-link">
-            ¿Ya tienes una cuenta? <a th:href="@{/sgra/login}">Iniciar sesión</a>
+            ¿Ya tienes una cuenta? <a th:href="@{/login}">Iniciar sesión</a>
         </div>
     </div>
 

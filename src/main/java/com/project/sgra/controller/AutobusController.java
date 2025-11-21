@@ -18,11 +18,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/sgra/admin/autobuses")
+@RequestMapping("/admin/autobuses")
 public class AutobusController {
 
     private static final String LISTAR_AUTOBUSES_VISTA = "admin/autobuses/listar-autobuses";
-    private static final String REDIRECT_LISTAR_AUTOBUSES_VISTA = "redirect:/sgra/admin/autobuses";
+    private static final String REDIRECT_LISTAR_AUTOBUSES_VISTA = "redirect:/admin/autobuses";
 
     private final AutobusRepository autobusRepository;
     private final ConductorService conductorService;
@@ -136,7 +136,7 @@ public class AutobusController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("mensajeError", "Error al vincular conductor.");
         }
-        return "redirect:/sgra/admin/autobuses";
+        return "redirect:/admin/autobuses";
     }
 
     @PostMapping("/desvincular-conductor/{id}")

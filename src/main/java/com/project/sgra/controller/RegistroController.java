@@ -15,13 +15,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 
 @Controller
-@RequestMapping("/sgra/registro")
+@RequestMapping("/registro")
 public class RegistroController {
 
     private static final String REGISTRO_VISTA = "home-login-registro-contraseña/registro";
 
-    private static final String REDIRECT_REGISTRO_VISTA = "redirect:/sgra/registro";
-    private static final String REDIRECT_LOGIN_VISTA = "redirect:/sgra/login";
+    private static final String REDIRECT_REGISTRO_VISTA = "redirect:/registro";
+    private static final String REDIRECT_LOGIN_VISTA = "redirect:/login";
 
     private final UsuarioRepository usuarioRepository;
     private final RegistroService registroService;

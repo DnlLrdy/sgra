@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@RequestMapping("/sgra/login")
+@RequestMapping("/login")
 public class LoginController {
 
     private static final String LOGIN_VISTA = "home-login-registro-contraseña/login";
 
-    private static final String REDIRECT_LOGIN_VISTA = "redirect:/sgra/login";
-    private static final String FORWARD_LOGIN_VISTA = "forward:/sgra/login";
+    private static final String REDIRECT_LOGIN_VISTA = "redirect:/login";
+    private static final String FORWARD_LOGIN_VISTA = "forward:/login";
 
     @GetMapping
     public String login(@RequestParam(value = "error", required = false) String error, RedirectAttributes redirectAttributes) {

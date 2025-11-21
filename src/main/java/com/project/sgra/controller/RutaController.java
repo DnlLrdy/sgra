@@ -19,16 +19,16 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 
 @Controller
-@RequestMapping("/sgra/admin/rutas")
+@RequestMapping("/admin/rutas")
 public class RutaController {
 
     private static final String LISTAR_RUTAS_VISTA = "admin/rutas/listar-rutas";
     private static final String CREAR_RUTA_VISTA = "admin/rutas/crear-ruta";
     private static final String EDITAR_RUTA_VISTA = "admin/rutas/editar-ruta";
 
-    private static final String REDIRECT_LISTAR_RUTAS_VISTA = "redirect:/sgra/admin/rutas";
-    private static final String REDIRECT_CREAR_RUTA_VISTA = "redirect:/sgra/admin/rutas/crear";
-    private static final String REDIRECT_EDITAR_RUTA_VISTA = "redirect:/sgra/admin/rutas/editar?id=";
+    private static final String REDIRECT_LISTAR_RUTAS_VISTA = "redirect:/admin/rutas";
+    private static final String REDIRECT_CREAR_RUTA_VISTA = "redirect:/admin/rutas/crear";
+    private static final String REDIRECT_EDITAR_RUTA_VISTA = "redirect:/admin/rutas/editar?id=";
 
     private final RutaRepository rutaRepository;
     private final AutobusRepository autobusRepository;
@@ -187,7 +187,7 @@ public class RutaController {
 
             if (autobusesDB.isEmpty()) {
                 redirectAttributes.addFlashAttribute("mensajeError", "No se encontraron autobusesDB con los IDs proporcionados.");
-                return "redirect:/sgra/admin/rutas";
+                return "redirect:/admin/rutas";
             }
 
             for (Autobus autobus : autobusesDB) {

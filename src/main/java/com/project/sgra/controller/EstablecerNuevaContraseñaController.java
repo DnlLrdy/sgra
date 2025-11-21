@@ -18,13 +18,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/sgra/establecer-nueva-contrasena")
+@RequestMapping("/establecer-nueva-contrasena")
 public class EstablecerNuevaContraseñaController {
 
     private static final String ESTABLECER_NUEVA_CONTRASEÑA_VISTA = "home-login-registro-contraseña/establecer-nueva-contraseña";
 
-    private static final String REDIRECT_ESTABLECER_NUEVA_CONTRASEÑA_VISTA = "redirect:/sgra/establecer-nueva-contrasena?token=";
-    private static final String REDIRECT_LOGIN_VISTA = "redirect:/sgra/login";
+    private static final String REDIRECT_ESTABLECER_NUEVA_CONTRASEÑA_VISTA = "redirect:/establecer-nueva-contrasena?token=";
+    private static final String REDIRECT_LOGIN_VISTA = "redirect:/login";
 
     private static final String MENSAJE_TOKEN_INVALIDO = "El enlace para restablecer la contraseña no es válido o ha expirado. Por favor, solicita uno nuevo.";
     private static final String MENSAJE_EXITO = "Tu nueva contraseña se estableció correctamente.";

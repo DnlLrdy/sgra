@@ -77,7 +77,7 @@
 
 <nav class="navbar navbar-expand-sm navbar-light bg-white fixed-top shadow">
     <div class="container-fluid">
-        <a class="d-flex align-items-center" th:href="@{/sgra/admin/rutas}">
+        <a class="d-flex align-items-center" th:href="@{/admin/rutas}">
             <img src="/images/logo_a-removebg-preview.png" alt="Logo de GeoRoute" style="height: 40px;">
             <span class="navbar-brand ms-2">GeoRoute</span>
         </a>
@@ -90,23 +90,23 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto align-items-center">
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/sgra/admin/rutas}">Rutas</a>
+                    <a class="nav-link" th:href="@{/admin/rutas}">Rutas</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/sgra/admin/autobuses}">Autobuses</a>
+                    <a class="nav-link" th:href="@{/admin/autobuses}">Autobuses</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/sgra/admin/conductores}">Conductores</a>
+                    <a class="nav-link" th:href="@{/admin/conductores}">Conductores</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/sgra/admin/prediccion}">Prediccion</a>
+                    <a class="nav-link" th:href="@{/admin/prediccion}">Prediccion</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/sgra/admin/dashboard}">Dashboard</a>
+                    <a class="nav-link" th:href="@{/admin/dashboard}">Dashboard</a>
                 </li>
 
                 <li class="nav-item d-flex align-items-center ms-3">
@@ -121,7 +121,7 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                         <li>
-                            <a class="dropdown-item text-danger" th:href="@{/sgra/logout}">
+                            <a class="dropdown-item text-danger" th:href="@{/logout}">
                                 <i class="fa-solid fa-arrow-right-from-bracket me-2"></i> Cerrar sesión
                             </a>
                         </li>
@@ -518,7 +518,7 @@
       const nombreEl = document.getElementById("nombreUsuarioNavbar");
       // Si Thymeleaf ya puso administradorNombreUsuario, no hacemos fetch. Si está vacío, consultamos.
       if (nombreEl && (!nombreEl.textContent || nombreEl.textContent.trim() === '' || nombreEl.textContent.trim().toLowerCase() === '')) {
-        fetch("/sgra/usuario/perfil")
+        fetch("/usuario/perfil")
           .then(response => response.json())
           .then(data => {
             // Solo setear si se obtiene un nombre distinto a 'Cliente' (evitar sobrescribir por error)

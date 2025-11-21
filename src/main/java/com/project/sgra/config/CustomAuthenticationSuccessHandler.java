@@ -22,13 +22,13 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
 
         if (roles.contains(ROLE_USUARIO)) {
-            response.sendRedirect("/sgra/usuario/buscar");
+            response.sendRedirect("/usuario/buscar");
         } else if (roles.contains(ROLE_CONDUCTOR)) {
-            response.sendRedirect("/sgra/conductor");
+            response.sendRedirect("/conductor");
         } else if (roles.contains(ROLE_ADMIN)) {
-            response.sendRedirect("/sgra/admin/rutas");
+            response.sendRedirect("/admin/rutas");
         } else {
-            response.sendRedirect("/sgra/login");
+            response.sendRedirect("/login");
         }
     }
 

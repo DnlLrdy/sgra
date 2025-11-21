@@ -50,23 +50,23 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/sgra/usuario/**").hasRole("USUARIO")
-                        .requestMatchers("/sgra/conductor/**").hasRole("CONDUCTOR")
-                        .requestMatchers("/sgra/admin/**").hasRole("ADMINISTRADOR")
+                        .requestMatchers("/usuario/**").hasRole("USUARIO")
+                        .requestMatchers("/conductor/**").hasRole("CONDUCTOR")
+                        .requestMatchers("/admin/**").hasRole("ADMINISTRADOR")
                         .anyRequest().permitAll()
                 )
                 .formLogin(form -> form
-                        .loginPage("/sgra/login")
-                        .loginProcessingUrl("/sgra/login")
+                        .loginPage("/login")
+                        .loginProcessingUrl("/login")
                         .successHandler(successHandler)
-                        .failureUrl("/sgra/login?error")
+                        .failureUrl("/login?error")
                         .usernameParameter("nombreUsuario")
                         .passwordParameter("contraseña")
                         .permitAll()
                 )
                 .logout(logout -> logout
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/sgra/logout"))
-                        .logoutSuccessUrl("/sgra/login")
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                        .logoutSuccessUrl("/login")
                         .permitAll()
                 );
 

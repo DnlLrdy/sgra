@@ -11,7 +11,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
 
-                <form th:action="@{/sgra/admin/conductores/guardar}" method="post" th:object="${conductorDTO}">
+                <form th:action="@{/admin/conductores/guardar}" method="post" th:object="${conductorDTO}">
 
                     <div class="modal-body text-muted fs-6">
                         <div id="step1">
@@ -197,7 +197,7 @@
                 </div>
 
 
-                <form th:action="@{/sgra/admin/conductores/actualizar}" method="post" th:object="${editarConductorDTO}">
+                <form th:action="@{/admin/conductores/actualizar}" method="post" th:object="${editarConductorDTO}">
                     <input type="hidden" id="conductor-id-edit" name="id" th:field="*{idDTO}" />
 
                     <div class="modal-body text-muted fs-6">
@@ -358,7 +358,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
 
-                <form th:action="@{/sgra/admin/conductores/eliminar}" method="post">
+                <form th:action="@{/admin/conductores/eliminar}" method="post">
 
                     <input type="hidden" name="id" id="conductorIdEliminar">
 

@@ -156,7 +156,7 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li>
-                            <a class="dropdown-item" th:href="@{/sgra/logout}">
+                            <a class="dropdown-item" th:href="@{/logout}">
                                 <i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar sesión
                             </a>
                         </li>
@@ -175,7 +175,7 @@
                 <!-- Columna izquierda: Campos de búsqueda y rutas encontradas -->
                 <div class="col-md-3">
                     <div class="shadow-container p-4 mb-4">
-                        <form th:action="@{/sgra/usuario/buscar}" method="get">
+                        <form th:action="@{/usuario/buscar}" method="get">
                             <h5 class="text-center mb-4 titulo-seccion">
                                 <i class="fa-solid fa-route"></i> Buscar rutas
                             </h5>
@@ -274,7 +274,7 @@
 <script>
     // Función para limpiar campos (redirecciona para quitar parámetros)
     function limpiarCampos() {
-        window.location.href = '/sgra/usuario/buscar';
+        window.location.href = '/usuario/buscar';
     }
 
     // Variables para instancias de Choices.js
@@ -298,7 +298,7 @@
     // Inicializar Choices.js después de cargar paradas
     document.addEventListener("DOMContentLoaded", async () => {
         try {
-            const response = await fetch("/sgra/usuario/paradas/todas");
+            const response = await fetch("/usuario/paradas/todas");
             const paradas = await response.json();
 
             const ubicacionSelect = document.getElementById("ubicacion");
@@ -469,7 +469,7 @@
                 this.classList.add('active');
 
                 // Cargar paradas
-                fetch(`/sgra/usuario/ruta/${rutaId}/paradas`)
+                fetch(`/usuario/ruta/${rutaId}/paradas`)
                     .then(response => response.json())
                     .then(paradas => {
                         mostrarParadas(paradas);
@@ -479,7 +479,7 @@
                     });
 
                 // Cargar autobuses
-                fetch(`/sgra/usuario/ruta/${rutaId}/autobuses`)
+                fetch(`/usuario/ruta/${rutaId}/autobuses`)
                     .then(response => response.json())
                     .then(autobuses => {
                         mostrarAutobuses(autobuses);
@@ -493,7 +493,7 @@
 </script>
 <script>
     document.addEventListener("DOMContentLoaded", () => {
-        fetch("/sgra/usuario/perfil")
+        fetch("/usuario/perfil")
             .then(response => response.json())
             .then(data => {
                 const nombreEl = document.getElementById("nombreUsuarioNavbar");
