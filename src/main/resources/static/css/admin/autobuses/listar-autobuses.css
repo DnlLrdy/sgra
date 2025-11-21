@@ -1,3 +1,6 @@
+@import url("https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap");
+
+
 .card {
     border-radius: 10px;
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
@@ -23,9 +26,12 @@
 .btn.btn-dark.btn-blue,
 button.btn.btn-dark.btn-blue,
 #btn-desvincular-conductor.btn-blue {
-    background-color: #0d6efd !important;    /* fondo azul */
-    color: #fff !important;                   /* texto blanco */
-    border: 2px solid #0d6efd !important;     /* borde azul más visible */
+    background-color: #0d6efd !important;
+    /* fondo azul */
+    color: #fff !important;
+    /* texto blanco */
+    border: 2px solid #0d6efd !important;
+    /* borde azul más visible */
     box-shadow: 0 2px 6px rgba(13, 110, 253, 0.12);
     padding: 6px 12px;
 }
@@ -47,7 +53,8 @@ button.btn.btn-dark.btn-blue:hover,
 .btn.btn-dark.btn-blue:focus,
 .btn.btn-dark.btn-blue:focus-visible,
 #btn-desvincular-conductor.btn-blue:focus,
-#btn-desvincular-conductor.btn-blue:focus-visible { /* Importante: aseguramos :focus-visible en el ID */
+#btn-desvincular-conductor.btn-blue:focus-visible {
+    /* Importante: aseguramos :focus-visible en el ID */
     outline: 0 !important;
     /* Anulación del box-shadow predeterminado de Bootstrap 5 en btn-dark */
     box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25) !important;
@@ -61,7 +68,8 @@ button.btn.btn-dark.btn-blue:hover,
 .btn-outline-danger:focus-visible {
     /* Forzar el anillo azul estándar de Bootstrap Primary */
     box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.5) !important;
-    border-color: #0d6efd !important; /* Para que el borde primario también sea azul */
+    border-color: #0d6efd !important;
+    /* Para que el borde primario también sea azul */
 }
 
 /* 3. Estilo de hover y animación */
@@ -83,7 +91,8 @@ button.btn.btn-dark.btn-blue:hover,
     align-items: center;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.3s;
-    overflow: visible !important; /* Permite que el box-shadow de los botones se vea */
+    overflow: visible !important;
+    /* Permite que el box-shadow de los botones se vea */
 }
 
 .bus-item:hover {
@@ -136,5 +145,148 @@ button.btn.btn-dark.btn-blue:hover,
 }
 
 body {
-    font-family: 'Noto Sans JP', sans-serif;
+    font-family: "Work Sans", sans-serif;
+    background: linear-gradient(135deg, #e0f7fa 0%, #c5cae9 100%);
+}
+
+
+/* ================================ VARIABLES ================================ */
+:root {
+    --primary-color: #092a54;
+    --secondary-color: #2d45b0;
+    --accent-color: #939bc6;
+    --light-color: #ffffff;
+    --dark-color: #212529;
+    --transition-base: all 0.3s ease;
+}
+
+/* ================================ NAVBAR ================================ */
+.navbar {
+    background-color: var(--light-color);
+    padding: 0.4rem 0;
+    transition: var(--transition-base);
+}
+
+.navbar.scrolled {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-image: linear-gradient(to right, #00d4c1, #42008b);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.navbar-toggler {
+    border: none;
+}
+
+.nav-link {
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    color: var(--dark-color);
+    position: relative;
+    transition: color 0.2s ease;
+}
+
+.nav-link::after {
+    content: "";
+    width: 0;
+    height: 2px;
+    background: var(--secondary-color);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    transition: width 0.25s ease;
+}
+
+.nav-link:hover,
+.nav-link:focus {
+    color: var(--primary-color);
+}
+
+.nav-link:hover::after,
+.nav-link:focus::after,
+.nav-link.active::after {
+    width: 100%;
+}
+
+/* Corrección para mantener el color degradado en navbar-brand al pasar el ratón/enfocar */
+.navbar-brand:hover,
+.navbar-brand:focus {
+    /* Estas reglas fuerzan la apariencia degradada */
+    background-image: linear-gradient(to right,
+            #00d4c1,
+            #42008b);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    /* Importante para que el clip funcione */
+
+    /* Opcional: Anula cualquier cambio de color de texto no deseado */
+    text-decoration: none;
+    transition: none;
+    /* Evita que el hover en anclas afecte la transición de color */
+}
+
+
+/* Centrar menú en móviles SIN generar scroll */
+@media (max-width: 991px) {
+
+    #menuMobile {
+        text-align: center;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+
+    #menuMobile .nav-item {
+        display: block;
+        width: 100%;
+        /* todos los elementos ocupan el mismo ancho */
+    }
+
+    #menuMobile .nav-link {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    /* CENTRAR EL DROPDOWN DEL USUARIO */
+    #menuMobile .dropdown {
+        display: flex;
+        justify-content: center;
+        /* fuerza centrado */
+    }
+
+    /* CENTRAR EL MENÚ DESPLEGABLE */
+    #menuMobile .dropdown-menu {
+        position: static !important;
+        /* ya no flota a la derecha */
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+        width: auto;
+        /* mantiene el ancho natural */
+    }
+
+    /* CENTRAR LAS OPCIONES DEL DROPDOWN (iconos + texto) */
+    #menuMobile .dropdown-item {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        text-align: center !important;
+    }
+
+
+}
+
+
+html,
+body {
+    overflow-x: hidden !important;
 }
