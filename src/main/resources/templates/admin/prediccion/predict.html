@@ -226,6 +226,9 @@
         #historyList .report-item+.report-item {
             margin-top: 12px;
         }
+        .modal-content {
+    background: #fff !important;
+}
     </style>
 </head>
 
@@ -454,20 +457,24 @@
 
     <div class="modal fade" id="historyModal" tabindex="-1" aria-labelledby="historyModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-scrollable">
-            <div class="modal-content">
+            <div class="modal-content"> <!-- *** ESTA ES LA IMPORTANTE *** -->
+
                 <div class="modal-header">
-                    <h5 class="modal-title text-primary-custom fw-bold" id="historyModalLabel"><i
-                            class="fas fa-clipboard-list me-2"></i>Historial de Predicciones</h5>
+                    <h5 class="modal-title text-primary-custom fw-bold" id="historyModalLabel">
+                        <i class="fas fa-clipboard-list me-2"></i>Historial de Predicciones
+                    </h5>
+
                     <div class="d-flex align-items-center gap-3">
                         <button id="clearBtn" class="btn btn-link text-danger p-0 small">Limpiar todo</button>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                 </div>
-                <div class="modal-body" id="historyList">
-                </div>
+
+                <div class="modal-body" id="historyList"></div>
+
             </div>
         </div>
     </div>
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -478,18 +485,30 @@
         const loading = document.getElementById('loading');
         const resultBox = document.getElementById('resultBox');
 
+        //----------------------------------------------
+        // 🔧 UTILIDAD PARA LIMPIAR LOS DATOS (CORREGIDO)
+        //----------------------------------------------
+        function safe(v, unit = "") {
+            if (v === null || v === undefined || v === "" || v === "null" || Number.isNaN(v)) {
+                return "N/A";
+            }
+            return unit ? `${v} ${unit}` : v;
+        }
+
         // modal
         const historyBtn = document.getElementById('historyBtn');
         const historyModal = new bootstrap.Modal(document.getElementById('historyModal'));
         const historyList = document.getElementById('historyList');
         const clearBtn = document.getElementById('clearBtn');
 
-        // POST prediction -> save report
+        //----------------------------------------------
+        // 📌 POST prediction -> save report
+        //----------------------------------------------
         submitBtn.addEventListener('click', async (e) => {
             e.preventDefault();
             const raw = Object.fromEntries(new FormData(form).entries());
 
-            // Convierte algunos campos a número donde aplique
+            // Conversión corregida (sin romper fechas)
             const payload = {
                 mileage: raw.mileage ? Number(raw.mileage) : null,
                 maintenanceHistory: raw.maintenanceHistory || null,
@@ -498,7 +517,7 @@
                 fuelType: raw.fuelType || null,
                 transmissionType: raw.transmissionType || null,
                 engineSize: raw.engineSize ? Number(raw.engineSize) : null,
-                lastServiceDate: raw.lastServiceDate ? Number(raw.lastServiceDate) : null,
+                lastServiceDate: raw.lastServiceDate || null,     // ✔️ CORREGIDO
                 serviceHistory: raw.serviceHistory ? Number(raw.serviceHistory) : null,
                 accidentHistory: raw.accidentHistory ? Number(raw.accidentHistory) : null,
                 fuelEfficiency: raw.fuelEfficiency ? Number(raw.fuelEfficiency) : null,
@@ -507,10 +526,9 @@
                 batteryStatus: raw.batteryStatus || null
             };
 
-            // simple front validation
+            // Validación simple
             for (const k of Object.keys(payload)) {
                 if (payload[k] === null || payload[k] === "") {
-                    // Reemplazado alert() por un modal/mensaje de error más amigable para el usuario
                     showUserAlert('Error', 'Completa todos los campos antes de predecir.', 'error');
                     return;
                 }
@@ -521,7 +539,7 @@
             resultBox.classList.add('d-none');
 
             try {
-                // 1) pedir predicción al backend Weka
+                // 1) Petición de predicción
                 const res = await fetch(`${API}/predict`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -530,7 +548,7 @@
                 const json = await res.json();
                 const prediction = json.prediction ? json.prediction.trim() : 'Unknown';
 
-                // 2) crear reporte completo y guardarlo en /reports
+                // 2) Guardar reporte
                 const report = {
                     ...payload,
                     prediction,
@@ -544,7 +562,7 @@
                     body: JSON.stringify(report)
                 });
 
-                // 3) mostrar resultado en UI
+                // 3) Mostrar resultado
                 resultBox.classList.remove('d-none');
                 if (prediction === 'Yes') {
                     resultBox.className = 'mt-4 p-3 rounded fw-semibold text-white bg-danger';
@@ -568,64 +586,91 @@
             }
         });
 
-        // Función de alerta personalizada (Reemplazo de alert())
+        //----------------------------------------------
+        // 🔔 Alerta amigable
+        //----------------------------------------------
         function showUserAlert(title, text, icon) {
             Swal.fire({
-                title: title,
-                text: text,
-                icon: icon,
+                title,
+                text,
+                icon,
                 confirmButtonColor: '#667eea',
                 confirmButtonText: 'Entendido'
             });
         }
 
-        // abrir modal y cargar historial
+        //----------------------------------------------
+        // 📜 Abrir modal + cargar historial (CORREGIDO)
+        //----------------------------------------------
         historyBtn.addEventListener('click', async () => {
             historyModal.show();
             historyList.innerHTML = '<div class="text-center py-4">Cargando... <i class="fas fa-spinner fa-spin"></i></div>';
+
             try {
                 const res = await fetch(`${API}/reports`);
                 const data = await res.json();
+
                 if (!data || data.length === 0) {
                     historyList.innerHTML = '<p class="text-center text-muted py-4">No hay reportes.</p>';
                     return;
                 }
-                // render
+
                 historyList.innerHTML = '';
+
                 data.slice().reverse().forEach(r => {
                     historyList.innerHTML += `
-            <div class="report-item p-3 rounded border shadow-sm d-flex gap-3 align-items-start justify-content-between animate-fade-in">
-              <div class="flex-fill">
-                <div class="d-flex align-items-center gap-3">
-                  <div class="small fw-bold ${r.prediction === 'Yes' ? 'text-danger' : 'text-success'}">
-                    ${r.prediction === 'Yes' ? '<i class="fas fa-exclamation-triangle"></i> Requiere mantenimiento' : '<i class="fas fa-check-circle"></i> Buen estado'}
-                  </div>
-                  <div class="small text-muted ms-2">${new Date(r.timestamp).toLocaleString()}</div>
-                </div>
-                <div class="mt-2 small text-muted">
-                  <div><strong>Kilometraje:</strong> ${r.mileage} km — <strong>FuelEff:</strong> ${r.fuelEfficiency} km/L — <strong>Motor:</strong> ${r.engineSize} L</div>
-                  <div><strong>Mantenimiento:</strong> ${r.maintenanceHistory} — <strong>ServiceCount:</strong> ${r.serviceHistory} — <strong>Accidentes:</strong> ${r.accidentHistory}</div>
-                  <div><strong>Combustible:</strong> ${r.fuelType} — <strong>Transmisión:</strong> ${r.transmissionType}</div>
-                  <div><strong>Llantas:</strong> ${r.tireCondition} — <strong>Frenos:</strong> ${r.brakeCondition} — <strong>Batería:</strong> ${r.batteryStatus}</div>
-                </div>
-              </div>
-              <div class="text-end">
-                <div class="small text-muted mt-2">ID: ${r.id || ''}</div>
-                <div class="mt-3 d-flex gap-2 justify-content-end">
-                  <button class="deleteBtn btn btn-link text-danger p-0 small" data-id="${r.id}">Borrar</button>
-                </div>
-              </div>
-            </div>
-          `;
+                    <div class="report-item p-3 rounded border shadow-sm d-flex gap-3 align-items-start justify-content-between animate-fade-in">
+                        <div class="flex-fill">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="small fw-bold ${r.prediction === 'Yes' ? 'text-danger' : 'text-success'}">
+                                    ${r.prediction === 'Yes'
+                                        ? '<i class="fas fa-exclamation-triangle"></i> Requiere mantenimiento'
+                                        : '<i class="fas fa-check-circle"></i> Buen estado'}
+                                </div>
+                                <div class="small text-muted ms-2">${new Date(r.timestamp).toLocaleString()}</div>
+                            </div>
+
+                            <div class="mt-2 small text-muted">
+                                <div>
+                                    <strong>Kilometraje:</strong> ${safe(r.mileage, "km")} —
+                                    <strong>Eficiencia:</strong> ${safe(r.fuelEfficiency, "km/L")} —
+                                    <strong>Motor:</strong> ${safe(r.engineSize, "L")}
+                                </div>
+                                <div>
+                                    <strong>Historial Mantenimiento:</strong> ${safe(r.maintenanceHistory)} —
+                                    <strong>Servicios Reportados:</strong> ${safe(r.reportedIssues)} —
+                                    <strong>Antigüedad:</strong> ${safe(r.vehicleAge, "años")}
+                                </div>
+                                <div>
+                                    <strong>Combustible:</strong> ${safe(r.fuelType)} —
+                                    <strong>Transmisión:</strong> ${safe(r.transmissionType)} —
+                                    <strong>Último Serv.:</strong> ${safe(r.lastServiceDate)} —
+                                    <strong>Accidentes:</strong> ${safe(r.accidentHistory)}
+                                </div>
+                                <div>
+                                    <strong>Llantas:</strong> ${safe(r.tireCondition)} —
+                                    <strong>Frenos:</strong> ${safe(r.brakeCondition)} —
+                                    <strong>Batería:</strong> ${safe(r.batteryStatus)}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-end">
+                            <div class="small text-muted mt-2">ID: ${safe(r.id)}</div>
+                            <div class="mt-3 d-flex gap-2 justify-content-end">
+                                <button class="deleteBtn btn btn-link text-danger p-0 small" data-id="${r.id}">Borrar</button>
+                            </div>
+                        </div>
+                    </div>
+                    `;
                 });
 
-                // attach delete handlers
+                // eliminar registros
                 document.querySelectorAll('.deleteBtn').forEach(btn => {
                     btn.addEventListener('click', async () => {
-                        // Reemplazado confirm() por SweetAlert2
                         Swal.fire({
                             title: '¿Estás seguro?',
-                            text: 'Esto borrará el reporte de predicción de forma permanente.',
+                            text: 'Esto borrará el reporte de forma permanente.',
                             icon: 'warning',
                             showCancelButton: true,
                             confirmButtonColor: '#d33',
@@ -639,7 +684,6 @@
                                     await fetch(`${API}/reports/${id}`, { method: 'DELETE' });
                                     btn.closest('.report-item')?.remove();
                                     showUserAlert('¡Borrado!', 'El reporte ha sido eliminado.', 'success');
-                                    // No hace falta recargar la lista si remove() funciona bien
                                 } catch (e) {
                                     showUserAlert('Error', 'Error borrando el reporte.', 'error');
                                 }
@@ -653,12 +697,13 @@
             }
         });
 
-        // Clear all
+        //----------------------------------------------
+        // 🗑️ Clear all
+        //----------------------------------------------
         clearBtn.addEventListener('click', async () => {
-            // Reemplazado confirm() por SweetAlert2
             Swal.fire({
                 title: '¿Estás seguro?',
-                text: 'Esto borrará TODO el historial de predicciones de forma permanente.',
+                text: 'Esto borrará TODO el historial permanentemente.',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
@@ -678,27 +723,29 @@
             });
         });
 
-        // Cargar nombre de usuario en navbar (pero NO sobrescribir 'Admin' por 'Cliente')
+        //----------------------------------------------
+        // 👤 Cargar nombre de usuario
+        //----------------------------------------------
         document.addEventListener("DOMContentLoaded", () => {
             const nombreEl = document.getElementById("nombreUsuarioNavbar");
-            // Si Thymeleaf ya puso administradorNombreUsuario, no hacemos fetch. Si está vacío, consultamos.
-            if (nombreEl && (!nombreEl.textContent || nombreEl.textContent.trim() === '' || nombreEl.textContent.trim().toLowerCase() === '')) {
+
+            if (nombreEl && (!nombreEl.textContent || nombreEl.textContent.trim() === '')) {
                 fetch("/usuario/perfil")
-                    .then(response => response.json())
+                    .then(res => res.json())
                     .then(data => {
-                        // Solo setear si se obtiene un nombre distinto a 'Cliente' (evitar sobrescribir por error)
                         if (data && data.nombreUsuario && data.nombreUsuario.toLowerCase() !== 'cliente') {
                             nombreEl.textContent = data.nombreUsuario;
                         }
                     })
-                    .catch(err => console.error("Error al cargar nombre de usuario:", err));
+                    .catch(err => console.error("Error al cargar nombre:", err));
             } else if (nombreEl && nombreEl.textContent.trim().toLowerCase() === 'cliente') {
-                // Reemplazamos explícitamente "Cliente" por "Admin"
                 nombreEl.textContent = 'Admin';
             }
         });
 
-        // Reloj simple en navbar
+        //----------------------------------------------
+        // ⏰ Reloj
+        //----------------------------------------------
         (function reloj() {
             const el = document.getElementById('reloj');
             if (!el) return;
@@ -708,7 +755,9 @@
                 el.textContent = `${fmt(d.getHours())}:${fmt(d.getMinutes())}:${fmt(d.getSeconds())}`;
             }, 1000);
         })();
+
     </script>
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.19.1/dist/sweetalert2.all.min.js"></script>
 
     <script>
