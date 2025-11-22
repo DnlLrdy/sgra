@@ -8,6 +8,7 @@ import com.project.sgra.repository.RutaRepository;
 import com.project.sgra.service.UsuarioService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -55,6 +56,7 @@ public class UsuarioController {
         model.addAttribute("destino", destino);
         model.addAttribute("errorMessage", errorMessage);
 
+        model.addAttribute("administradorNombreUsuario", administradorNombreUsuario());
         return "usuario/buscar-rutas";
     }
 
@@ -168,4 +170,10 @@ public class UsuarioController {
         response.put("message", "Controlador Usuario activo y funcionando");
         return ResponseEntity.ok(response);
     }
+
+    public String administradorNombreUsuario() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getName();
+    }
+
 }

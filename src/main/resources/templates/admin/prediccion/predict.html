@@ -678,26 +678,6 @@
             });
         });
 
-        // Cargar nombre de usuario en navbar (pero NO sobrescribir 'Admin' por 'Cliente')
-        document.addEventListener("DOMContentLoaded", () => {
-            const nombreEl = document.getElementById("nombreUsuarioNavbar");
-            // Si Thymeleaf ya puso administradorNombreUsuario, no hacemos fetch. Si está vacío, consultamos.
-            if (nombreEl && (!nombreEl.textContent || nombreEl.textContent.trim() === '' || nombreEl.textContent.trim().toLowerCase() === '')) {
-                fetch("/usuario/perfil")
-                    .then(response => response.json())
-                    .then(data => {
-                        // Solo setear si se obtiene un nombre distinto a 'Cliente' (evitar sobrescribir por error)
-                        if (data && data.nombreUsuario && data.nombreUsuario.toLowerCase() !== 'cliente') {
-                            nombreEl.textContent = data.nombreUsuario;
-                        }
-                    })
-                    .catch(err => console.error("Error al cargar nombre de usuario:", err));
-            } else if (nombreEl && nombreEl.textContent.trim().toLowerCase() === 'cliente') {
-                // Reemplazamos explícitamente "Cliente" por "Admin"
-                nombreEl.textContent = 'Admin';
-            }
-        });
-
         // Reloj simple en navbar
         (function reloj() {
             const el = document.getElementById('reloj');
