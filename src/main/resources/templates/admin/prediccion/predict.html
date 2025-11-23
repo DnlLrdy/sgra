@@ -2,28 +2,23 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="GeoRoute - Software de gestión y visualización de rutas de autobuses">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="GeoRoute - Software de gestión y visualización de rutas de autobuses" />
     <title>GeoRoute</title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+          integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="icon" type="image/x-icon" th:href="@{/images/logo-bg.png}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
-        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+          integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <style>
+        /* Georoute - estilos unificados (incluye mejoras responsive para modal) */
         @import url("https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap");
 
-        body {
-            font-family: "Work Sans", sans-serif;
-            background: linear-gradient(135deg, #e0f7fa 0%, #c5cae9 100%);
-        }
-
-
-        /* ================================ VARIABLES ================================ */
         :root {
             --primary-color: #092a54;
             --secondary-color: #2d45b0;
@@ -31,6 +26,11 @@
             --light-color: #ffffff;
             --dark-color: #212529;
             --transition-base: all 0.3s ease;
+        }
+
+        body {
+            font-family: "Work Sans", sans-serif;
+            background: linear-gradient(135deg, #e0f7fa 0%, #c5cae9 100%);
         }
 
         /* ================================ NAVBAR ================================ */
@@ -90,24 +90,15 @@
             width: 100%;
         }
 
-        /* Corrección para mantener el color degradado en navbar-brand al pasar el ratón/enfocar */
         .navbar-brand:hover,
         .navbar-brand:focus {
-            /* Estas reglas fuerzan la apariencia degradada */
-            background-image: linear-gradient(to right,
-                    #00d4c1,
-                    #42008b);
+            background-image: linear-gradient(to right, #00d4c1, #42008b);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            /* Importante para que el clip funcione */
-
-            /* Opcional: Anula cualquier cambio de color de texto no deseado */
             text-decoration: none;
             transition: none;
-            /* Evita que el hover en anclas afecte la transición de color */
         }
-
 
         /* Centrar menú en móviles SIN generar scroll */
         @media (max-width: 991px) {
@@ -121,7 +112,6 @@
             #menuMobile .nav-item {
                 display: block;
                 width: 100%;
-                /* todos los elementos ocupan el mismo ancho */
             }
 
             #menuMobile .nav-link {
@@ -129,36 +119,28 @@
                 padding-right: 0 !important;
             }
 
-            /* CENTRAR EL DROPDOWN DEL USUARIO */
             #menuMobile .dropdown {
                 display: flex;
                 justify-content: center;
-                /* fuerza centrado */
             }
 
-            /* CENTRAR EL MENÚ DESPLEGABLE */
             #menuMobile .dropdown-menu {
                 position: static !important;
-                /* ya no flota a la derecha */
                 margin-left: auto;
                 margin-right: auto;
                 text-align: center;
                 width: auto;
-                /* mantiene el ancho natural */
             }
 
-            /* CENTRAR LAS OPCIONES DEL DROPDOWN (iconos + texto) */
             #menuMobile .dropdown-item {
                 display: flex !important;
                 justify-content: center !important;
                 align-items: center !important;
                 text-align: center !important;
             }
-
-
         }
 
-
+        /* Evitar overflow horizontal global */
         html,
         body {
             overflow-x: hidden !important;
@@ -167,7 +149,6 @@
         /* Ajuste para contenido bajo navbar fixed-top */
         main.container-main {
             padding-top: 90px;
-            /* espacio para navbar fixed-top */
             padding-bottom: 40px;
         }
 
@@ -175,8 +156,6 @@
             border-radius: 1rem;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
         }
-
-        /* Se eliminaron .btn-custom y .btn-custom:hover ya que ahora se usa .btn-outline-primary */
 
         .text-primary-custom {
             color: #667eea !important;
@@ -206,7 +185,7 @@
             }
         }
 
-        /* Ajustes de inputs (ligero) */
+        /* Inputs */
         .input-group-text {
             background: #f8f9fa;
             border-right: 0;
@@ -222,440 +201,586 @@
             white-space: pre-wrap;
         }
 
-        /* Mejor separación en modal historial */
-        #historyList .report-item+.report-item {
+        /* Separación entre report items */
+        #historyList .report-item + .report-item {
             margin-top: 12px;
+        }
+
+        /* ================================ MODAL RESPONSIVE FIXES ================================ */
+        /* Base: limitar ancho y permitir centrado correcto */
+        .modal-dialog {
+            max-width: 1100px;
+            margin: 1.75rem auto;
+            box-sizing: border-box;
+        }
+
+        /* Centrado vertical seguro */
+        .modal-dialog-centered {
+            display: flex;
+            align-items: center;
+            min-height: calc(100% - 3.5rem);
+        }
+
+        /* Asegura scroll interno sin overflow externo */
+        .modal-dialog-scrollable .modal-content {
+            max-height: calc(100vh - 3.5rem);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Cuerpo del modal con scroll interno y buen comportamiento en iOS */
+        .modal-body {
+            max-height: calc(100vh - 220px);
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            padding: 1rem;
+            box-sizing: border-box;
+            word-break: break-word;
+        }
+
+        /* Evitar que el backdrop provoque jumps */
+        .modal-open {
+            overflow: hidden;
+        }
+
+        /* Ajustes para pantallas medianas/pequeñas */
+        @media (max-width: 992px) {
+            .modal-dialog {
+                max-width: 90% !important;
+                margin: 1rem auto;
+            }
+
+            .modal-body {
+                max-height: calc(100vh - 160px);
+            }
+        }
+
+        /* Ajustes para móviles pequeños */
+        @media (max-width: 576px) {
+            .modal-dialog {
+                max-width: 95% !important;
+                margin: 8px auto !important;
+            }
+
+            .modal-content {
+                border-radius: 12px !important;
+            }
+
+            .modal-header {
+                padding: 0.6rem 0.75rem;
+                gap: 0.5rem;
+            }
+
+            .modal-footer {
+                padding: 0.6rem 0.75rem;
+            }
+
+            .history-item {
+                width: 100% !important;
+            }
+        }
+
+        /* Evitar que header buttons colapsen */
+        .modal-header .btn,
+        .modal-header .btn-close {
+            flex-shrink: 0;
+        }
+
+        /* ================================ REPORT ITEM LAYOUT ================================ */
+        /* Layout flexible en desktop; en móvil se apila para evitar overflow */
+        .report-item {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+            justify-content: space-between;
+            flex-wrap: nowrap;
+            box-sizing: border-box;
+        }
+
+        .report-item .flex-fill {
+            min-width: 0; /* permite truncado y evita overflow horizontal */
+        }
+
+        /* En móviles apilar el contenido y colocar acciones abajo */
+        @media (max-width: 576px) {
+            .report-item {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .report-item .text-end {
+                text-align: left !important;
+                margin-top: 0.5rem;
+            }
+
+            .report-item .mt-3 {
+                margin-top: 0.5rem !important;
+            }
+        }
+
+        /* Mejor legibilidad */
+        #historyList {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* Pequeñas mejoras visuales */
+        .modal .btn-link {
+            text-decoration: none;
+        }
+
+        .modal .small.text-muted {
+            word-break: break-word;
         }
     </style>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg shadow">
-        <div class="container">
+<nav class="navbar navbar-expand-lg shadow">
+    <div class="container">
 
-            <!-- Marca -->
-            <div class="navbar-brand d-flex align-items-center">
-                <img src="/images/logo-nobg.png" alt="Logo GeoRoute" height="40">
-                GeoRoute
-            </div>
-
-            <!-- Botón móvil -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <!-- Menú -->
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto align-items-lg-center" id="menuMobile">
-
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/admin/rutas}">Rutas</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/admin/autobuses}">Autobuses</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/admin/conductores}">Conductores</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/admin/dashboard}">Dashboard</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link active">Mantenimiento</a>
-                    </li>
-
-                    <!-- Dropdown usuario -->
-                    <li class="nav-item dropdown ms-lg-3 mt-3 mt-lg-0">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown"
-                            role="button" data-bs-toggle="dropdown">
-                            <i class="bi bi-person-circle me-2"></i>
-                            <span th:text="${administradorNombreUsuario}"></span>
-                        </a>
-
-                        <ul class="dropdown-menu dropdown-menu-center">
-                            <li>
-                                <a class="dropdown-item text-danger d-flex align-items-center" th:href="@{/logout}">
-                                    <i class="bi bi-box-arrow-right me-2"></i> Cerrar sesión
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-
-                </ul>
-            </div>
-
+        <div class="navbar-brand d-flex align-items-center">
+            <img src="/images/logo-nobg.png" alt="Logo GeoRoute" height="40">
+            GeoRoute
         </div>
-    </nav>
 
-    <main class="container container-main">
-        <section class="card card-custom mx-auto" style="max-width:1200px;">
-            <div class="card-body p-4">
-                <div class="d-flex align-items-center justify-content-between mb-3">
-                    <div>
-                        <h2 class="h4 fw-bold text-primary-custom mb-1"><i class="fas fa-bus me-2"></i>Georoute -
-                            Predicción</h2>
-                        <p class="small text-muted mb-0">Registra predicciones y consulta el historial guardado en
-                            MongoDB</p>
-                    </div>
-                    <button id="historyBtn" class="btn btn-outline-primary fw-semibold rounded-pill shadow">
-                        <i class="fas fa-clipboard-list"></i> Historial
-                    </button>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto align-items-lg-center" id="menuMobile">
+
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/admin/rutas}">Rutas</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/admin/autobuses}">Autobuses</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/admin/conductores}">Conductores</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/admin/dashboard}">Dashboard</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link active">Mantenimiento</a>
+                </li>
+
+                <li class="nav-item dropdown ms-lg-3 mt-3 mt-lg-0">
+                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown"
+                       role="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-person-circle me-2"></i>
+                        <span id="nombreUsuarioNavbar" th:text="${administradorNombreUsuario}"></span>
+                    </a>
+
+                    <ul class="dropdown-menu dropdown-menu-center">
+                        <li>
+                            <a class="dropdown-item text-danger d-flex align-items-center" th:href="@{/logout}">
+                                <i class="bi bi-box-arrow-right me-2"></i> Cerrar sesión
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+            </ul>
+        </div>
+
+    </div>
+</nav>
+
+<main class="container container-main">
+    <section class="card card-custom mx-auto" style="max-width:1200px;">
+        <div class="card-body p-4">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <div>
+                    <h2 class="h4 fw-bold text-primary-custom mb-1"><i class="fas fa-bus me-2"></i>Georoute -
+                        Predicción</h2>
+                    <p class="small text-muted mb-0">Registra predicciones y consulta el historial guardado en
+                        MongoDB</p>
                 </div>
-
-                <form id="predictForm" class="row g-3">
-                    <div class="col-md-4">
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="fas fa-tachometer"></i></span>
-                            <input name="mileage" placeholder="Kilometraje (ej. 50000)" required class="form-control" />
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="fas fa-wrench"></i></span>
-                            <select name="maintenanceHistory" required class="form-select">
-                                <option value="">Historial mantenimiento</option>
-                                <option value="Poor">Poor</option>
-                                <option value="Average">Average</option>
-                                <option value="Good">Good</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="fas fa-exclamation-triangle"></i></span>
-                            <input name="reportedIssues" placeholder="Problemas reportados (ej. 2)" required
-                                class="form-control" />
-                        </div>
-                    </div>
-
-                    <div class="col-md-4">
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
-                            <input name="vehicleAge" placeholder="Antigüedad años" required class="form-control" />
-                        </div>
-                    </div>
-
-                    <div class="col-md-4">
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="fas fa-gas-pump"></i></span>
-                            <select name="fuelType" required class="form-select">
-                                <option value="">Tipo Combustible</option>
-                                <option value="Petrol">Petrol</option>
-                                <option value="Diesel">Diesel</option>
-                                <option value="Electric">Electric</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4">
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="fas fa-cogs"></i></span>
-                            <select name="transmissionType" required class="form-select">
-                                <option value="">Transmisión</option>
-                                <option value="Manual">Manual</option>
-                                <option value="Automatic">Automatic</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4">
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="fas fa-cog"></i></span>
-                            <input name="engineSize" placeholder="Tamaño motor (L)" class="form-control" />
-                        </div>
-                    </div>
-
-                    <div class="col-md-4">
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
-                            <input name="lastServiceDate" placeholder="Último servicio (año)" class="form-control" />
-                        </div>
-                    </div>
-
-                    <div class="col-md-4">
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="fas fa-history"></i></span>
-                            <input name="serviceHistory" placeholder="Historial de servicios (ej. 10)"
-                                class="form-control" />
-                        </div>
-                    </div>
-
-                    <div class="col-md-4">
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="fas fa-car-crash"></i></span>
-                            <input name="accidentHistory" placeholder="Historial de accidentes (ej. 0)"
-                                class="form-control" />
-                        </div>
-                    </div>
-
-                    <div class="col-md-4">
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="fas fa-chart-line"></i></span>
-                            <input name="fuelEfficiency" placeholder="Eficiencia km/L (ej. 15.5)"
-                                class="form-control" />
-                        </div>
-                    </div>
-
-                    <div class="col-md-4">
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="fas fa-circle-notch"></i></span>
-                            <select name="tireCondition" required class="form-select">
-                                <option value="">Condición de llantas</option>
-                                <option value="New">New</option>
-                                <option value="Good">Good</option>
-                                <option value="Worn Out">Worn Out</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4">
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="fas fa-stop-circle"></i></span>
-                            <select name="brakeCondition" required class="form-select">
-                                <option value="">Condición de frenos</option>
-                                <option value="Good">Good</option>
-                                <option value="Worn Out">Worn Out</option>
-                                <option value="New">New</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4">
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="fas fa-battery-half"></i></span>
-                            <select name="batteryStatus" required class="form-select">
-                                <option value="">Estado batería</option>
-                                <option value="Good">Good</option>
-                                <option value="Weak">Weak</option>
-                                <option value="New">New</option>
-                            </select>
-                        </div>
-                    </div>
-                </form>
-
-                <div class="mt-4 d-flex gap-3 align-items-center">
-                    <!-- Botón Predecir ahora con outline-primary -->
-                    <button id="submitBtn" class="btn btn-outline-primary fw-bold shadow">
-                        <i class="fas fa-magic me-2"></i>Predecir
-                    </button>
-                    <div id="loading" class="d-none d-flex align-items-center gap-2 small text-muted">
-                        <i class="fas fa-spinner fa-spin"></i> Procesando...
-                    </div>
-                </div>
-
-                <div id="resultBox" class="mt-4 d-none p-3 rounded fw-semibold text-white"></div>
+                <button id="historyBtn" class="btn btn-outline-primary fw-semibold rounded-pill shadow">
+                    <i class="fas fa-clipboard-list"></i> Historial
+                </button>
             </div>
-        </section>
-    </main>
 
-    <div class="modal fade" id="historyModal" tabindex="-1" aria-labelledby="historyModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title text-primary-custom fw-bold" id="historyModalLabel"><i
-                            class="fas fa-clipboard-list me-2"></i>Historial de Predicciones</h5>
-                    <div class="d-flex align-items-center gap-3">
-                        <button id="clearBtn" class="btn btn-link text-danger p-0 small">Limpiar todo</button>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <form id="predictForm" class="row g-3">
+                <div class="col-sm-6 col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-tachometer"></i></span>
+                        <input name="mileage" placeholder="Kilometraje (ej. 50000)" required class="form-control" />
                     </div>
                 </div>
-                <div class="modal-body" id="historyList">
+                <div class="col-sm-6 col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-wrench"></i></span>
+                        <select name="maintenanceHistory" required class="form-select">
+                            <option value="">Historial mantenimiento</option>
+                            <option value="Poor">Poor</option>
+                            <option value="Average">Average</option>
+                            <option value="Good">Good</option>
+                        </select>
+                    </div>
                 </div>
+                <div class="col-sm-6 col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-exclamation-triangle"></i></span>
+                        <input name="reportedIssues" placeholder="Problemas reportados (ej. 2)" required
+                               class="form-control" />
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                        <input name="vehicleAge" placeholder="Antigüedad años" required class="form-control" />
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-gas-pump"></i></span>
+                        <select name="fuelType" required class="form-select">
+                            <option value="">Tipo Combustible</option>
+                            <option value="Petrol">Petrol</option>
+                            <option value="Diesel">Diesel</option>
+                            <option value="Electric">Electric</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-cogs"></i></span>
+                        <select name="transmissionType" required class="form-select">
+                            <option value="">Transmisión</option>
+                            <option value="Manual">Manual</option>
+                            <option value="Automatic">Automatic</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-cog"></i></span>
+                        <input name="engineSize" placeholder="Tamaño motor (L)" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
+                        <input name="lastServiceDate" placeholder="Último servicio (año)" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-history"></i></span>
+                        <input name="serviceHistory" placeholder="Historial de servicios (ej. 10)"
+                               class="form-control" />
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-car-crash"></i></span>
+                        <input name="accidentHistory" placeholder="Historial de accidentes (ej. 0)"
+                               class="form-control" />
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-chart-line"></i></span>
+                        <input name="fuelEfficiency" placeholder="Eficiencia km/L (ej. 15.5)"
+                               class="form-control" />
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-circle-notch"></i></span>
+                        <select name="tireCondition" required class="form-select">
+                            <option value="">Condición de llantas</option>
+                            <option value="New">New</option>
+                            <option value="Good">Good</option>
+                            <option value="Worn Out">Worn Out</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-stop-circle"></i></span>
+                        <select name="brakeCondition" required class="form-select">
+                            <option value="">Condición de frenos</option>
+                            <option value="Good">Good</option>
+                            <option value="Worn Out">Worn Out</option>
+                            <option value="New">New</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-battery-half"></i></span>
+                        <select name="batteryStatus" required class="form-select">
+                            <option value="">Estado batería</option>
+                            <option value="Good">Good</option>
+                            <option value="Weak">Weak</option>
+                            <option value="New">New</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+
+            <div class="mt-4 d-flex gap-3 align-items-center">
+                <button id="submitBtn" class="btn btn-outline-primary fw-bold shadow">
+                    <i class="fas fa-magic me-2"></i>Predecir
+                </button>
+                <div id="loading" class="d-none d-flex align-items-center gap-2 small text-muted">
+                    <i class="fas fa-spinner fa-spin"></i> Procesando...
+                </div>
+            </div>
+
+            <div id="resultBox" class="mt-4 d-none p-3 rounded fw-semibold text-white"></div>
+        </div>
+    </section>
+</main>
+
+<!-- Modal historial -->
+<div class="modal fade" id="historyModal" tabindex="-1" aria-labelledby="historyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-primary-custom fw-bold" id="historyModalLabel">
+                    <i class="fas fa-clipboard-list me-2"></i>Historial de Predicciones
+                </h5>
+                <div class="d-flex align-items-center gap-2">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+            </div>
+            <div class="modal-body" id="historyList">
+                <!-- Contenido dinámico -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
             </div>
         </div>
     </div>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.19.1/dist/sweetalert2.all.min.js"></script>
 
-    <script>
-        const API = "http://localhost:8080/api";
-        const form = document.getElementById('predictForm');
-        const submitBtn = document.getElementById('submitBtn');
-        const loading = document.getElementById('loading');
-        const resultBox = document.getElementById('resultBox');
+<script>
+    const API = "http://localhost:8080/api";
+    const form = document.getElementById('predictForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const loading = document.getElementById('loading');
+    const resultBox = document.getElementById('resultBox');
 
-        // modal
-        const historyBtn = document.getElementById('historyBtn');
-        const historyModal = new bootstrap.Modal(document.getElementById('historyModal'));
-        const historyList = document.getElementById('historyList');
-        const clearBtn = document.getElementById('clearBtn');
+    // modal
+    const historyBtn = document.getElementById('historyBtn');
+    const historyModalEl = document.getElementById('historyModal');
+    const historyModal = new bootstrap.Modal(historyModalEl);
+    const historyList = document.getElementById('historyList');
+    const clearBtn = document.getElementById('clearBtn');
 
-        // POST prediction -> save report
-        submitBtn.addEventListener('click', async (e) => {
-            e.preventDefault();
-            const raw = Object.fromEntries(new FormData(form).entries());
-
-            // Convierte algunos campos a número donde aplique
-            const payload = {
-                mileage: raw.mileage ? Number(raw.mileage) : null,
-                maintenanceHistory: raw.maintenanceHistory || null,
-                reportedIssues: raw.reportedIssues ? Number(raw.reportedIssues) : null,
-                vehicleAge: raw.vehicleAge ? Number(raw.vehicleAge) : null,
-                fuelType: raw.fuelType || null,
-                transmissionType: raw.transmissionType || null,
-                engineSize: raw.engineSize ? Number(raw.engineSize) : null,
-                lastServiceDate: raw.lastServiceDate ? Number(raw.lastServiceDate) : null,
-                serviceHistory: raw.serviceHistory ? Number(raw.serviceHistory) : null,
-                accidentHistory: raw.accidentHistory ? Number(raw.accidentHistory) : null,
-                fuelEfficiency: raw.fuelEfficiency ? Number(raw.fuelEfficiency) : null,
-                tireCondition: raw.tireCondition || null,
-                brakeCondition: raw.brakeCondition || null,
-                batteryStatus: raw.batteryStatus || null
-            };
-
-            // simple front validation
-            for (const k of Object.keys(payload)) {
-                if (payload[k] === null || payload[k] === "") {
-                    // Reemplazado alert() por un modal/mensaje de error más amigable para el usuario
-                    showUserAlert('Error', 'Completa todos los campos antes de predecir.', 'error');
-                    return;
-                }
-            }
-
-            loading.classList.remove('d-none');
-            submitBtn.disabled = true;
-            resultBox.classList.add('d-none');
-
-            try {
-                // 1) pedir predicción al backend Weka
-                const res = await fetch(`${API}/predict`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                const json = await res.json();
-                const prediction = json.prediction ? json.prediction.trim() : 'Unknown';
-
-                // 2) crear reporte completo y guardarlo en /reports
-                const report = {
-                    ...payload,
-                    prediction,
-                    timestamp: new Date().toISOString(),
-                    accuracy: (Math.random() * (99 - 85) + 85).toFixed(2) + '%'
-                };
-
-                await fetch(`${API}/reports`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(report)
-                });
-
-                // 3) mostrar resultado en UI
-                resultBox.classList.remove('d-none');
-                if (prediction === 'Yes') {
-                    resultBox.className = 'mt-4 p-3 rounded fw-semibold text-white bg-danger';
-                    resultBox.textContent = '⚠️ El bus requiere mantenimiento (predicción: Yes)';
-                } else if (prediction === 'No') {
-                    resultBox.className = 'mt-4 p-3 rounded fw-semibold text-white bg-success';
-                    resultBox.textContent = '✅ El bus NO requiere mantenimiento (predicción: No)';
-                } else {
-                    resultBox.className = 'mt-4 p-3 rounded fw-semibold text-white bg-secondary';
-                    resultBox.textContent = `❓ Resultado no claro: ${prediction}`;
-                }
-
-            } catch (err) {
-                console.error(err);
-                resultBox.classList.remove('d-none');
-                resultBox.className = 'mt-4 p-3 rounded fw-semibold text-white bg-danger';
-                resultBox.textContent = '❌ Error al pedir predicción o guardar reporte.';
-            } finally {
-                loading.classList.add('d-none');
-                submitBtn.disabled = false;
-            }
+    // Helper alert
+    function showUserAlert(title, text, icon) {
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: icon,
+            confirmButtonColor: '#667eea',
+            confirmButtonText: 'Entendido'
         });
+    }
 
-        // Función de alerta personalizada (Reemplazo de alert())
-        function showUserAlert(title, text, icon) {
-            Swal.fire({
-                title: title,
-                text: text,
-                icon: icon,
-                confirmButtonColor: '#667eea',
-                confirmButtonText: 'Entendido'
-            });
+    // POST prediction -> save report
+    submitBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const raw = Object.fromEntries(new FormData(form).entries());
+
+        // Convierte algunos campos a número donde aplique
+        const payload = {
+            mileage: raw.mileage ? Number(raw.mileage) : null,
+            maintenanceHistory: raw.maintenanceHistory || null,
+            reportedIssues: raw.reportedIssues ? Number(raw.reportedIssues) : null,
+            vehicleAge: raw.vehicleAge ? Number(raw.vehicleAge) : null,
+            fuelType: raw.fuelType || null,
+            transmissionType: raw.transmissionType || null,
+            engineSize: raw.engineSize ? Number(raw.engineSize) : null,
+            lastServiceDate: raw.lastServiceDate ? Number(raw.lastServiceDate) : null,
+            serviceHistory: raw.serviceHistory ? Number(raw.serviceHistory) : null,
+            accidentHistory: raw.accidentHistory ? Number(raw.accidentHistory) : null,
+            fuelEfficiency: raw.fuelEfficiency ? Number(raw.fuelEfficiency) : null,
+            tireCondition: raw.tireCondition || null,
+            brakeCondition: raw.brakeCondition || null,
+            batteryStatus: raw.batteryStatus || null
+        };
+
+        // simple front validation
+        for (const k of Object.keys(payload)) {
+            if (payload[k] === null || payload[k] === "") {
+                showUserAlert('Error', 'Completa todos los campos antes de predecir.', 'error');
+                return;
+            }
         }
 
-        // abrir modal y cargar historial
-        historyBtn.addEventListener('click', async () => {
-            historyModal.show();
-            historyList.innerHTML = '<div class="text-center py-4">Cargando... <i class="fas fa-spinner fa-spin"></i></div>';
-            try {
-                const res = await fetch(`${API}/reports`);
-                const data = await res.json();
-                if (!data || data.length === 0) {
-                    historyList.innerHTML = '<p class="text-center text-muted py-4">No hay reportes.</p>';
-                    return;
-                }
-                // render
-                historyList.innerHTML = '';
-                data.slice().reverse().forEach(r => {
-                    historyList.innerHTML += `
-            <div class="report-item p-3 rounded border shadow-sm d-flex gap-3 align-items-start justify-content-between animate-fade-in">
-              <div class="flex-fill">
-                <div class="d-flex align-items-center gap-3">
-                  <div class="small fw-bold ${r.prediction === 'Yes' ? 'text-danger' : 'text-success'}">
-                    ${r.prediction === 'Yes' ? '<i class="fas fa-exclamation-triangle"></i> Requiere mantenimiento' : '<i class="fas fa-check-circle"></i> Buen estado'}
-                  </div>
-                  <div class="small text-muted ms-2">${new Date(r.timestamp).toLocaleString()}</div>
-                </div>
-                <div class="mt-2 small text-muted">
-                  <div><strong>Kilometraje:</strong> ${r.mileage} km — <strong>FuelEff:</strong> ${r.fuelEfficiency} km/L — <strong>Motor:</strong> ${r.engineSize} L</div>
-                  <div><strong>Mantenimiento:</strong> ${r.maintenanceHistory} — <strong>ServiceCount:</strong> ${r.serviceHistory} — <strong>Accidentes:</strong> ${r.accidentHistory}</div>
-                  <div><strong>Combustible:</strong> ${r.fuelType} — <strong>Transmisión:</strong> ${r.transmissionType}</div>
-                  <div><strong>Llantas:</strong> ${r.tireCondition} — <strong>Frenos:</strong> ${r.brakeCondition} — <strong>Batería:</strong> ${r.batteryStatus}</div>
-                </div>
-              </div>
-              <div class="text-end">
-                <div class="small text-muted mt-2">ID: ${r.id || ''}</div>
-                <div class="mt-3 d-flex gap-2 justify-content-end">
-                  <button class="deleteBtn btn btn-link text-danger p-0 small" data-id="${r.id}">Borrar</button>
-                </div>
-              </div>
-            </div>
-          `;
-                });
+        loading.classList.remove('d-none');
+        submitBtn.disabled = true;
+        resultBox.classList.add('d-none');
 
-                // attach delete handlers
-                document.querySelectorAll('.deleteBtn').forEach(btn => {
-                    btn.addEventListener('click', async () => {
-                        // Reemplazado confirm() por SweetAlert2
-                        Swal.fire({
-                            title: '¿Estás seguro?',
-                            text: 'Esto borrará el reporte de predicción de forma permanente.',
-                            icon: 'warning',
-                            showCancelButton: true,
-                            confirmButtonColor: '#d33',
-                            cancelButtonColor: '#667eea',
-                            confirmButtonText: 'Sí, borrar',
-                            cancelButtonText: 'Cancelar'
-                        }).then(async (result) => {
-                            if (result.isConfirmed) {
-                                const id = btn.dataset.id;
-                                try {
-                                    await fetch(`${API}/reports/${id}`, { method: 'DELETE' });
+        try {
+            // 1) pedir predicción al backend Weka
+            const res = await fetch(`${API}/predict`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!res.ok) throw new Error('Error en /predict');
+
+            const json = await res.json();
+            const prediction = json.prediction ? json.prediction.trim() : 'Unknown';
+
+            // 2) crear reporte completo y guardarlo en /reports
+            const report = {
+                ...payload,
+                prediction,
+                timestamp: new Date().toISOString(),
+                accuracy: (Math.random() * (99 - 85) + 85).toFixed(2) + '%'
+            };
+
+            await fetch(`${API}/reports`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(report)
+            });
+
+            // 3) mostrar resultado en UI
+            resultBox.classList.remove('d-none');
+            if (prediction === 'Yes') {
+                resultBox.className = 'mt-4 p-3 rounded fw-semibold text-white bg-danger';
+                resultBox.textContent = '⚠️ El bus requiere mantenimiento (predicción: Yes)';
+            } else if (prediction === 'No') {
+                resultBox.className = 'mt-4 p-3 rounded fw-semibold text-white bg-success';
+                resultBox.textContent = '✅ El bus NO requiere mantenimiento (predicción: No)';
+            } else {
+                resultBox.className = 'mt-4 p-3 rounded fw-semibold text-white bg-secondary';
+                resultBox.textContent = `❓ Resultado no claro: ${prediction}`;
+            }
+
+        } catch (err) {
+            console.error(err);
+            resultBox.classList.remove('d-none');
+            resultBox.className = 'mt-4 p-3 rounded fw-semibold text-white bg-danger';
+            resultBox.textContent = '❌ Error al pedir predicción o guardar reporte.';
+        } finally {
+            loading.classList.add('d-none');
+            submitBtn.disabled = false;
+        }
+    });
+
+    // abrir modal y cargar historial
+    historyBtn.addEventListener('click', async () => {
+        historyModal.show();
+        historyList.innerHTML = '<div class="text-center py-4">Cargando... <i class="fas fa-spinner fa-spin"></i></div>';
+        try {
+            const res = await fetch(`${API}/reports`);
+            if (!res.ok) throw new Error('Error cargando reports');
+            const data = await res.json();
+
+            if (!data || data.length === 0) {
+                historyList.innerHTML = '<p class="text-center text-muted py-4">No hay reportes.</p>';
+                return;
+            }
+
+            // render
+            historyList.innerHTML = '';
+            data.slice().reverse().forEach(r => {
+                historyList.innerHTML += `
+        <div class="report-item p-3 rounded border shadow-sm d-flex gap-3 align-items-start justify-content-between animate-fade-in">
+          <div class="flex-fill">
+            <div class="d-flex align-items-center gap-3 flex-wrap">
+              <div class="small fw-bold ${r.prediction === 'Yes' ? 'text-danger' : 'text-success'}">
+                ${r.prediction === 'Yes' ? '<i class="fas fa-exclamation-triangle"></i> Requiere mantenimiento' : '<i class="fas fa-check-circle"></i> Buen estado'}
+              </div>
+              <div class="small text-muted ms-2">${new Date(r.timestamp).toLocaleString()}</div>
+            </div>
+            <div class="mt-2 small text-muted">
+              <div><strong>Kilometraje:</strong> ${r.mileage} km — <strong>FuelEff:</strong> ${r.fuelEfficiency} km/L — <strong>Motor:</strong> ${r.engineSize ?? ''} L</div>
+              <div><strong>Mantenimiento:</strong> ${r.maintenanceHistory} — <strong>ServiceCount:</strong> ${r.serviceHistory ?? ''} — <strong>Accidentes:</strong> ${r.accidentHistory ?? ''}</div>
+              <div><strong>Combustible:</strong> ${r.fuelType} — <strong>Transmisión:</strong> ${r.transmissionType}</div>
+              <div><strong>Llantas:</strong> ${r.tireCondition} — <strong>Frenos:</strong> ${r.brakeCondition} — <strong>Batería:</strong> ${r.batteryStatus}</div>
+            </div>
+          </div>
+          <div class="text-end">
+            <div class="small text-muted mt-2">ID: ${r.id || ''}</div>
+            <div class="mt-3 d-flex gap-2 justify-content-end">
+              <button class="deleteBtn btn btn-link text-danger p-0 small" data-id="${r.id}">Borrar</button>
+            </div>
+          </div>
+        </div>
+      `;
+            });
+
+            // attach delete handlers after render
+            document.querySelectorAll('.deleteBtn').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    Swal.fire({
+                        title: '¿Estás seguro?',
+                        text: 'Esto borrará el reporte de predicción de forma permanente.',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#6c757d',
+                        confirmButtonText: 'Sí, borrar',
+                        cancelButtonText: 'Cancelar'
+                    }).then(async (result) => {
+                        if (result.isConfirmed) {
+                            const id = btn.dataset.id;
+                            try {
+                                const del = await fetch(`${API}/reports/${id}`, { method: 'DELETE' });
+                                if (del.ok) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Eliminado',
+                                        text: 'El reporte fue eliminado correctamente.',
+                                        confirmButtonColor: '#667eea'
+                                    });
                                     btn.closest('.report-item')?.remove();
-                                    showUserAlert('¡Borrado!', 'El reporte ha sido eliminado.', 'success');
-                                    // No hace falta recargar la lista si remove() funciona bien
-                                } catch (e) {
-                                    showUserAlert('Error', 'Error borrando el reporte.', 'error');
+                                } else {
+                                    Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo eliminar el reporte.', confirmButtonColor: '#667eea' });
                                 }
+                            } catch (err) {
+                                console.error(err);
+                                Swal.fire({ icon: 'error', title: 'Error', text: 'Error inesperado al intentar eliminar.', confirmButtonColor: '#667eea' });
                             }
-                        });
+                        }
                     });
                 });
+            });
 
-            } catch (err) {
-                historyList.innerHTML = '<p class="text-danger text-center py-4">Error cargando historial.</p>';
-            }
-        });
+        } catch (err) {
+            console.error(err);
+            historyList.innerHTML = '<p class="text-danger text-center py-4">Error cargando historial.</p>';
+        }
+    });
 
-        // Clear all
+    // Clear all - safe guard si clearBtn existe
+    if (clearBtn) {
         clearBtn.addEventListener('click', async () => {
-            // Reemplazado confirm() por SweetAlert2
             Swal.fire({
                 title: '¿Estás seguro?',
                 text: 'Esto borrará TODO el historial de predicciones de forma permanente.',
@@ -668,59 +793,58 @@
             }).then(async (result) => {
                 if (result.isConfirmed) {
                     try {
-                        await fetch(`${API}/reports/clear`, { method: 'DELETE' });
+                        const res = await fetch(`${API}/reports/clear`, { method: 'DELETE' });
+                        if (!res.ok) throw new Error('clear failed');
                         historyList.innerHTML = '<p class="text-center text-muted py-4">Historial vacío.</p>';
                         showUserAlert('¡Limpiado!', 'Todo el historial ha sido eliminado.', 'success');
                     } catch (e) {
+                        console.error(e);
                         showUserAlert('Error', 'Error al limpiar el historial.', 'error');
                     }
                 }
             });
         });
+    }
 
-        // Cargar nombre de usuario en navbar (pero NO sobrescribir 'Admin' por 'Cliente')
-        document.addEventListener("DOMContentLoaded", () => {
-            const nombreEl = document.getElementById("nombreUsuarioNavbar");
-            // Si Thymeleaf ya puso administradorNombreUsuario, no hacemos fetch. Si está vacío, consultamos.
-            if (nombreEl && (!nombreEl.textContent || nombreEl.textContent.trim() === '' || nombreEl.textContent.trim().toLowerCase() === '')) {
-                fetch("/usuario/perfil")
-                    .then(response => response.json())
-                    .then(data => {
-                        // Solo setear si se obtiene un nombre distinto a 'Cliente' (evitar sobrescribir por error)
-                        if (data && data.nombreUsuario && data.nombreUsuario.toLowerCase() !== 'cliente') {
-                            nombreEl.textContent = data.nombreUsuario;
-                        }
-                    })
-                    .catch(err => console.error("Error al cargar nombre de usuario:", err));
-            } else if (nombreEl && nombreEl.textContent.trim().toLowerCase() === 'cliente') {
-                // Reemplazamos explícitamente "Cliente" por "Admin"
-                nombreEl.textContent = 'Admin';
-            }
-        });
+    // Cargar nombre de usuario en navbar (pero NO sobrescribir 'Admin' por 'Cliente')
+    document.addEventListener("DOMContentLoaded", () => {
+        const nombreEl = document.getElementById("nombreUsuarioNavbar");
+        if (nombreEl && (!nombreEl.textContent || nombreEl.textContent.trim() === '' || nombreEl.textContent.trim().toLowerCase() === '')) {
+            fetch("/usuario/perfil")
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.nombreUsuario && data.nombreUsuario.toLowerCase() !== 'cliente') {
+                        nombreEl.textContent = data.nombreUsuario;
+                    }
+                })
+                .catch(err => console.error("Error al cargar nombre de usuario:", err));
+        } else if (nombreEl && nombreEl.textContent.trim().toLowerCase() === 'cliente') {
+            nombreEl.textContent = 'Admin';
+        }
+    });
 
-        // Reloj simple en navbar
-        (function reloj() {
-            const el = document.getElementById('reloj');
-            if (!el) return;
-            function fmt(n) { return n.toString().padStart(2, '0'); }
-            setInterval(() => {
-                const d = new Date();
-                el.textContent = `${fmt(d.getHours())}:${fmt(d.getMinutes())}:${fmt(d.getSeconds())}`;
-            }, 1000);
-        })();
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.19.1/dist/sweetalert2.all.min.js"></script>
+    // Reloj simple en navbar
+    (function reloj() {
+        const el = document.getElementById('reloj');
+        if (!el) return;
+        function fmt(n) { return n.toString().padStart(2, '0'); }
+        setInterval(() => {
+            const d = new Date();
+            el.textContent = `${fmt(d.getHours())}:${fmt(d.getMinutes())}:${fmt(d.getSeconds())}`;
+        }, 1000);
+    })();
 
-    <script>
-        document.addEventListener("scroll", () => {
-            const nav = document.querySelector(".navbar");
-            if (window.scrollY > 30) {
-                nav.classList.add("scrolled");
-            } else {
-                nav.classList.remove("scrolled");
-            }
-        });
-    </script>
+    // Navbar shadow on scroll
+    document.addEventListener("scroll", () => {
+        const nav = document.querySelector(".navbar");
+        if (!nav) return;
+        if (window.scrollY > 30) {
+            nav.classList.add("scrolled");
+        } else {
+            nav.classList.remove("scrolled");
+        }
+    });
+</script>
+
 </body>
-
 </html>

@@ -88,17 +88,14 @@ button:focus-visible {
 /* Corrección para mantener el color degradado en navbar-brand al pasar el ratón/enfocar */
 .navbar-brand:hover,
 .navbar-brand:focus {
-    /* Estas reglas fuerzan la apariencia degradada */
     background-image: linear-gradient(to right,
                 #00d4c1,
                 #42008b);
     -webkit-background-clip: text;
     background-clip: text;
-    color: transparent; /* Importante para que el clip funcione */
-
-    /* Opcional: Anula cualquier cambio de color de texto no deseado */
+    color: transparent;
     text-decoration: none;
-    transition: none; /* Evita que el hover en anclas afecte la transición de color */
+    transition: none;
 }
 
 /* ================================ BUTTONS ================================ */
@@ -118,32 +115,40 @@ button:focus-visible {
     border-color: var(--secondary-color);
 }
 
-/* ================================ HERO ================================ */
-.hero-carousel {
+/* ================================ HERO (ESTÁTICO) ================================ */
+.hero-static {
     height: 90vh;
     margin-top: 56px;
     overflow: hidden;
     position: relative;
 }
 
-.carousel-item,
-.carousel-item img {
-    height: 100%;
+/* Contenedor de la imagen de fondo */
+.hero-static .hero-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+}
+
+/* Imagen con object-fit para cubrir el hero */
+.hero-static .hero-bg img.object-fit-cover {
     width: 100%;
-}
-
-.carousel-item img {
+    height: 100%;
     object-fit: cover;
+    display: block;
 }
 
-.carousel-overlay {
+/* Overlay oscuro para mejorar legibilidad del contenido */
+.hero-overlay {
     position: absolute;
     inset: 0;
     background: linear-gradient(to right, rgba(9, 42, 84, 0.9), rgba(9, 42, 84, 0.7));
     pointer-events: none;
-    z-index: 1;
+    z-index: 2;
 }
 
+/* Contenido del hero por encima de la imagen y overlay */
 .hero-content {
     z-index: 3;
     padding: 0 1rem;
@@ -160,21 +165,6 @@ button:focus-visible {
     margin: 0 auto;
     font-size: 1.25rem;
     text-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
-}
-
-/* MOBILE ADAPTATION */
-@media (max-width: 768px) {
-    .hero-carousel {
-        height: 70vh;
-    }
-
-    .hero-content h1 {
-        font-size: 2.2rem;
-    }
-
-    .hero-content .lead {
-        font-size: 1.1rem;
-    }
 }
 
 /* ================================ ICON BOX & CARDS ================================ */
@@ -214,7 +204,8 @@ footer a:hover {
     transform: translateY(-3px);
 }
 
-/* Centrar menú en móviles SIN generar scroll */
+/* ================================ MEDIA QUERIES (ADAPTACIÓN MÓVIL) ================================ */
+
 @media (max-width: 991px) {
     #menuMobile {
         text-align: center;
@@ -238,6 +229,71 @@ footer a:hover {
     }
 }
 
+@media (max-width: 768px) {
+    /* Altura menor para hero en pantallas pequeñas */
+    .hero-static {
+        height: 60vh;
+    }
+
+    .py-5 {
+        padding-top: 3rem !important;
+        padding-bottom: 3rem !important;
+    }
+
+    .hero-content h1 {
+        font-size: 2rem;
+    }
+
+    .hero-content .lead {
+        font-size: 1.05rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-static {
+        height: 50vh;
+    }
+
+    .hero-content {
+        top: 55%;
+    }
+
+    .hero-content h1 {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem !important;
+    }
+
+    .hero-content .lead {
+        font-size: 0.95rem;
+        margin-bottom: 1.5rem !important;
+    }
+
+    .hero-content .d-flex {
+        flex-direction: column;
+        gap: 0.75rem !important;
+    }
+
+    .hero-content .d-flex a {
+        width: 100%;
+        padding: 0.6rem 3rem;
+        font-size: 1rem;
+    }
+
+    .container {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+
+    .footer .justify-content-center {
+        justify-content: center !important;
+    }
+
+    .card-body p {
+        font-size: 0.9rem;
+    }
+}
+
+/* Corrección para eliminar el scroll horizontal (mantenido) */
 html, body {
     overflow-x: hidden !important;
 }
