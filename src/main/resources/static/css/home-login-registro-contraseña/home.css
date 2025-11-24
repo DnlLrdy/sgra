@@ -1,129 +1,299 @@
+@import url("https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap");
+
+/* ================================ VARIABLES ================================ */
 :root {
     --primary-color: #092a54;
     --secondary-color: #2d45b0;
     --accent-color: #939bc6;
-    --light-color: #f8f9fa;
+    --light-color: #ffffff;
     --dark-color: #212529;
+    --transition-base: all 0.3s ease;
 }
 
+/* ================================ BASE ================================ */
 body {
-    font-family: 'Roboto', sans-serif;
-    line-height: 1.6;
+    font-family: "Work Sans", sans-serif;
+    background-color: #fff;
     color: var(--dark-color);
-    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
 }
 
-/* Navbar mejorado */
+section {
+    scroll-margin-top: 80px;
+}
+
+a:focus-visible,
+button:focus-visible {
+    outline: 3px solid rgba(45, 69, 176, 0.18);
+    outline-offset: 2px;
+}
+
+/* ================================ NAVBAR ================================ */
 .navbar {
-    transition: all 0.3s ease;
-    padding: 0.75rem 0;
+    background-color: var(--light-color);
+    padding: 0.4rem 0;
+    transition: var(--transition-base);
 }
 
 .navbar.scrolled {
-    background-color: var(--primary-color) !important;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
 }
 
 .navbar-brand {
     font-weight: 700;
     font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-image: linear-gradient(to right, #00d4c1, #42008b);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.navbar-toggler {
+    border: none;
 }
 
 .nav-link {
     font-weight: 500;
     padding: 0.5rem 1rem;
+    color: var(--dark-color);
     position: relative;
+    transition: color 0.2s ease;
 }
 
-.nav-link:after {
-    content: '';
-    position: absolute;
+.nav-link::after {
+    content: "";
     width: 0;
     height: 2px;
-    background: white;
+    background: var(--secondary-color);
+    position: absolute;
     bottom: 0;
     left: 0;
-    transition: width 0.3s ease;
+    transition: width 0.25s ease;
 }
 
-.nav-link:hover:after {
+.nav-link:hover,
+.nav-link:focus {
+    color: var(--primary-color);
+}
+
+.nav-link:hover::after,
+.nav-link:focus::after,
+.nav-link.active::after {
     width: 100%;
 }
 
-/* Hero Section mejorada */
-.hero-carousel {
-    height: 90vh;
-    margin-top: 56px;
+/* Corrección para mantener el color degradado en navbar-brand al pasar el ratón/enfocar */
+.navbar-brand:hover,
+.navbar-brand:focus {
+    background-image: linear-gradient(to right,
+                #00d4c1,
+                #42008b);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-decoration: none;
+    transition: none;
 }
 
-.carousel-item {
+/* ================================ BUTTONS ================================ */
+.btn-outline-primary {
+    border-color: var(--secondary-color);
+    color: var(--secondary-color);
+    transition: var(--transition-base);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--secondary-color);
+    color: var(--light-color);
+}
+
+.btn-primary {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+
+/* ================================ HERO (ESTÁTICO) ================================ */
+.hero-static {
+    height: 90vh;
+    margin-top: 56px;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Contenedor de la imagen de fondo */
+.hero-static .hero-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+}
+
+/* Imagen con object-fit para cubrir el hero */
+.hero-static .hero-bg img.object-fit-cover {
+    width: 100%;
     height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Overlay oscuro para mejorar legibilidad del contenido */
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgba(9, 42, 84, 0.9), rgba(9, 42, 84, 0.7));
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* Contenido del hero por encima de la imagen y overlay */
+.hero-content {
+    z-index: 3;
+    padding: 0 1rem;
 }
 
 .hero-content h1 {
     font-size: 3rem;
-    line-height: 1.2;
+    line-height: 1.1;
+    text-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
 }
 
-@media (max-width: 768px) {
-    .hero-content h1 {
-        font-size: 2.2rem;
-    }
-
-    .hero-content .btn {
-        display: block;
-        width: 100%;
-        margin-bottom: 1rem;
-    }
+.hero-content .lead {
+    max-width: 900px;
+    margin: 0 auto;
+    font-size: 1.25rem;
+    text-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
 }
 
-/* Cards mejoradas */
+/* ================================ ICON BOX & CARDS ================================ */
 .icon-box {
     width: 70px;
     height: 70px;
-    display: inline-flex;
+    border-radius: 12px;
+    display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 12px;
+    font-size: 1.25rem;
 }
 
 .hover-top {
-    transition: all 0.3s ease;
+    transition: transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1), box-shadow 0.28s ease;
 }
 
 .hover-top:hover {
     transform: translateY(-10px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 10px 20px rgba(9, 42, 84, 0.08);
 }
 
-/* Testimonios mejorados */
-.testimonial-card {
-    transition: all 0.3s ease;
+/* ================================ FOOTER ================================ */
+footer {
+    background-color: #0d1726;
+    color: #fff;
 }
 
-.testimonial-card:hover {
-    transform: translateY(-5px);
-}
-
-/* Formulario de contacto mejorado */
-.form-control-lg {
-    padding: 0.75rem 1rem;
-}
-
-/* Footer mejorado */
 footer a {
-    transition: all 0.3s ease;
+    color: rgba(255, 255, 255, 0.85);
+    transition: color 0.2s ease, transform 0.15s ease;
+    text-decoration: none;
 }
 
 footer a:hover {
-    color: var(--accent-color) !important;
-}
-
-.social-icon:hover {
+    color: var(--accent-color);
     transform: translateY(-3px);
 }
 
-/* Secciones */
-section {
-    scroll-margin-top: 80px;
+/* ================================ MEDIA QUERIES (ADAPTACIÓN MÓVIL) ================================ */
+
+@media (max-width: 991px) {
+    #menuMobile {
+        text-align: center;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+
+    #menuMobile .nav-item {
+        display: block;
+    }
+
+    #menuMobile .nav-link {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    #menuMobile .btn {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        display: inline-block;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Altura menor para hero en pantallas pequeñas */
+    .hero-static {
+        height: 60vh;
+    }
+
+    .py-5 {
+        padding-top: 3rem !important;
+        padding-bottom: 3rem !important;
+    }
+
+    .hero-content h1 {
+        font-size: 2rem;
+    }
+
+    .hero-content .lead {
+        font-size: 1.05rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-static {
+        height: 50vh;
+    }
+
+    .hero-content {
+        top: 55%;
+    }
+
+    .hero-content h1 {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem !important;
+    }
+
+    .hero-content .lead {
+        font-size: 0.95rem;
+        margin-bottom: 1.5rem !important;
+    }
+
+    .hero-content .d-flex {
+        flex-direction: column;
+        gap: 0.75rem !important;
+    }
+
+    .hero-content .d-flex a {
+        width: 100%;
+        padding: 0.6rem 3rem;
+        font-size: 1rem;
+    }
+
+    .container {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+
+    .footer .justify-content-center {
+        justify-content: center !important;
+    }
+
+    .card-body p {
+        font-size: 0.9rem;
+    }
+}
+
+/* Corrección para eliminar el scroll horizontal (mantenido) */
+html, body {
+    overflow-x: hidden !important;
 }

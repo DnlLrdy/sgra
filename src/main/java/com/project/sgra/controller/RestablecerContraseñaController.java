@@ -16,13 +16,13 @@ import java.util.List;
 import java.util.UUID;
 
 @Controller
-@RequestMapping("/sgra/restablecer-contrasena")
+@RequestMapping("/restablecer-contrasena")
 public class RestablecerContraseñaController {
 
     private static final String RESTABLECER_CONTRASEÑA_VISTA = "home-login-registro-contraseña/restablecer-contraseña";
 
-    private static final String REDIRECT_RESTABLECER_CONTRASEÑA_VISTA = "redirect:/sgra/restablecer-contrasena";
-    private static final String REDIRECT_LOGIN_VISTA = "redirect:/sgra/login";
+    private static final String REDIRECT_RESTABLECER_CONTRASEÑA_VISTA = "redirect:/restablecer-contrasena";
+    private static final String REDIRECT_LOGIN_VISTA = "redirect:/login";
 
     private final TokenRestablecerContraseñaRepository tokenRestablecerContraseñaRepository;
     private final RestablecerContraseñaService restablecerContraseñaService;
@@ -70,7 +70,7 @@ public class RestablecerContraseñaController {
 
         tokenRestablecerContraseñaRepository.save(tokenRestablecerContraseña);
 
-        String resetLink = "http://localhost:8080/sgra/establecer-nueva-contrasena?token=" + token;
+        String resetLink = "http://localhost:8080/establecer-nueva-contrasena?token=" + token;
         emailService.sendResetLink(restablecerContraseñaDTO.getCorreoElectronicoDTO(), resetLink);
 
         redirectAttributes.addFlashAttribute("mensajeExito", "Te hemos enviado un enlace a tu correo electrónico para restablecer tu contraseña.");

@@ -1,26 +1,24 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="GeoRoute - Software de gestión y visualización de rutas de autobuses">
     <title>GeoRoute</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-    <link rel="stylesheet" href="../../../static/css/home-login-registro-contraseña/registro.css">
+    <link rel="icon" type="image/x-icon" th:href="@{/images/logo-bg.png}">
     <link rel="stylesheet" th:href="@{/css/home-login-registro-contraseña/registro.css}">
 </head>
 
 <body>
     <div class="signup-container">
         <h2 class="signup-title">Crear cuenta</h2>
-        <form th:action="@{/sgra/registro/registrar}" th:method="post" th:object="${usuarioDTO}">
+        <form th:action="@{/registro/registrar}" th:method="post" th:object="${usuarioDTO}">
             <div class="form-row">
                 <div class="form-group">
                     <label for="firstName" class="form-label">Primer nombre</label>
@@ -105,7 +103,7 @@
             </button>
         </form>
         <div class="login-link">
-            ¿Ya tienes una cuenta? <a th:href="@{/sgra/login}">Iniciar sesión</a>
+            ¿Ya tienes una cuenta? <a th:href="@{/login}">Iniciar sesión</a>
         </div>
     </div>
 

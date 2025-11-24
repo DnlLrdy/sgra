@@ -269,7 +269,7 @@ function cambiarEstadoConductor() {
     const nuevoEstado = select.value;
     const id = document.getElementById('detalle-id').value;
 
-    fetch('/sgra/admin/conductores/actualizar-estado', {
+    fetch('/admin/conductores/actualizar-estado', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
