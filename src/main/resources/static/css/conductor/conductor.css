@@ -1,0 +1,211 @@
+@import url("https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap");
+
+/* ================================ VARIABLES ================================ */
+:root {
+    --primary-color: #092a54;
+    --secondary-color: #2d45b0;
+    --accent-color: #939bc6;
+    --light-color: #ffffff;
+    --dark-color: #212529;
+    --transition-base: all 0.3s ease;
+}
+
+/* ================================ BODY ================================ */
+body {
+    font-family: "Work Sans", sans-serif;
+    background: linear-gradient(135deg, #e0f7fa 0%, #c5cae9 100%);
+}
+
+html,
+body {
+    overflow-x: hidden !important;
+}
+
+/* ================================ NAVBAR ================================ */
+.navbar {
+    background-color: var(--light-color);
+    padding: 0.4rem 0;
+    transition: var(--transition-base);
+}
+
+.navbar.scrolled {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-image: linear-gradient(to right, #00d4c1, #42008b);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.navbar-brand:hover,
+.navbar-brand:focus {
+    background-image: linear-gradient(to right, #00d4c1, #42008b);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-decoration: none;
+    transition: none;
+}
+
+.navbar-toggler {
+    border: none;
+}
+
+.nav-link {
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    color: var(--dark-color);
+    position: relative;
+    transition: color 0.2s ease;
+}
+
+.nav-link::after {
+    content: "";
+    width: 0;
+    height: 2px;
+    background: var(--secondary-color);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    transition: width 0.25s ease;
+}
+
+.nav-link:hover,
+.nav-link:focus {
+    color: var(--primary-color);
+}
+
+.nav-link:hover::after,
+.nav-link:focus::after,
+.nav-link.active::after {
+    width: 100%;
+}
+
+/* ================================ CARDS ================================ */
+.card {
+    border: none;
+    border-radius: 1rem;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    background: #fff;
+}
+
+.card-header-custom {
+    font-size: 1.25rem;
+    font-weight: 700;
+    border-bottom: 2px solid var(--secondary-color);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--dark-color);
+    margin-bottom: 1rem;
+}
+
+.card-header-custom i {
+    color: var(--secondary-color);
+}
+
+/* ================================ LISTAS (MEJORADAS) ================================ */
+.list-group-item {
+    border: none;
+    padding: 0.75rem 1rem;
+    font-size: 1.05rem;
+    background: transparent;
+    cursor: pointer;
+
+    position: relative;
+    transition: all 0.25s ease;
+}
+
+/* Barra lateral animada */
+.list-group-item::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0px;
+    height: 100%;
+    background: var(--secondary-color);
+    border-radius: 0 4px 4px 0;
+    transition: width 0.25s ease;
+}
+
+/* Hover elegante */
+.list-group-item:hover {
+    background: rgba(45, 69, 176, 0.08);
+    color: var(--primary-color);
+    transform: translateX(6px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* Barra crece en hover */
+.list-group-item:hover::before {
+    width: 6px;
+}
+
+/* Ícono animado */
+.list-group-item i {
+    transition: color 0.25s ease;
+}
+
+.list-group-item:hover i {
+    color: var(--secondary-color);
+}
+
+/* ================================ MAPA ================================ */
+#map {
+    height: 550px;
+    border-radius: 0.75rem;
+}
+
+/* ================================ NOTAS ================================ */
+.section-subtle-note {
+    font-size: 0.85rem;
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* ================================ MOBILE ================================ */
+@media (max-width: 991px) {
+    #menuMobile {
+        text-align: center;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+
+    #menuMobile .nav-item {
+        display: block;
+        width: 100%;
+    }
+
+    #menuMobile .nav-link {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    #menuMobile .dropdown {
+        display: flex;
+        justify-content: center;
+    }
+
+    #menuMobile .dropdown-menu {
+        position: static !important;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+        width: auto;
+    }
+
+    #menuMobile .dropdown-item {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        text-align: center !important;
+    }
+}

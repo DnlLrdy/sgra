@@ -1,115 +1,58 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="GeoRoute - Software de gestión y visualización de rutas de autobuses">
     <title>GeoRoute</title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="icon" type="image/x-icon" th:href="@{/images/logo-bg.png}">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
-
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f4f5f7;
-            color: #343a40;
-        }
-
-        .navbar {
-            background-color: #1e1e2f;
-        }
-
-        .navbar-brand {
-            font-weight: 700;
-            font-size: 1.4rem;
-        }
-
-        .navbar .nav-link {
-            color: #f8d34c !important;
-            font-weight: 600;
-        }
-
-        .card {
-            border: none;
-            border-radius: 1rem;
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-            background: #fff;
-        }
-
-        .card-header-custom {
-            font-size: 1.25rem;
-            font-weight: 700;
-            border-bottom: 2px solid #f8d34c;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: #212529;
-            margin-bottom: 1rem;
-        }
-
-        .card-header-custom i {
-            color: #f8d34c;
-        }
-
-        .list-group-item {
-            border: none;
-            padding: 0.75rem 1rem;
-            font-size: 1.05rem;
-            border-left: 4px solid transparent;
-            transition: all 0.2s;
-            background: transparent;
-        }
-
-        .list-group-item:hover {
-            background-color: #fff6d6;
-            border-left-color: #f8d34c;
-        }
-
-        #map {
-            height: 550px;
-            border-radius: 0.75rem;
-        }
-
-        .section-subtle-note {
-            font-size: 0.85rem;
-            color: #6c757d;
-            font-style: italic;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/conductor/conductor.css}">
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+    <nav class="navbar navbar-expand-lg shadow">
         <div class="container">
-            <a class="navbar-brand text-warning">GeoRoute</a>
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <!-- Marca -->
+            <div class="navbar-brand d-flex align-items-center">
+                <img src="/images/logo-nobg.png" alt="Logo GeoRoute" height="40">
+                GeoRoute
+            </div>
+
+            <!-- Botón móvil -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
+            <!-- Menú -->
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-person-circle me-1"></i>
+                <ul class="navbar-nav ms-auto align-items-lg-center" id="menuMobile">
+                    <!-- Dropdown usuario -->
+                    <li class="nav-item dropdown ms-lg-3 mt-3 mt-lg-0">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown"
+                            role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle me-2"></i>
                             <span th:text="${conductorNombreUsuario}"></span>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="userDropdown">
+
+                        <ul class="dropdown-menu dropdown-menu-center">
                             <li>
-                                <a class="dropdown-item text-danger" th:href="@{/logout}">
-                                    <i class="bi bi-box-arrow-right me-2"></i>Cerrar sesión
+                                <a class="dropdown-item text-danger d-flex align-items-center" th:href="@{/logout}">
+                                    <i class="bi bi-box-arrow-right me-2"></i> Cerrar sesión
                                 </a>
                             </li>
                         </ul>
                     </li>
+
                 </ul>
             </div>
+
         </div>
     </nav>
 
@@ -141,9 +84,6 @@
                             <span th:text="${parada.nombre}">Nombre de la parada</span>
                         </li>
                     </ul>
-                    <div class="mt-3 section-subtle-note">
-                        Desliza para ver todas las paradas
-                    </div>
                 </div>
                 <div class="card p-4 text-center text-muted" th:if="${ruta == null}">
                     <div class="card-header-custom">
@@ -171,11 +111,9 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+        xintegrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
         crossorigin="anonymous"></script>
 
-    <script src="../../static/js/conductor/conductor.js"></script>
-    <script th:src="@{/js/conductor/conductor.js}"></script>
 
     <script th:inline="javascript">
         /*<![CDATA[*/
@@ -184,68 +122,7 @@
         /*]]>*/
     </script>
 
-    <script>
-        if (paradas.length > 0) {
-            const map = L.map('map', {
-                center: [10.395431, -75.472807],
-                zoom: 18,
-                minZoom: 14,
-                maxZoom: 18,
-                maxBounds: [
-                    [10.2000, -75.5700],
-                    [10.5000, -75.3700]
-                ],
-                maxBoundsViscosity: 1.0
-            });
-
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-
-            const marcadores = [];
-            const bounds = [];
-
-            paradas.forEach((parada, index) => {
-                const latLng = [parada.latitud, parada.longitud];
-                const color = parada.color || 'blue';
-
-                const iconoPersonalizado = L.icon({
-                    iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-${color}.png`,
-                    shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-                    iconSize: [25, 41],
-                    iconAnchor: [12, 41],
-                    popupAnchor: [1, -34],
-                    shadowSize: [41, 41]
-                });
-
-                const marker = L.marker(latLng, { icon: iconoPersonalizado })
-                    .bindPopup(`<strong>${parada.nombre}</strong>`)
-                    .addTo(map);
-
-                marcadores.push(marker);
-                bounds.push(latLng);
-
-                marker.on('click', () => {
-                    marker.openPopup();
-                });
-            });
-
-            if (bounds.length > 0) {
-                map.fitBounds(bounds);
-            }
-
-            document.addEventListener("DOMContentLoaded", () => {
-                document.querySelectorAll('.parada-item').forEach(item => {
-                    item.addEventListener('click', () => {
-                        const index = parseInt(item.getAttribute('data-index'));
-                        const marker = marcadores[index];
-                        if (marker) {
-                            map.setView(marker.getLatLng(), 18);
-                            marker.openPopup();
-                        }
-                    });
-                });
-            });
-        }
-    </script>
+    <script th:src="@{/js/conductor/conductor.js}"></script>
 </body>
 
 </html>
