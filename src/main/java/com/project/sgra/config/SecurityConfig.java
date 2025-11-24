@@ -52,7 +52,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/usuario/**").hasRole("USUARIO")
                         .requestMatchers("/conductor/**").hasRole("CONDUCTOR")
-                        .requestMatchers("/admin/**").hasRole("ADMINISTRADOR")
+                        .requestMatchers("/admin/**", "/api/**").hasRole("ADMINISTRADOR")
                         .anyRequest().permitAll()
                 )
                 .formLogin(form -> form
