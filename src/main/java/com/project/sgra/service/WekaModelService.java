@@ -28,7 +28,7 @@ public class WekaModelService {
         // Cambia la ruta aquí según dónde esté el archivo:
         // - Si lo dejaste en src/main/resources/static -> "static/maintenance.model"
         // - Si lo pusiste en src/main/resources -> "maintenance.model"
-        String resourcePath = "static/maintenance.model";
+        String resourcePath = "maintenance.model";
 
         try (InputStream modelStream = new ClassPathResource(resourcePath).getInputStream()) {
             if (modelStream == null) {
